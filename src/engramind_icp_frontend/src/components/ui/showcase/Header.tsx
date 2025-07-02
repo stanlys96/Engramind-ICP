@@ -1,16 +1,15 @@
 "use client";
 import { BellDot } from "lucide-react";
-// import { usePathname } from "next/navigation";
-// import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import ThemeToggle from "../../../theme/theme-toggle";
 
 export const Header = (
   { name }: { name: string } = { name: "User" } // Default value for name
 ) => {
   const location = useLocation();
   const pathname = location.pathname;
-  const router = useNavigate();
+  const navigate = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleLogout = () => {
@@ -31,16 +30,16 @@ export const Header = (
           Personas
         </div>
         <nav className="hidden md:flex gap-6 text-md text-gray-700 dark:text-gray-300 leading-relaxed">
-          <a
-            href="/showcase"
+          <Link
+            to="/showcase"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
               pathname === "/showcase" ? "text-purple-600 font-bold" : ""
             }`}
           >
             Persona Showcase
-          </a>
-          <a
-            href="/showcase/how-it-works"
+          </Link>
+          <Link
+            to="/showcase/how-it-works"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
               pathname === "/showcase/how-it-works"
                 ? "text-purple-600 font-bold"
@@ -48,15 +47,15 @@ export const Header = (
             }`}
           >
             How It Works
-          </a>
-          <a
-            href="/showcase/faq"
+          </Link>
+          <Link
+            to="/showcase/faq"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
               pathname === "/showcase/faq" ? "text-purple-600 font-bold" : ""
             }`}
           >
             FAQ
-          </a>
+          </Link>
         </nav>
         <div className="flex gap-4 items-center relative">
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
@@ -64,7 +63,7 @@ export const Header = (
           </div>
           <BellDot className="text-purple-600 dark:text-purple-400" />
           <img
-            // onClick={() => router.push("/dashboard")}
+            onClick={() => navigate("/dashboard")}
             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Profile"
             className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
@@ -77,6 +76,7 @@ export const Header = (
           >
             Logout
           </button>
+          <ThemeToggle />
         </div>
       </div>
       {showConfirm && (

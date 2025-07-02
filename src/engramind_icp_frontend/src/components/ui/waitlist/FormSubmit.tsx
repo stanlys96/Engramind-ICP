@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
-import Modal from '../Modal';
-import { FormInput } from './FormInput';
+import React, { useState } from "react";
+import Modal from "../Modal";
+import { FormInput } from "./FormInput";
+import { Link } from "react-router-dom";
 
 export default function FormSubmit() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    occupation: '',
-    knowGenAI: '',
-    reason: '',
+    name: "",
+    email: "",
+    occupation: "",
+    knowGenAI: "",
+    reason: "",
   });
   const [showModal, setShowModal] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -29,10 +30,10 @@ export default function FormSubmit() {
     setError(null);
 
     try {
-      const res = await fetch('/api/submit-waitlist', {
-        method: 'POST',
+      const res = await fetch("/api/submit-waitlist", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           name: form.name,
@@ -51,20 +52,20 @@ export default function FormSubmit() {
         setShowModal(true);
         // Optional: Reset form if needed
         setForm({
-          name: '',
-          email: '',
-          occupation: '',
-          reason: '',
-          knowGenAI: '',
+          name: "",
+          email: "",
+          occupation: "",
+          reason: "",
+          knowGenAI: "",
         });
       } else {
-        setError(result.message || 'Submission failed.');
+        setError(result.message || "Submission failed.");
         // setModalMessage(result.message || 'Submission failed.');
         setShowModal(true);
       }
     } catch (err) {
-      console.error('Submission error:', err);
-      setError('Something went wrong. Please try again later.');
+      console.error("Submission error:", err);
+      setError("Something went wrong. Please try again later.");
       //   setModalMessage('Something went wrong. Please try again later.');
       setShowModal(true);
     } finally {
@@ -122,7 +123,7 @@ export default function FormSubmit() {
                 type="radio"
                 name="knowGenAI"
                 value="yes"
-                checked={form.knowGenAI === 'yes'}
+                checked={form.knowGenAI === "yes"}
                 onChange={handleChange}
                 required
                 className="accent-indigo-500"
@@ -134,7 +135,7 @@ export default function FormSubmit() {
                 type="radio"
                 name="knowGenAI"
                 value="no"
-                checked={form.knowGenAI === 'no'}
+                checked={form.knowGenAI === "no"}
                 onChange={handleChange}
                 required
                 className="accent-indigo-500"
@@ -167,7 +168,7 @@ export default function FormSubmit() {
           disabled={loading}
           className="w-full rounded-md bg-purple-600 py-3 font-medium text-white transition hover:bg-purple-500 disabled:cursor-not-allowed disabled:bg-indigo-900"
         >
-          {loading ? 'Submitting...' : 'Join Early Access'}
+          {loading ? "Submitting..." : "Join Early Access"}
         </button>
         {error && (
           <p className="text-red-500 text-xs mt-2 text-center">{error}</p>
@@ -177,32 +178,32 @@ export default function FormSubmit() {
           updates.
         </p>
         <p className="mt-4 text-center text-xs text-neutral-400 dark:text-neutral-500 hidden">
-          By logging in, you agree to our{' '}
-          <a
-            href="/terms"
+          By logging in, you agree to our{" "}
+          <Link
+            to="/terms"
             className="text-purple-500 hover:underline"
             target="_blank"
             rel="noopener noreferrer"
           >
             Terms of Service
-          </a>{' '}
-          and{' '}
-          <a
-            href="/privacy"
+          </Link>{" "}
+          and{" "}
+          <Link
+            to="/privacy"
             className="text-purple-500 hover:underline"
             target="_blank"
             rel="noopener noreferrer"
           >
             Privacy
-          </a>
+          </Link>
         </p>
       </form>
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title={error ? 'Submission Failed' : 'Submission Status'}
+        title={error ? "Submission Failed" : "Submission Status"}
         email={form.email}
-        type={error ? 'error' : 'success'}
+        type={error ? "error" : "success"}
       />
     </div>
   );

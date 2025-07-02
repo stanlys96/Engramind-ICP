@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Scenario } from "../../../interface/scenario";
 import React from "react";
 
@@ -78,14 +79,14 @@ export default function ModalRoleplay({
           </label>
         </div>
 
-        <a
-          href={`/showcase/roleplay/${selectedScenario?.id}`}
+        <Link
+          to={`/showcase/roleplay/${selectedScenario?.id}`}
           className={`bg-purple-600 hover:bg-purple-700 text-sm right-0 text-white font-semibold py-2 px-4 rounded transition-all ${
             selectedMode ? "" : "opacity-50 cursor-not-allowed"
           }`}
         >
           Start Conversation
-        </a>
+        </Link>
       </div>
     </div>
   );

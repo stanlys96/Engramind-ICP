@@ -2,14 +2,15 @@
 import { Gem } from "lucide-react";
 import { useState } from "react";
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 const NavLink = ({ href, children }: { href: string; children: ReactNode }) => (
-  <a
-    href={href}
+  <Link
+    to={href}
     className="text-zinc-800 dark:text-zinc-100 hover:text-purple-600 dark:hover:text-purple-400 font-medium  transition-colors"
   >
     {children}
-  </a>
+  </Link>
 );
 
 const MobileNavLink = ({
@@ -19,12 +20,12 @@ const MobileNavLink = ({
   href: string;
   children: ReactNode;
 }) => (
-  <a
-    href={href}
+  <Link
+    to={href}
     className="block py-2 text-zinc-900 dark:text-zinc-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium leading-relaxed transition-colors duration-300"
   >
     {children}
-  </a>
+  </Link>
 );
 
 const FeatureCard = ({

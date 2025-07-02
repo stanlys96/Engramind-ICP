@@ -5,12 +5,14 @@ import { MobileNavLink, NavLink } from "../ui/HelperComponents";
 import ThemeToggle from "../../theme/theme-toggle";
 import IC from "../../utils/IC";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
+import { useNavigate } from "react-router-dom";
 
 type NavbarProps = {
   showMenu: boolean;
 };
 
 export default function Navbar({ showMenu }: NavbarProps) {
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,7 +28,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getIdentity()
             ?.getPrincipal()
             ?.toText();
-          console.log(principalText);
+          navigate("/showcase");
         },
         onError: () => {
           // setLoading(false);
