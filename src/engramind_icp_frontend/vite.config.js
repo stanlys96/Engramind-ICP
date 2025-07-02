@@ -2,6 +2,7 @@ import { fileURLToPath, URL } from 'url';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import environment from 'vite-plugin-environment';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env' });
@@ -29,6 +30,7 @@ export default defineConfig({
     react(),
     environment("all", { prefix: "CANISTER_" }),
     environment("all", { prefix: "DFX_" }),
+    nodePolyfills(),
   ],
   resolve: {
     alias: [

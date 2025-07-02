@@ -1,23 +1,24 @@
 import { Header } from "../../components/ui/showcase/Header";
-import jwt from "jsonwebtoken";
-// import { cookies } from "next/headers";
+import Cookies from "js-cookie";
 import ShowcaseClientLayout from "./client-layout";
+import { jwtVerify } from "jose";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  //   const cookieStore = cookies();
-  //   const token = (await cookieStore).get("access_token")?.value;
+  const token = Cookies.get("token");
   let name = "Guest";
 
-  //   if (token) {
-  //     try {
-  //   const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-  //         name?: string;
-  //       };
-  //       name = decoded.name || "User";
-  //     } catch {
-  //       name = "Guest";
-  //     }
-  //   }
+  if (token) {
+    try {
+      if (token) {
+        // const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+        //   name?: string;
+        // };
+        name = "User";
+      }
+    } catch {
+      name = "Guest";
+    }
+  }
 
   return (
     <ShowcaseClientLayout name={name}>
