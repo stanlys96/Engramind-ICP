@@ -161,7 +161,10 @@ export default function Navbar({ showMenu }: NavbarProps) {
             {/* <button className="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm">
           Login
         </button> */}
-            <button className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm">
+            <button
+              onClick={() => handleConnectWallet()}
+              className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm"
+            >
               Get Started
             </button>
           </div>
