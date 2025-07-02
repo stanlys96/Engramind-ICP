@@ -1,8 +1,10 @@
 "use client";
-import ThemeToggle from "@/theme/theme-toggle";
+
 import { useEffect, useState } from "react";
 import { MobileNavLink, NavLink } from "../ui/HelperComponents";
-import Link from "next/link";
+import ThemeToggle from "../../theme/theme-toggle";
+import IC from "../../utils/IC";
+import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 
 type NavbarProps = {
   showMenu: boolean;
@@ -10,15 +12,39 @@ type NavbarProps = {
 
 export default function Navbar({ showMenu }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { theme } = useTheme();
-
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [backend, setBackend] = useState<_SERVICE>();
+
+  const handleConnectWallet = async () => {
+    IC.getAuth(async (authClient) => {
+      authClient.login({
+        ...IC.defaultAuthOption,
+        onSuccess: async () => {
+          const principalText = authClient
+            ?.getIdentity()
+            ?.getPrincipal()
+            ?.toText();
+          console.log(principalText);
+        },
+        onError: () => {
+          // setLoading(false);
+        },
+      });
+    });
+  };
 
   useEffect(() => {
     setMounted(true);
     const hasSession = document.cookie.includes("session=");
     setIsLoggedIn(hasSession);
+  }, []);
+
+  useEffect(() => {
+    IC.getBackend((result: _SERVICE) => {
+      setBackend(result);
+    });
   }, []);
 
   if (!mounted) {
@@ -39,7 +65,15 @@ export default function Navbar({ showMenu }: NavbarProps) {
             className="flex items-center cursor-pointer"
           >
             <img
-              src={theme === "light" ? "/engramind.svg" : "/engramindDark.svg"}
+              src="/engramind.svg"
+              className="block dark:hidden"
+              alt="Logo"
+              width={120}
+              height={80}
+            />
+            <img
+              src="/engramindDark.svg"
+              className="hidden dark:block"
               alt="Logo"
               width={120}
               height={80}
@@ -47,31 +81,29 @@ export default function Navbar({ showMenu }: NavbarProps) {
           </div>
 
           {/* Menu Navigation */}
-          {showMenu && (
-            <div className="justify-around w-1/3 md:w-1/2 hidden md:flex">
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="#how-it-works">How It Works</NavLink>
-              <NavLink href="#pricing">Pricing</NavLink>
-              <NavLink href="#faq">FAQ</NavLink>
-            </div>
-          )}
+          <div className="justify-around w-1/3 md:w-1/2 hidden md:flex">
+            <NavLink href="#features">Features</NavLink>
+            <NavLink href="#how-it-works">How It Works</NavLink>
+            <NavLink href="#pricing">Pricing</NavLink>
+            <NavLink href="#faq">FAQ</NavLink>
+          </div>
 
           {/* Button Get Started */}
           {!isLoggedIn && (
             <div className="hidden md:flex items-center space-x-8">
               <div className="flex gap-x-2">
-                <Link
+                {/* <a
                   href={"/auth/login"}
                   className="px-4 py-2 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                 >
                   Login
-                </Link>
-                <Link
-                  href={"/auth/register"}
-                  className="px-4 py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm hover:from-purple-700 hover:to-indigo-700 transition-colors"
+                </a> */}
+                <a
+                  onClick={() => handleConnectWallet()}
+                  className="px-4 cursor-pointer py-2 rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium text-sm hover:from-purple-700 hover:to-indigo-700 transition-colors"
                 >
-                  Sign Up
-                </Link>
+                  Connect
+                </a>
               </div>
 
               <ThemeToggle />

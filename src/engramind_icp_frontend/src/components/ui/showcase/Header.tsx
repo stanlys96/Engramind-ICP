@@ -1,14 +1,16 @@
 "use client";
 import { BellDot } from "lucide-react";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+// import { usePathname } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Header = (
   { name }: { name: string } = { name: "User" } // Default value for name
 ) => {
-  const pathname = usePathname();
-  const router = useRouter();
+  const location = useLocation();
+  const pathname = location.pathname;
+  const router = useNavigate();
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleLogout = () => {
@@ -19,7 +21,7 @@ export const Header = (
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    router.push("/");
+    // router("/");
   };
 
   return (
@@ -62,7 +64,7 @@ export const Header = (
           </div>
           <BellDot className="text-purple-600 dark:text-purple-400" />
           <img
-            onClick={() => router.push("/dashboard")}
+            // onClick={() => router.push("/dashboard")}
             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Profile"
             className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"

@@ -1,6 +1,5 @@
-import { DetailDescription, Scenario } from '@/interface/scenario';
-import Image from 'next/image';
-import React from 'react';
+import { Scenario, DetailDescription } from "../../../interface/scenario";
+import React from "react";
 
 export default function ModalDetailRelic({
   selectedScenario,
@@ -27,8 +26,8 @@ export default function ModalDetailRelic({
           <div className="flex justify-between items-center text-sm border border-zinc-200 dark:border-zinc-800 rounded-full p-2 dark:bg-zinc-800 bg-zinc-300">
             {/* Icon Solana */}
             <div className="flex items-center gap-x-2">
-              <Image
-                src={'assets/coin.svg'}
+              <img
+                src={"assets/coin.svg"}
                 alt="solana"
                 className="w-6 h-6"
                 width={30}
@@ -48,7 +47,7 @@ export default function ModalDetailRelic({
 
           {/* AI Scenario */}
           <div className="flex gap-x-4 mt-4">
-            <Image
+            <img
               src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
               alt="character"
               className="w-32 h-32 object-cover rounded-md"
@@ -60,7 +59,7 @@ export default function ModalDetailRelic({
                 {selectedScenario?.name}
               </h2>
               <p className="text-base italic dark:text-zinc-300 text-zinc-800 ">
-                My Name {detailDescription?.charactersName}, I am{' '}
+                My Name {detailDescription?.charactersName}, I am{" "}
                 {detailDescription?.charactersAge} years old.
               </p>
               <p className="text-sm dark:text-zinc-400 text-zinc-700">
@@ -79,7 +78,7 @@ export default function ModalDetailRelic({
                 Gender : {detailDescription?.charactersGender}
               </p>
               <p className="text-sm dark:text-zinc-400 text-zinc-700">
-                Occupation :{detailDescription?.charactersOccupation}{' '}
+                Occupation :{detailDescription?.charactersOccupation}{" "}
               </p>
             </div>
 
@@ -88,13 +87,13 @@ export default function ModalDetailRelic({
                 Scenario Details
               </h3>
               <p className="text-sm dark:text-zinc-300 text-zinc-700 font-semibold">
-                Scenario Snippet :{' '}
+                Scenario Snippet :{" "}
                 <span className="font-normal dark:text-zinc-400 text-zinc-700">
                   {detailDescription?.charactersScenarioSnippet}
                 </span>
               </p>
               <p className="text-sm dark:text-zinc-300 text-zinc-700 font-semibold mt-2">
-                Relevance To Persona :{' '}
+                Relevance To Persona :{" "}
                 <span className="font-normal dark:text-zinc-400 text-zinc-700">
                   {detailDescription?.charactersRelevanceToScenario}
                 </span>

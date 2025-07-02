@@ -1,5 +1,4 @@
-import { Star, Users } from 'lucide-react';
-import Image from 'next/image';
+import { Star, Users } from "lucide-react";
 
 export const RelicCard = ({
   title,
@@ -17,7 +16,7 @@ export const RelicCard = ({
   rating: string | number;
 }) => (
   <div className=" dark:bg-neutral-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 hover hover:shadow-lg shadow-none transition-all duration-300 hover:border-purple-500">
-    <Image
+    <img
       src={image}
       width={400}
       height={300}
@@ -43,7 +42,7 @@ export const RelicCard = ({
     </div>
     <div className="flex justify-between items-center text-sm">
       <span className="text-purple-700 dark:text-purple-400 flex items-center text-xs">
-        <Image
+        <img
           height={200}
           width={200}
           src={image}

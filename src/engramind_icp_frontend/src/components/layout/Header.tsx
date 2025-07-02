@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import ThemeToggle from "../../theme/theme-toggle";
 
 export default function Header({ isFixed }: { isFixed?: boolean }) {
   const [mounted, setMounted] = useState(false);
@@ -30,12 +31,13 @@ export default function Header({ isFixed }: { isFixed?: boolean }) {
             }}
             className="flex items-center cursor-pointer"
           >
-            <Image
-              src={theme === "light" ? "/engramind.svg" : "/engramindDark.svg"}
+            <img
+              src={
+                "light" === "light" ? "/engramind.svg" : "/engramindDark.svg"
+              }
               alt="Logo"
               width={120}
               height={80}
-              priority
             />
           </div>
 

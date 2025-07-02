@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import React from 'react';
+import React from "react";
 
 export const MobileCarouselSlide = ({
   images,
@@ -14,13 +13,12 @@ export const MobileCarouselSlide = ({
 }) => (
   <div className="relative inset-0 flex flex-col items-center justify-start text-center text-white z-20 px-4 pt-18 pb-10 md:hidden">
     <div className="w-full flex justify-center items-center mb-8 h-[250px] relative">
-      <Image
+      <img
         src={images[currentIndex]}
         alt="Engramind Mobile Background"
         width={250}
         height={250}
         className="mb-6"
-        priority
       />
     </div>
 
@@ -36,7 +34,7 @@ export const MobileCarouselSlide = ({
           key={index}
           onClick={() => setCurrentIndex(index)}
           className={`w-2 h-2 rounded-full cursor-pointer ${
-            index === currentIndex ? 'bg-purple-600' : 'bg-gray-400'
+            index === currentIndex ? "bg-purple-600" : "bg-gray-400"
           }`}
           aria-label={`Go to slide ${index + 1}`}
         />
@@ -45,8 +43,8 @@ export const MobileCarouselSlide = ({
     <button
       onClick={() =>
         document
-          .getElementById('waitlist-form')
-          ?.scrollIntoView({ behavior: 'smooth' })
+          .getElementById("waitlist-form")
+          ?.scrollIntoView({ behavior: "smooth" })
       }
       className="bg-purple-600 font-medium leading-relaxed text-white text-sm px-6 py-2 rounded-md shadow-md"
     >

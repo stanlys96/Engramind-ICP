@@ -1,19 +1,18 @@
-'use client';
+"use client";
 
 import {
-  DetailDescription,
   Scenario,
   ScenarioListResponse,
-} from '@/interface/scenario';
-import RenderIf from '@/utils/RenderIf';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import ModalDetailRelic from './ModalDetailRelic';
-import ModalRoleplay from './ModalRoleplay';
+  DetailDescription,
+} from "../../../interface/scenario";
+import RenderIf from "../../../utils/RenderIf";
+import { useEffect, useState } from "react";
+import ModalDetailRelic from "./ModalDetailRelic";
+import ModalRoleplay from "./ModalRoleplay";
 
 export default function Relic() {
   const [scenarioList, setScenarioList] = useState<ScenarioListResponse | null>(
-    null,
+    null
   );
 
   const [detailDescription, setdetailDescription] =
@@ -21,18 +20,18 @@ export default function Relic() {
   const [fetchingScenarios, setFetchingScenarios] = useState(false);
   const [showModalDescription, setshowModalDescription] = useState(false);
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(
-    null,
+    null
   );
   const [showRoleplayModal, setShowRoleplayModal] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<'speech' | 'text' | null>(
-    'speech',
+  const [selectedMode, setSelectedMode] = useState<"speech" | "text" | null>(
+    "speech"
   );
   // const [timerEnabled, setTimerEnabled] = useState(false);
 
   useEffect(() => {
     const fetchScenarios = async () => {
       setFetchingScenarios(true);
-      const res = await fetch('/api/ai/scenario?soft_delete=false');
+      const res = await fetch("/api/ai/scenario?soft_delete=false");
       const data = await res.json();
       setScenarioList(data);
       if (data?.data?.length) {
@@ -81,7 +80,7 @@ export default function Relic() {
                 onClick={() => handleSelectedScenario(item)}
                 className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
               >
-                <Image
+                <img
                   src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
                   alt="character"
                   className="w-full h-64 object-cover rounded-t-xl"
@@ -98,16 +97,16 @@ export default function Relic() {
                       <span
                         className={[
                           JSON.parse(item.description)?.charactersGender ===
-                          'Female'
-                            ? 'text-pink-500'
-                            : 'text-blue-500',
-                          'ml-1 text-lg font-semibold',
-                        ].join(' ')}
+                          "Female"
+                            ? "text-pink-500"
+                            : "text-blue-500",
+                          "ml-1 text-lg font-semibold",
+                        ].join(" ")}
                       >
                         {JSON.parse(item.description)?.charactersGender ===
-                        'Female'
-                          ? '♀️'
-                          : '♂️'}
+                        "Female"
+                          ? "♀️"
+                          : "♂️"}
                       </span>
                     </p>
                   </>
@@ -117,7 +116,7 @@ export default function Relic() {
                     <div className="flex flex-wrap gap-2 mt-4">
                       {item.category
                         .flatMap((category: string) =>
-                          category.split(',').map((cat) => cat.trim()),
+                          category.split(",").map((cat) => cat.trim())
                         )
                         .map((category: string, index: number) => {
                           return (

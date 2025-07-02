@@ -1,5 +1,4 @@
-import Image from 'next/image';
-import React from 'react';
+import React from "react";
 
 export const DesktopCarouselSlide = ({
   images,
@@ -16,16 +15,15 @@ export const DesktopCarouselSlide = ({
     {/* Image  */}
     <div className="w-full flex justify-center items-center h-[350px] relative">
       {images.map((src, index) => (
-        <Image
+        <img
           key={index}
           src={src}
           alt="Engramind Background"
           width={300}
           height={300}
           className={`absolute object-contain transition-opacity duration-300 ${
-            index === currentIndex ? 'opacity-100' : 'opacity-0'
+            index === currentIndex ? "opacity-100" : "opacity-0"
           }`}
-          priority={index === currentIndex}
         />
       ))}
     </div>
@@ -47,7 +45,7 @@ export const DesktopCarouselSlide = ({
           key={index}
           onClick={() => setCurrentIndex(index)}
           className={`w-2 h-2 rounded-full cursor-pointer ${
-            index === currentIndex ? 'bg-purple-600' : 'bg-gray-400'
+            index === currentIndex ? "bg-purple-600" : "bg-gray-400"
           }`}
           aria-label={`Go to slide ${index + 1}`}
         />
