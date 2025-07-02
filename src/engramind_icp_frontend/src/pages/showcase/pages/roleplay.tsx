@@ -24,7 +24,7 @@ export default function RoleplayDetail() {
       try {
         const res = await fetch(`/api/ai/scenario/${scenarioId}`, {
           headers: {
-            "X-AI_TOKEN": process.env.NEXT_PUBLIC_AI_KEY || "",
+            "X-AI_TOKEN": import.meta.env.NEXT_PUBLIC_AI_KEY || "",
             "X-REQUEST_FROM": "AI_TOKEN",
           },
         });
