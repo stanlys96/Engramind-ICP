@@ -20,7 +20,7 @@ export const Header = (
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    // router("/");
+    navigate("/");
   };
 
   return (
