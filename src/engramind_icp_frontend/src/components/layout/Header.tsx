@@ -32,9 +32,15 @@ export default function Header({ isFixed }: { isFixed?: boolean }) {
             className="flex items-center cursor-pointer"
           >
             <img
-              src={
-                "light" === "light" ? "/engramind.svg" : "/engramindDark.svg"
-              }
+              src="/engramind.svg"
+              className="block dark:hidden"
+              alt="Logo"
+              width={120}
+              height={80}
+            />
+            <img
+              src="/engramindDark.svg"
+              className="hidden dark:block"
               alt="Logo"
               width={120}
               height={80}
