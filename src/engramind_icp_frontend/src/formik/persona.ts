@@ -4,6 +4,7 @@ export const createPersonaInitialValues = {
 };
 
 export const updatePersonaInitialValues = {
+  id: "",
   name: "",
   age: "",
   gender: "",

@@ -16,21 +16,21 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
   customClassName,
   loading,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, settingIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
-        setIsOpen(false);
+        settingIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const toggleDropdown = () => settingIsOpen((prev) => !prev);
 
   return (
     <div
@@ -38,11 +38,12 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
       ref={ref}
     >
       <button
+        type="button"
         onClick={() => {
           if (loading) return;
           toggleDropdown();
         }}
-        className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-4 py-2 cursor-pointer text-[14px]`}
+        className={`w-full border text-[#888] focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-4 py-2 cursor-pointer text-[14px]`}
       >
         {label}
       </button>
@@ -59,9 +60,10 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
             {options.map((option) => (
               <li key={option}>
                 <button
+                  type="button"
                   onClick={() => {
                     onSelect(option);
-                    setIsOpen(false);
+                    settingIsOpen(false);
                   }}
                   className="w-full cursor-pointer text-gray-900 dark:text-white  text-left px-4 py-2 dark:hover:text-black hover:bg-blue-100 transition"
                 >

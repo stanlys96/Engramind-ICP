@@ -36,6 +36,7 @@ export const CreatePersonaForm = ({
           Do you not have the file you need?
         </p>
         <button
+          type="button"
           onClick={() => {}}
           className={`bg-purple-600 text-white px-4 py-2 rounded-full cursor-pointer`}
         >
@@ -86,6 +87,7 @@ export const CreatePersonaForm = ({
       />
       <div className="flex justify-end mt-5 gap-x-3">
         <button
+          type="button"
           disabled={loading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"

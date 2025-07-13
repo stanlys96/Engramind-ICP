@@ -4,6 +4,7 @@ export interface CreateFormValues {
 }
 
 export interface EditFormValues {
+  id: string;
   name: string;
   age: string;
   gender: string;
