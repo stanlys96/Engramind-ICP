@@ -41,3 +41,21 @@ export interface CreateRubricValues {
   name: string;
   description: string;
 }
+
+export interface EditRubricValues {
+  name: string;
+  title: string;
+  description: string;
+  criteria: Criteria[];
+}
+
+interface Criteria {
+  name: string;
+  weight: string;
+  performanceLevels: PerformanceLevel[];
+}
+
+interface PerformanceLevel {
+  value: string;
+  description: string;
+}

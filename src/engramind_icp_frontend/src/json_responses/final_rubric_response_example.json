@@ -1,0 +1,61 @@
+{
+  "assessment": {
+    "id": "5accaeca-a79f-44a3-aa6a-4befc681a381",
+    "name": "Assessment for Rubric: dasd",
+    "organization_id": null,
+    "rubric_id": "a1f80656-d36c-4c9c-a163-109acbbd7c22",
+    "scenario_id": null,
+    "timestamp": "2025-07-13T09:26:54",
+    "user_id": 1242
+  },
+  "final_rubric": {
+    "rubric_title": "Assessment Rubric",
+    "description": "Rubric for evaluating assessments based on specified criteria.",
+    "criteria": [
+      {
+        "criterion_name": "Target Assessment Modality",
+        "weight": 0.25,
+        "performance_levels": {
+          "Roleplay": "Demonstrates understanding of roleplay assessment.",
+          "Image": "Demonstrates understanding of image-based assessment.",
+          "Video": "Demonstrates understanding of video-based assessment.",
+          "Audio": "Demonstrates understanding of audio-based assessment."
+        }
+      },
+      {
+        "criterion_name": "Natural Language Description",
+        "weight": 0.5,
+        "performance_levels": {
+          "Clear": "Provides a clear and concise description of the assessment task.",
+          "Detailed": "Provides a detailed description of the assessment task.",
+          "Vague": "Provides a vague description of the assessment task; generic criteria may be generated."
+        }
+      },
+      {
+        "criterion_name": "Optional Style Preference",
+        "weight": 0.25,
+        "performance_levels": {
+          "Checklist": "Specifies a checklist-style rubric.",
+          "Qualitative": "Specifies a qualitative rubric."
+        }
+      }
+    ],
+    "scoring_guide": {
+      "individual_score_description": "Each criterion is scored based on the performance level achieved.",
+      "weighted_score_description": "The weighted score for each criterion is calculated by multiplying the criterion's weight by the performance level score.",
+      "total_score_description": "The total score is the sum of the weighted scores for all criteria."
+    },
+    "performance_levels_summary": {
+      "Roleplay": "Understanding of roleplay assessment.",
+      "Image": "Understanding of image-based assessment.",
+      "Video": "Understanding of video-based assessment.",
+      "Audio": "Understanding of audio-based assessment.",
+      "Clear": "Clear and concise description.",
+      "Detailed": "Detailed description.",
+      "Vague": "Vague description.",
+      "Checklist": "Checklist-style rubric.",
+      "Qualitative": "Qualitative rubric."
+    },
+    "note": "Provide the target assessment modality, natural language description, and optional style preference to generate the rubric."
+  }
+}
