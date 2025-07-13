@@ -1,0 +1,17 @@
+{
+  "code": 200,
+  "is_success": true,
+  "message": "Successfully generated rubric and created linked assessment",
+  "data": {
+    "assessment": {
+      "id": "5accaeca-a79f-44a3-aa6a-4befc681a381",
+      "name": "Assessment for Rubric: dasd",
+      "organization_id": null,
+      "rubric_id": "a1f80656-d36c-4c9c-a163-109acbbd7c22",
+      "scenario_id": null,
+      "timestamp": "2025-07-13T09:26:54",
+      "user_id": 1242
+    },
+    "final_rubric": "```json\n{\n  \"rubric_title\": \"Generic Rubric\",\n  \"description\": \"Generic rubric for roleplay assessment.\",\n  \"criteria\": [\n    {\n      \"criterion_name\": \"Clarity of Communication\",\n      \"weight\": 33.33,\n      \"performance_levels\": {\n        \"Excellent\": \"Communication is consistently clear, concise, and easily understood.\",\n        \"Fair\": \"Communication is generally understandable but may have minor clarity issues.\",\n        \"No Attempt\": \"Communication is unclear or no relevant communication occurred.\"\n      }\n    },\n    {\n      \"criterion_name\": \"Engagement and Interaction\",\n      \"weight\": 33.33,\n      \"performance_levels\": {\n        \"Excellent\": \"Actively engages with the roleplay scenario and interacts effectively with others.\",\n        \"Fair\": \"Shows some engagement but interaction may be limited or inconsistent.\",\n        \"No Attempt\": \"Demonstrates little to no engagement or interaction in the roleplay.\"\n      }\n    },\n    {\n      \"criterion_name\": \"Professionalism and Demeanor\",\n      \"weight\": 33.34,\n      \"performance_levels\": {\n        \"Excellent\": \"Maintains a consistently professional and respectful demeanor throughout the roleplay.\",\n        \"Fair\": \"Generally professional but may have minor lapses in demeanor or respect.\",\n        \"No Attempt\": \"Demeanor is unprofessional, disrespectful, or inappropriate for the roleplay scenario.\"\n      }\n    }\n  ],\n  \"scoring_guide\": {\n    \"individual_score_description\": \"Each criterion is scored based on the performance levels: Excellent, Fair, and No Attempt.\",\n    \"weighted_score_description\": \"The weighted score is calculated by multiplying the score of each criterion by its weight.\",\n    \"total_score_description\": \"The total score is the sum of the weighted scores for all criteria.\"\n  },\n  \"performance_levels_summary\": {\n    \"Excellent\": \"Demonstrates a high level of proficiency in the assessed criterion.\",\n    \"Fair\": \"Demonstrates a moderate level of proficiency in the assessed criterion.\",\n    \"No Attempt\": \"Demonstrates little to no proficiency in the assessed criterion.\"\n  },\n  \"note\": \"Placeholder criteria generated due to minimal input description. Review and refine criteria for specific assessment goals.\"\n}\n```"
+  }
+}

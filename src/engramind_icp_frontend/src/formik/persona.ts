@@ -36,3 +36,8 @@ export const updatePersonaInitialValues = {
   relevanceToScenario: "",
   challengesAndGrowthAreas: "",
 };
+
+export const createRubricInitialValues = {
+  name: "",
+  description: "",
+};

@@ -7,6 +7,7 @@ import DashboardPage from "./pages/dashboard";
 import ShowcaseHowItWorks from "./pages/showcase/pages/how-it-works";
 import ShowcaseFaq from "./pages/showcase/pages/faq";
 import RoleplayDetail from "./pages/showcase/pages/roleplay";
+import RubricsPage from "./pages/showcase/pages/rubrics";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/showcase/how-it-works" element={<ShowcaseHowItWorks />} />
         <Route path="/showcase/faq" element={<ShowcaseFaq />} />
         <Route path="/showcase/roleplay/:id" element={<RoleplayDetail />} />
+        <Route path="/showcase/rubrics" element={<RubricsPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </Router>

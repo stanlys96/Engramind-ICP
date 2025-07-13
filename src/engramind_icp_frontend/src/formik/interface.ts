@@ -36,3 +36,8 @@ export interface EditFormValues {
   relevanceToScenario: string;
   challengesAndGrowthAreas: string;
 }
+
+export interface CreateRubricValues {
+  name: string;
+  description: string;
+}

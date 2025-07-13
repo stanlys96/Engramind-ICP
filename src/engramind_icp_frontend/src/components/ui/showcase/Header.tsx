@@ -49,7 +49,11 @@ export const ShowcaseHeader = (
           </Link>
           <Link
             to="/showcase/rubrics"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/rubrics"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
           >
             Rubrics
           </Link>
