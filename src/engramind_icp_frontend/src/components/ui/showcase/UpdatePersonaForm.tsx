@@ -19,7 +19,7 @@ export const UpdatePersonaForm = ({
       className="h-[85vh] overflow-scroll"
     >
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
-        Edit Persona: asdasd
+        Edit Persona: {updateFormik.values.name}
       </h2>
       <div className="gap-y-3 flex flex-col">
         <div className="flex gap-x-4 w-full">
