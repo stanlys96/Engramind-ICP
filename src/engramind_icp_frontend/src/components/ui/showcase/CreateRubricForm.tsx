@@ -57,7 +57,7 @@ export const CreateRubricForm = ({
         value={createFormik.values.name}
         onChange={createFormik.handleChange}
         placeholder="Enter a name for your rubrics"
-        className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+        className={`w-full shadow-sm border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
           loading
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"
@@ -77,7 +77,7 @@ export const CreateRubricForm = ({
         onChange={createFormik.handleChange}
         onBlur={createFormik.handleBlur}
         placeholder="Make a rubric based on this document"
-        className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+        className={`w-full shadow-sm border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
           loading
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"

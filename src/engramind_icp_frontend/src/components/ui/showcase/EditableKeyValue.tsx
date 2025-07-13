@@ -47,7 +47,7 @@ export const EditableKeyValue = ({
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"
         }`}
-        disabled={loading}
+        disabled
       />
       <Field
         as="textarea"
@@ -59,7 +59,7 @@ export const EditableKeyValue = ({
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"
         }`}
-        disabled={loading}
+        disabled
       />
       <button
         className="p-[6px] cursor-pointer border border-[#FECACA] rounded-[8px]"

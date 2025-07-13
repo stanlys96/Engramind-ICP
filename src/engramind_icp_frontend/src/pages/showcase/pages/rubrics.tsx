@@ -16,90 +16,14 @@ import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
 import { FinalRubric, RubricsResponse } from "../../../interface";
 
-interface Rubric {
-  name: string;
-  rubric_title: string;
-  description: string;
-  note: string;
-  scoring_guide: Record<string, string>;
-  performance_levels_summary: Record<string, string>;
-  criteria: {
-    criterion_name: string;
-    weight: number;
-    performance_levels: Record<string, string>;
-  }[];
-}
-
 export type FlatFormValues = Record<string, any>;
-
-const flattenRubricToFields = (rubric: Rubric): FlatFormValues => {
-  const fields: FlatFormValues = {
-    Beginning: {
-      "Rubric Name": rubric.name,
-      "Rubric Title": rubric.rubric_title,
-      Description: rubric.description,
-    },
-    "Scoring Guide": {},
-    "Performance Levels Summary": {},
-    Criteria: [],
-    End: {
-      Note: rubric.note,
-    },
-  };
-
-  // Scoring Guide
-  Object.entries(rubric.scoring_guide).forEach(([key, value]) => {
-    fields["Scoring Guide"][`${key}`] = value;
-  });
-
-  // Performance Level Summaries
-  Object.entries(rubric.performance_levels_summary).forEach(([key, value]) => {
-    fields["Performance Levels Summary"][`${key}`] = value;
-  });
-
-  // Criteria
-  rubric.criteria.forEach((criterion) => {
-    const label = criterion.criterion_name;
-    const temp: FlatFormValues = {};
-    temp[label] = {};
-    temp[label]["weight"] = criterion.weight;
-
-    Object.entries(criterion.performance_levels).forEach(([level, desc]) => {
-      temp[label][`${level}`] = desc;
-    });
-    fields["Criteria"].push(temp);
-  });
-  return fields;
-};
-
-type FlatValues = Record<string, string>;
-
-function flattenValues(obj: any, prefix = ""): FlatValues {
-  let result: FlatValues = {};
-
-  Object.entries(obj).forEach(([key, value]) => {
-    const path = prefix ? `${prefix}.${key}` : key;
-
-    if (typeof value === "string") {
-      result[path] = value;
-    } else if (Array.isArray(value)) {
-      value.forEach((item, index) => {
-        const subPath = `${path}[${index}]`;
-        result = { ...result, ...flattenValues(item, subPath) };
-      });
-    } else if (typeof value === "object" && value !== null) {
-      result = { ...result, ...flattenValues(value, path) };
-    }
-  });
-
-  return result;
-}
 
 export default function RubricsPage() {
   const { name } = useUser();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [rubricId, setRubricId] = useState("");
   const { addToast } = useToast();
 
   const [updateRubricsFormValues, setUpdateRubricsFormValues] =
@@ -141,6 +65,7 @@ export default function RubricsPage() {
             ""
           ),
         };
+        setRubricId(result?.data?.assessment?.id);
         setUpdateRubricsFormValues(finalResult);
         addToast({ message: "Successfully created your rubrics!" });
         setLoading(false);
@@ -200,9 +125,11 @@ export default function RubricsPage() {
           }}
         >
           <UpdateRubricsForm
+            rubricId={rubricId}
             loading={loading}
             setIsOpen={setIsOpenEditRubrics}
             updateRubricsFormValues={updateRubricsFormValues}
+            setLoading={setLoading}
           />
         </AnimatedModal>
       </div>

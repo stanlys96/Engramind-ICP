@@ -43,7 +43,7 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
           if (loading) return;
           toggleDropdown();
         }}
-        className={`w-full border text-[#888] focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-4 py-2 cursor-pointer text-[14px]`}
+        className={`w-full shadow-sm border text-[#888] focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-4 py-2 cursor-pointer text-[14px]`}
       >
         {label}
       </button>
@@ -51,7 +51,7 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.ul
-            className="absolute w-full mt-2 w-48 cursor-pointer bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700 border-zinc-200 bg-white rounded-lg shadow-lg overflow-hidden z-10"
+            className="absolute shadow-sm w-full mt-2 w-48 cursor-pointer bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700 border-zinc-200 bg-white rounded-lg shadow-lg overflow-hidden z-10"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

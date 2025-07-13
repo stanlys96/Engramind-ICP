@@ -38,7 +38,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter persona name"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -64,7 +64,7 @@ export const UpdatePersonaForm = ({
               onBlur={updateFormik.handleBlur}
               type="text"
               placeholder="Enter persona name"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -89,7 +89,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter persona name"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -112,7 +112,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter occupation"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -137,7 +137,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter language"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -160,7 +160,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter hometown"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -185,7 +185,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter birthdate"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -208,7 +208,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter nationality"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -233,7 +233,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter background"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -258,7 +258,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter scenario snippet"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -286,7 +286,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter MBTI type"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -309,7 +309,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter enneagram type"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -340,7 +340,7 @@ export const UpdatePersonaForm = ({
               }}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter openness"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -366,7 +366,7 @@ export const UpdatePersonaForm = ({
               }}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter conscientiousness"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -392,7 +392,7 @@ export const UpdatePersonaForm = ({
               }}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter extraversion"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -418,7 +418,7 @@ export const UpdatePersonaForm = ({
               }}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter agreeableness"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -444,7 +444,7 @@ export const UpdatePersonaForm = ({
                 updateFormik.setFieldValue("neuroticism", digitsOnly);
               }}
               placeholder="Enter neuroticism"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -469,7 +469,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter skills and abilities"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -494,7 +494,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter motivations and goals"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -522,7 +522,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter build"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -545,7 +545,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter height"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -568,7 +568,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter eye color"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -591,7 +591,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter skin tone"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -614,7 +614,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter hair color"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -637,7 +637,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter hair style"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -662,7 +662,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter typical attire"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -687,7 +687,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter distinguishing features"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -712,7 +712,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter industry relevance"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -737,7 +737,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter relevance to scenario"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"
@@ -762,7 +762,7 @@ export const UpdatePersonaForm = ({
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter challenges and growth areas"
-              className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+              className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
                 loading
                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                   : "dark:bg-zinc-800 bg-zinc-50"

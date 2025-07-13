@@ -3,11 +3,16 @@ import { AnimatedSpinner } from "../AnimatedSpinner";
 import { Trash2 } from "lucide-react";
 import { FlatFormValues } from "../../../pages/showcase/pages/rubrics";
 import { EditableKeyValue } from "./EditableKeyValue";
+import axios from "axios";
+import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
+import { useToast } from "../../../toast/toast";
 
 interface UpdateRubricsForm {
   loading: boolean;
   setIsOpen: (value: boolean) => void;
   updateRubricsFormValues: FlatFormValues;
+  rubricId: string;
+  setLoading: (value: boolean) => void;
 }
 
 const capitalCase = (str: string) =>
@@ -22,13 +27,39 @@ export const UpdateRubricsForm = ({
   loading,
   setIsOpen,
   updateRubricsFormValues,
+  rubricId,
+  setLoading,
 }: UpdateRubricsForm) => {
+  const { addToast } = useToast();
   return (
     <Formik
       initialValues={updateRubricsFormValues}
       enableReinitialize
-      onSubmit={(values) => {
-        console.log("Submitted:", values);
+      onSubmit={async (values) => {
+        setIsOpen(false);
+        // console.log(values);
+        // try {
+        //   setLoading(true);
+        //   const response = await axios.put(
+        //     `${API_BASE_URL}/assessment/rubrics/${rubricId}`,
+        //     {
+        //       name: values.name,
+        //       rubrics: JSON.stringify(values),
+        //     },
+        //     {
+        //       headers: {
+        //         "X-AI_TOKEN": API_KEY,
+        //         "X-REQUEST_FROM": API_REQUEST_FROM,
+        //       },
+        //     }
+        //   );
+        //   console.log(response.data, "<<< DATA");
+        //   addToast({ message: "Successfully created your rubrics!" });
+        //   setLoading(false);
+        //   setIsOpen(false);
+        // } catch (e) {
+        //   setLoading(false);
+        // }
       }}
     >
       {({ setFieldValue }) => (
@@ -54,7 +85,7 @@ export const UpdateRubricsForm = ({
                       ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                       : "dark:bg-zinc-800 bg-zinc-50"
                   }`}
-                  disabled={loading}
+                  disabled
                 />
               </div>
             </div>
@@ -75,7 +106,7 @@ export const UpdateRubricsForm = ({
                       ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                       : "dark:bg-zinc-800 bg-zinc-50"
                   }`}
-                  disabled={loading}
+                  disabled
                 />
               </div>
             </div>
@@ -88,6 +119,7 @@ export const UpdateRubricsForm = ({
                   Description
                 </label>
                 <Field
+                  disabled
                   as="textarea"
                   rows={3}
                   id={"description"}
@@ -97,7 +129,6 @@ export const UpdateRubricsForm = ({
                       ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                       : "dark:bg-zinc-800 bg-zinc-50"
                   }`}
-                  disabled={loading}
                 />
               </div>
             </div>
@@ -130,7 +161,7 @@ export const UpdateRubricsForm = ({
                                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                                   : "dark:bg-zinc-800 bg-zinc-50"
                               }`}
-                              disabled={loading}
+                              disabled
                             />
                           </div>
                           <div className="w-full flex-1">
@@ -144,7 +175,7 @@ export const UpdateRubricsForm = ({
                                   ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                                   : "dark:bg-zinc-800 bg-zinc-50"
                               }`}
-                              disabled={loading}
+                              disabled
                             />
                           </div>
                           <button
@@ -184,7 +215,6 @@ export const UpdateRubricsForm = ({
                                     const value = updated[key];
                                     delete updated[key];
                                     updated[newKey] = value;
-                                    console.log(updated);
                                     setFieldValue(
                                       `criteria[${cIndex}].performance_levels`,
                                       updated
@@ -206,7 +236,7 @@ export const UpdateRubricsForm = ({
             <div className="p-[20px] flex flex-col gap-y-4 shadow-md border rounded-xl dark:border-zinc-700 border-zinc-200">
               {updateRubricsFormValues?.["scoring_guide"] &&
                 Object.entries(updateRubricsFormValues?.["scoring_guide"])?.map(
-                  ([key, value]) => (
+                  ([key]) => (
                     <div>
                       <label
                         htmlFor="birthdate"
@@ -223,7 +253,7 @@ export const UpdateRubricsForm = ({
                             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                             : "dark:bg-zinc-800 bg-zinc-50"
                         }`}
-                        disabled={loading}
+                        disabled
                       />
                     </div>
                   )
@@ -253,7 +283,7 @@ export const UpdateRubricsForm = ({
                           ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                           : "dark:bg-zinc-800 bg-zinc-50"
                       }`}
-                      disabled={loading}
+                      disabled
                     />
                   </div>
                 ))}
@@ -279,22 +309,13 @@ export const UpdateRubricsForm = ({
                       ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
                       : "dark:bg-zinc-800 bg-zinc-50"
                   }`}
-                  disabled={loading}
+                  disabled
                 />
               </div>
             </div>
             <div className="mt-3 flex gap-x-2 justify-end">
               <button
-                type="button"
-                disabled={loading}
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
-              >
-                Cancel
-              </button>
-              <button
                 type="submit"
-                disabled={loading}
                 className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
                   loading
                     ? "opacity-50 cursor-not-allowed"
@@ -302,7 +323,7 @@ export const UpdateRubricsForm = ({
                 }`}
               >
                 <AnimatedSpinner show={loading} />
-                Save Changes
+                OK
               </button>
             </div>
           </div>
