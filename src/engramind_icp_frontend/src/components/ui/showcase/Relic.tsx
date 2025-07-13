@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import ModalDetailRelic from "./ModalDetailRelic";
 import ModalRoleplay from "./ModalRoleplay";
 
-export default function Relic() {
+export const Relic = () => {
   const [scenarioList, setScenarioList] = useState<ScenarioListResponse | null>(
     null
   );
@@ -156,4 +156,4 @@ export default function Relic() {
       </RenderIf>
     </div>
   );
-}
+};

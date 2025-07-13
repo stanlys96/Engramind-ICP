@@ -2,8 +2,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { v4 as uuidv4 } from "uuid";
-import { CheckCheckIcon, CheckCircle } from "lucide-react";
-import { CheckboxIcon, CheckCircledIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon } from "@radix-ui/react-icons";
 
 export interface Toast {
   id: string;

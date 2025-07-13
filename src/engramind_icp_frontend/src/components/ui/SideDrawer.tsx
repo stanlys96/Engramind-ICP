@@ -28,7 +28,7 @@ const drawerVariants: Variants = {
   },
 };
 
-const SideDrawer: React.FC<SideDrawerProps> = ({
+export const SideDrawer: React.FC<SideDrawerProps> = ({
   isOpen,
   onClose,
   children,
@@ -73,5 +73,3 @@ const SideDrawer: React.FC<SideDrawerProps> = ({
     </AnimatePresence>
   );
 };
-
-export default SideDrawer;

@@ -9,7 +9,7 @@ interface HeaderProps {
   setIsOpenDrawer: (value: boolean) => void;
 }
 
-export const Header = (
+export const ShowcaseHeader = (
   { name, setIsOpenDrawer }: HeaderProps // Default value for name
 ) => {
   const location = useLocation();

@@ -1,24 +1,27 @@
 "use client";
-import { CategoryFilter } from "../../components/ui/showcase/CategoryFilter";
-import Relic from "../../components/ui/showcase/Relic";
-import { SearchBar } from "../../components/ui/showcase/SearchBar";
 import { useUser } from "../../context/UserContext";
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
-import { AnimatedModal } from "../../components/ui/AnimatedModal";
 import { useState } from "react";
 import { useToast } from "../../toast/toast";
 import axios from "axios";
 import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../utils/api";
 import { useFormik } from "formik";
-import { CreateFormValues, EditFormValues } from "../../formik/interface";
 import { PersonaResponse } from "../../interface/persona";
-import { CreatePersonaForm } from "../../components/ui/showcase/CreatePersonaForm";
-import { UpdatePersonaForm } from "../../components/ui/showcase/UpdatePersonaForm";
 import {
+  CreatePersonaForm,
+  UpdatePersonaForm,
+  CategoryFilter,
+  SearchBar,
+  AnimatedModal,
+  Relic,
+} from "../../components/ui";
+import {
+  CreateFormValues,
+  EditFormValues,
   createPersonaInitialValues,
   updatePersonaInitialValues,
-} from "../../formik/persona";
+} from "../../formik";
 
 export default function ShowcasePage() {
   const { name } = useUser();
