@@ -36,7 +36,7 @@ export const ShowcaseHeader = (
         </div> */}
         <MenuIcon
           onClick={() => setIsOpenDrawer(true)}
-          className="md:hidden block cursor-pointer"
+          className="md:hidden text-black dark:text-white block cursor-pointer"
         />
         <nav className="hidden md:flex gap-6 text-md text-gray-700 dark:text-gray-300 leading-relaxed">
           <Link
