@@ -60,12 +60,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             to="/showcase/scenarios"
             className={`hover:text-purple-600 dark:hover:text-purple-400`}
           >
-            Scenarios
-          </Link>
-          <Link
-            to="/showcase/scenarios"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
-          >
             Glossary
           </Link>
           <Link

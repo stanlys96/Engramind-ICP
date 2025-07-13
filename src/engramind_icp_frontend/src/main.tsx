@@ -5,6 +5,7 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 
 import { useTheme } from "./theme";
+import { ToastProvider } from "./toast/toast";
 
 const { setInitialTheme, toggleTheme } = useTheme();
 
@@ -14,8 +15,8 @@ document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
 
 ReactDOM.createRoot(document.getElementById("root") as any).render(
   <React.StrictMode>
-    {/* <BrowserRouter> */}
-    <App />
-    {/* </BrowserRouter> */}
+    <ToastProvider>
+      <App />
+    </ToastProvider>
   </React.StrictMode>
 );

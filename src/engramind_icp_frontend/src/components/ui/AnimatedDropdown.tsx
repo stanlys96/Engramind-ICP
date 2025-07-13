@@ -6,6 +6,7 @@ interface DropdownProps {
   options: string[];
   onSelect: (option: string) => void;
   customClassName?: string;
+  loading?: boolean;
 }
 
 export const AnimatedDropdown: React.FC<DropdownProps> = ({
@@ -13,6 +14,7 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
   options,
   onSelect,
   customClassName,
+  loading,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -36,7 +38,10 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
       ref={ref}
     >
       <button
-        onClick={toggleDropdown}
+        onClick={() => {
+          if (loading) return;
+          toggleDropdown();
+        }}
         className={`w-full border focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-4 py-2 cursor-pointer text-[14px]`}
       >
         {label}

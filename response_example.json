@@ -1,0 +1,52 @@
+{
+  "code": 200,
+  "is_success": true,
+  "message": "Successfully generated and saved persona character",
+  "data": {
+    "id": "f4543ad9-a8af-4cb5-8f8b-ce2f2989fc7a",
+    "name": "dasdjoiqjwe",
+    "organization_id": null,
+    "persona_details": {
+      "Big 5 Personality": "Moderately conscientious and agreeable, somewhat introverted and neurotic, not very open.",
+      "age": "35",
+      "background": "John is a project manager with 5 years of experience in the tech industry. He is calling support because he needs assistance with a new project management software. He is looking for guidance on how to best utilize the software's features to streamline his team's workflow and improve project outcomes. He is generally proactive and engaged, seeking opportunities for growth. \n\n--- Input Context/Rubric Provided: ---\ndajsodijqoiweqwe",
+      "birthdate": "15-08-1988",
+      "challengesAndGrowthAreas": "Balancing Work/Life, Staying Current, Conflict Resolution, Delegation",
+      "gender": "Male",
+      "hometown": "Springfield, USA",
+      "industryRelevance": "This persona is relevant for the tech, construction, and manufacturing industries.",
+      "language": "English (Native)",
+      "motivationsAndGoals": "Career Advancement, Project Success, Team Collaboration, Personal Fulfillment",
+      "name": "John Smith",
+      "nationality": "American",
+      "occupation": "Project Manager",
+      "personalityTraits": {
+        "bigFive": {
+          "agreeableness": "65",
+          "conscientiousness": "75",
+          "extraversion": "40",
+          "neuroticism": "55",
+          "openness": "30"
+        },
+        "enneagramType": "6w5",
+        "mbtiType": "ISTJ"
+      },
+      "physicalDescription": {
+        "build": "Average",
+        "distinguishingFeatures": "None",
+        "eyeColor": "Blue",
+        "hairColor": "Brown",
+        "hairStyle": "Short, Neat",
+        "height": "178 cm",
+        "skinTone": "Fair",
+        "typicalAttire": "Business Casual"
+      },
+      "relevanceToScenario": "This persona represents a typical project manager who needs support with new software.",
+      "scenarioSnippet": "John is attending a training session on the new project management software and is struggling to understand a specific feature.",
+      "skillsAndAbilities": "Project Management, Risk Assessment, Communication, Leadership, Software Proficiency",
+      "visualDescription": "John is a man of average height and build with short, neat brown hair and blue eyes. He has fair skin and no distinguishing features. He typically wears business casual attire."
+    },
+    "timestamp": "2025-07-13T07:27:47",
+    "user_id": 1242
+  }
+}
