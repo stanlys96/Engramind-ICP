@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 
 interface SideDrawerProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ const overlayVariants = {
   visible: { opacity: 1 },
 };
 
-const drawerVariants = {
+const drawerVariants: Variants = {
   hidden: { x: "-100%" },
   visible: {
     x: 0,
