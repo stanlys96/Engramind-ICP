@@ -2,13 +2,17 @@
 
 import { useTheme } from "../theme";
 
-export default function ThemeToggle() {
+interface ThemeProps {
+  customClassName?: string;
+}
+
+export default function ThemeToggle({ customClassName }: ThemeProps) {
   const { toggleTheme } = useTheme();
 
   return (
     <button
       type="button"
-      className="cursor-pointer bg-white dark:bg-[#191919] text-[#37352f] dark:text-[#ffffffcf] hover:bg-hover-background active:bg-active-background rounded-md border border-button-border-color p-1.5 [transition:background_20ms_ease-in,_color_0.15s]"
+      className={`${customClassName} cursor-pointer bg-white dark:bg-[#191919] text-[#37352f] dark:text-[#ffffffcf] hover:bg-hover-background active:bg-active-background rounded-md border border-button-border-color p-1.5 [transition:background_20ms_ease-in,_color_0.15s]`}
       title="Toggle theme"
       aria-label="Toggle theme"
       onClick={() => toggleTheme()}

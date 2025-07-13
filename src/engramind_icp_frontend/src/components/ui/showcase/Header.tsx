@@ -1,11 +1,16 @@
 "use client";
-import { BellDot } from "lucide-react";
+import { BellDot, MenuIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "../../../theme/theme-toggle";
 
+interface HeaderProps {
+  name: string;
+  setIsOpenDrawer: (value: boolean) => void;
+}
+
 export const Header = (
-  { name }: { name: string } = { name: "User" } // Default value for name
+  { name, setIsOpenDrawer }: HeaderProps // Default value for name
 ) => {
   const location = useLocation();
   const pathname = location.pathname;
@@ -26,9 +31,13 @@ export const Header = (
   return (
     <header className="w-full border-b border-zinc-200 bg-white/50 backdrop-blur-sm dark:bg-zinc-800 dark:border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+        {/* <div className="text-lg font-bold text-purple-600 dark:text-purple-400 md:block hidden">
           Personas
-        </div>
+        </div> */}
+        <MenuIcon
+          onClick={() => setIsOpenDrawer(true)}
+          className="md:hidden block cursor-pointer"
+        />
         <nav className="hidden md:flex gap-6 text-md text-gray-700 dark:text-gray-300 leading-relaxed">
           <Link
             to="/showcase"
@@ -36,7 +45,37 @@ export const Header = (
               pathname === "/showcase" ? "text-purple-600 font-bold" : ""
             }`}
           >
-            Persona Showcase
+            Persona
+          </Link>
+          <Link
+            to="/showcase/rubrics"
+            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+          >
+            Rubrics
+          </Link>
+          <Link
+            to="/showcase/scenarios"
+            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+          >
+            Scenarios
+          </Link>
+          <Link
+            to="/showcase/scenarios"
+            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+          >
+            Glossary
+          </Link>
+          <Link
+            to="/showcase/scenarios"
+            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+          >
+            Scenarios
+          </Link>
+          <Link
+            to="/showcase/scenarios"
+            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+          >
+            File Management
           </Link>
           <Link
             to="/showcase/how-it-works"
@@ -61,7 +100,7 @@ export const Header = (
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
             Hi, {name}
           </div>
-          <BellDot className="text-purple-600 dark:text-purple-400" />
+          <BellDot className="text-purple-600 dark:text-purple-400 md:block hidden" />
           <img
             onClick={() => navigate("/dashboard")}
             src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -72,11 +111,11 @@ export const Header = (
           />
           <button
             onClick={() => setShowConfirm(true)}
-            className="text-sm text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
+            className="text-sm md:block hidden text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
           >
             Logout
           </button>
-          <ThemeToggle />
+          <ThemeToggle customClassName="md:block hidden" />
         </div>
       </div>
       {showConfirm && (

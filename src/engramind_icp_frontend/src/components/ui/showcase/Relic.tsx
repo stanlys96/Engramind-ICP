@@ -28,20 +28,20 @@ export default function Relic() {
   );
   // const [timerEnabled, setTimerEnabled] = useState(false);
 
-  useEffect(() => {
-    const fetchScenarios = async () => {
-      setFetchingScenarios(true);
-      const res = await fetch("/api/ai/scenario?soft_delete=false");
-      const data = await res.json();
-      setScenarioList(data);
-      if (data?.data?.length) {
-        setdetailDescription(JSON.parse(data.data[0].description));
-      }
-      setFetchingScenarios(false);
-    };
+  // useEffect(() => {
+  //   const fetchScenarios = async () => {
+  //     setFetchingScenarios(true);
+  //     const res = await fetch("/api/ai/scenario?soft_delete=false");
+  //     const data = await res.json();
+  //     setScenarioList(data);
+  //     if (data?.data?.length) {
+  //       setdetailDescription(JSON.parse(data.data[0].description));
+  //     }
+  //     setFetchingScenarios(false);
+  //   };
 
-    fetchScenarios();
-  }, []);
+  //   fetchScenarios();
+  // }, []);
 
   const handleSelectedScenario = (item: Scenario) => {
     setSelectedScenario(item);
