@@ -3,8 +3,6 @@ import { AnimatedSpinner } from "../AnimatedSpinner";
 import { Trash2 } from "lucide-react";
 import { FlatFormValues } from "../../../pages/showcase/pages/rubrics";
 import { EditableKeyValue } from "./EditableKeyValue";
-import axios from "axios";
-import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
 import { useToast } from "../../../toast/toast";
 
 interface UpdateRubricsForm {
@@ -30,7 +28,6 @@ export const UpdateRubricsForm = ({
   rubricId,
   setLoading,
 }: UpdateRubricsForm) => {
-  const { addToast } = useToast();
   return (
     <Formik
       initialValues={updateRubricsFormValues}
