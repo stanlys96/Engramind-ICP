@@ -61,6 +61,7 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
             onClick={(e) => e.stopPropagation()}
           >
             <button
+              type="button"
               className="absolute top-4 right-4 text-gray-500 hover:text-black"
               onClick={onClose}
             >

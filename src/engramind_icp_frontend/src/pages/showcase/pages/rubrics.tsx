@@ -28,6 +28,7 @@ export default function RubricsPage() {
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [currentRubrics, setCurrentRubrics] = useState<Assessment[]>();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [rubricId, setRubricId] = useState("");
   const [backend, setBackend] = useState<_SERVICE>();
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
@@ -177,6 +178,8 @@ export default function RubricsPage() {
             loading={loading}
             createFormik={createFormik}
             setIsOpen={setIsOpen}
+            uploading={uploading}
+            setUploading={setUploading}
           />
         </AnimatedModal>
         <AnimatedModal

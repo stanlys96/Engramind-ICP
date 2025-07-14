@@ -78,6 +78,7 @@ export const AnimatedModal = ({
           >
             {showCrossIcon && (
               <button
+                type="button"
                 onClick={onClose}
                 className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
               >

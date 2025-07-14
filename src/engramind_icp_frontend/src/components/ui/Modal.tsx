@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   email?: string;
-  type?: 'success' | 'error';
+  type?: "success" | "error";
 };
 
 export default function Modal({
@@ -13,7 +13,7 @@ export default function Modal({
   onClose,
   title,
   email,
-  type = 'success',
+  type = "success",
 }: ModalProps) {
   if (!isOpen) return null;
 
@@ -30,15 +30,15 @@ export default function Modal({
         )}
         <p
           className={`text-sm mb-6 ${
-            type === 'error'
-              ? 'text-red-600 dark:text-red-400'
-              : 'text-neutral-700 dark:text-neutral-300'
+            type === "error"
+              ? "text-red-600 dark:text-red-400"
+              : "text-neutral-700 dark:text-neutral-300"
           }`}
         >
-          {type === 'error'
-            ? 'Oops! Something went wrong. Please try again later or contact support if the issue persists.'
-            : 'Thank you for your interest! Your submission has been received and you are now on our waitlist.'}
-          {email && type !== 'error' && (
+          {type === "error"
+            ? "Oops! Something went wrong. Please try again later or contact support if the issue persists."
+            : "Thank you for your interest! Your submission has been received and you are now on our waitlist."}
+          {email && type !== "error" && (
             <p className="mt-2">
               <br />
               We will notify you at <strong>{email}</strong> with early-access
@@ -48,11 +48,12 @@ export default function Modal({
         </p>
         <div className="flex flex-col gap-3 items-center">
           <button
+            type="button"
             onClick={onClose}
             className={`px-6 py-2 rounded-md transition-colors cursor-pointer ${
-              type === 'error'
-                ? 'bg-red-600 text-white hover:bg-red-500'
-                : 'bg-black text-white hover:bg-neutral-800'
+              type === "error"
+                ? "bg-red-600 text-white hover:bg-red-500"
+                : "bg-black text-white hover:bg-neutral-800"
             }`}
           >
             Close

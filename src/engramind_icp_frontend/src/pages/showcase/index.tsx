@@ -36,6 +36,7 @@ export default function ShowcasePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
   const [currentPersonas, setCurrentPersonas] = useState<PersonaData[]>();
   const { addToast } = useToast();
@@ -178,7 +179,7 @@ export default function ShowcasePage() {
         <AnimatedModal
           isOpen={isOpen}
           onClose={() => {
-            if (loading) return;
+            if (loading || uploading) return;
             setIsOpen(false);
           }}
         >
@@ -186,6 +187,8 @@ export default function ShowcasePage() {
             loading={loading}
             createFormik={createFormik}
             setIsOpen={setIsOpen}
+            uploading={uploading}
+            setUploading={setUploading}
           />
         </AnimatedModal>
         <AnimatedModal

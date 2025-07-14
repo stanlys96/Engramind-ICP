@@ -143,6 +143,7 @@ const PricingCard = ({
       ))}
     </ul>
     <button
+      type="button"
       className={`w-full py-2 rounded-lg  font-medium transition-colors ${
         highlighted
           ? "mt-16 -mb-4 bg-gradient-to-r text-lg from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700"
@@ -205,6 +206,7 @@ const FaqItem = ({
   return (
     <div className="bg-white dark:bg-zinc-800 rounded  overflow-hidden border border-zinc-100 dark:border-zinc-700">
       <button
+        type="button"
         className="w-full px-6 py-4 text-left font-medium text-zinc-800 dark:text-zinc-200 focus:outline-none flex justify-between items-center"
         onClick={() => setIsOpen(!isOpen)}
       >

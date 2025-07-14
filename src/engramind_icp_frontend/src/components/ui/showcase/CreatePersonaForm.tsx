@@ -2,18 +2,26 @@ import { FormikProps } from "formik";
 import { CreateFormValues } from "../../../formik/interface";
 import { AnimatedDropdown } from "../AnimatedDropdown";
 import { AnimatedSpinner } from "../AnimatedSpinner";
+import { UploadFileForm } from "./UploadFileForm";
+import { AnimatedModal } from "../AnimatedModal";
+import { useState } from "react";
 
 interface CreatePersonaForm {
   loading: boolean;
   createFormik: FormikProps<CreateFormValues>;
   setIsOpen: (value: boolean) => void;
+  uploading: boolean;
+  setUploading: (value: boolean) => void;
 }
 
 export const CreatePersonaForm = ({
   loading,
   createFormik,
   setIsOpen,
+  uploading,
+  setUploading,
 }: CreatePersonaForm) => {
+  const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
@@ -36,8 +44,9 @@ export const CreatePersonaForm = ({
           Do you not have the file you need?
         </p>
         <button
+          disabled={loading}
           type="button"
-          onClick={() => {}}
+          onClick={() => setAnimatedModalOpen(true)}
           className={`bg-purple-600 text-white px-4 py-2 rounded-full cursor-pointer`}
         >
           Upload New File
@@ -78,7 +87,7 @@ export const CreatePersonaForm = ({
         onBlur={createFormik.handleBlur}
         placeholder="Make a personalized description of the persona"
         className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-          loading
+          loading || uploading
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"
         }`}
@@ -88,7 +97,7 @@ export const CreatePersonaForm = ({
       <div className="flex justify-end mt-5 gap-x-3">
         <button
           type="button"
-          disabled={loading}
+          disabled={loading || uploading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
         >
@@ -99,12 +108,14 @@ export const CreatePersonaForm = ({
           disabled={
             !createFormik.values.name ||
             !createFormik.values.personaPrompt ||
-            loading
+            loading ||
+            uploading
           }
           className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
             !createFormik.values.name ||
             !createFormik.values.personaPrompt ||
-            loading
+            loading ||
+            uploading
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-purple-700"
           }`}
@@ -113,6 +124,20 @@ export const CreatePersonaForm = ({
           {loading ? "Creating..." : "Create Persona"}
         </button>
       </div>
+      <AnimatedModal
+        widthFitContainer
+        isOpen={animatedModalOpen}
+        onClose={() => {
+          if (uploading) return;
+          setAnimatedModalOpen(false);
+        }}
+      >
+        <UploadFileForm
+          setLoading={setUploading}
+          setIsOpen={setAnimatedModalOpen}
+          loading={uploading}
+        />
+      </AnimatedModal>
     </form>
   );
 };

@@ -2,18 +2,26 @@ import { FormikProps } from "formik";
 import { CreateRubricValues } from "../../../formik/interface";
 import { AnimatedDropdown } from "../AnimatedDropdown";
 import { AnimatedSpinner } from "../AnimatedSpinner";
+import { AnimatedModal } from "../AnimatedModal";
+import { UploadFileForm } from "./UploadFileForm";
+import { useState } from "react";
 
 interface CreateRubricForm {
   loading: boolean;
   createFormik: FormikProps<CreateRubricValues>;
   setIsOpen: (value: boolean) => void;
+  uploading: boolean;
+  setUploading: (value: boolean) => void;
 }
 
 export const CreateRubricForm = ({
   loading,
   createFormik,
   setIsOpen,
+  uploading,
+  setUploading,
 }: CreateRubricForm) => {
+  const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
@@ -36,8 +44,9 @@ export const CreateRubricForm = ({
           Do you not have the file you need?
         </p>
         <button
+          disabled={loading}
           type="button"
-          onClick={() => {}}
+          onClick={() => setAnimatedModalOpen(true)}
           className={`bg-purple-600 text-white px-4 py-2 rounded-full cursor-pointer`}
         >
           Upload New File
@@ -113,6 +122,20 @@ export const CreateRubricForm = ({
           {loading ? "Saving..." : "Save Rubrics"}
         </button>
       </div>
+      <AnimatedModal
+        widthFitContainer
+        isOpen={animatedModalOpen}
+        onClose={() => {
+          if (uploading) return;
+          setAnimatedModalOpen(false);
+        }}
+      >
+        <UploadFileForm
+          setLoading={setUploading}
+          setIsOpen={setAnimatedModalOpen}
+          loading={uploading}
+        />
+      </AnimatedModal>
     </form>
   );
 };

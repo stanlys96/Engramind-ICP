@@ -11,3 +11,4 @@ export * from "./SearchBar";
 export * from "./UpdatePersonaForm";
 export * from "./UpdateRubricsForm";
 export * from "./CreateOrUpdateGlossaryForm";
+export * from "./UploadFileForm";

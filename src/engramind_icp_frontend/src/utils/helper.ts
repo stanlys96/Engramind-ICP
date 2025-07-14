@@ -1,5 +1,3 @@
-import { PersonaData } from "../interface";
-
 export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
     secondArray.map((item: any) => item.id)
@@ -16,6 +14,28 @@ export function selectCommonIds(firstArray: any, secondArray: any): any {
   commonItems.sort((a: any, b: any) => {
     const dateA = new Date(a.timestamp).getTime(); // getTime() returns milliseconds since epoch
     const dateB = new Date(b.timestamp).getTime();
+    return dateB - dateA; // For ascending order (earliest first)
+  });
+
+  return commonItems;
+}
+
+export function selectCommonFiles(firstArray: any, secondArray: any): any {
+  const secondArrayIds = new Set<string>(
+    secondArray.map((item: any) => item.id)
+  );
+
+  const commonItems: any = [];
+
+  for (const item of firstArray) {
+    if (secondArrayIds.has(item.file_id)) {
+      commonItems.push(item);
+    }
+  }
+
+  commonItems.sort((a: any, b: any) => {
+    const dateA = new Date(a.created_at).getTime(); // getTime() returns milliseconds since epoch
+    const dateB = new Date(b.created_at).getTime();
     return dateB - dateA; // For ascending order (earliest first)
   });
 
