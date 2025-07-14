@@ -59,3 +59,8 @@ interface PerformanceLevel {
   value: string;
   description: string;
 }
+
+export interface CreateUpdateGlossaryValues {
+  name: string;
+  content: string;
+}

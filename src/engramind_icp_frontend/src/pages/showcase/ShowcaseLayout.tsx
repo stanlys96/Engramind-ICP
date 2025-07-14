@@ -49,25 +49,41 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </Link>
           <Link
             to="/showcase/rubrics"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/rubrics"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
           >
             Rubrics
           </Link>
           <Link
-            to="/showcase/scenarios"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+            to="/showcase/glossary"
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/glossary"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
           >
             Glossary
           </Link>
           <Link
             to="/showcase/scenarios"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/scenarios"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
           >
             Scenarios
           </Link>
           <Link
-            to="/showcase/scenarios"
-            className={`hover:text-purple-600 dark:hover:text-purple-400`}
+            to="/showcase/file-management"
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/file-management"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
           >
             File Management
           </Link>

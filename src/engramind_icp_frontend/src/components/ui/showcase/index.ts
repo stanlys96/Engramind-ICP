@@ -10,3 +10,4 @@ export * from "./RelicCard";
 export * from "./SearchBar";
 export * from "./UpdatePersonaForm";
 export * from "./UpdateRubricsForm";
+export * from "./CreateOrUpdateGlossaryForm";

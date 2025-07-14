@@ -8,6 +8,9 @@ import ShowcaseHowItWorks from "./pages/showcase/pages/how-it-works";
 import ShowcaseFaq from "./pages/showcase/pages/faq";
 import RoleplayDetail from "./pages/showcase/pages/roleplay";
 import RubricsPage from "./pages/showcase/pages/rubrics";
+import GlossaryPage from "./pages/showcase/pages/glossary";
+import FileManagementPage from "./pages/showcase/pages/file-management";
+import ScenariosPage from "./pages/showcase/pages/scenarios";
 
 function App() {
   return (
@@ -20,6 +23,12 @@ function App() {
         <Route path="/showcase/faq" element={<ShowcaseFaq />} />
         <Route path="/showcase/roleplay/:id" element={<RoleplayDetail />} />
         <Route path="/showcase/rubrics" element={<RubricsPage />} />
+        <Route path="/showcase/glossary" element={<GlossaryPage />} />
+        <Route path="/showcase/scenarios" element={<ScenariosPage />} />
+        <Route
+          path="/showcase/file-management"
+          element={<FileManagementPage />}
+        />
         <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </Router>
