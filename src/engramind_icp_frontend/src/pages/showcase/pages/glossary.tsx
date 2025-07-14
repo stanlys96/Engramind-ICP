@@ -1,7 +1,7 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../../../toast/toast";
 import {
   SearchBar,
@@ -13,9 +13,14 @@ import {
   createUpdateGlossaryInitialValues,
   CreateUpdateGlossaryValues,
 } from "../../../formik";
-import axios from "axios";
-import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
+import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import Cookies from "js-cookie";
+import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
+import IC from "../../../utils/IC";
+import { Principal } from "@dfinity/principal";
+import { GlossaryData, GlossaryResponse } from "../../../interface";
+import useSWR from "swr";
+import { selectCommonIds } from "../../../utils/helper";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -23,26 +28,35 @@ export default function GlossaryPage() {
   const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [backend, setBackend] = useState<_SERVICE>();
+  const [currentGlossaries, setCurrentGlossaries] = useState<GlossaryData[]>();
+  const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
+    `/assessment/scenario-glossary`,
+    fetcherElwyn
+  );
   const { addToast } = useToast();
+
+  const totalGlossaryResult = totalGlossaryData?.data?.data;
 
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
     onSubmit: async (values, { resetForm }) => {
       try {
         setLoading(true);
-        const response = await axios.post(
-          `${API_BASE_URL}/assessment/scenario-glossary`,
+        const response = await axiosElwyn.post(
+          "/assessment/scenario-glossary",
           {
             name: values.name,
             glossary: values.content,
-          },
-          {
-            headers: {
-              "X-AI_TOKEN": API_KEY,
-              "X-REQUEST_FROM": API_REQUEST_FROM,
-            },
           }
         );
+        const result = response.data as GlossaryResponse;
+        await backend?.addContentToUser(
+          Principal.fromText(name ?? ""),
+          { Glossary: null },
+          result.data.id
+        );
+        glossaryMutate();
         addToast({ message: "Successfully created your glossary!" });
         setLoading(false);
         setIsOpen(false);
@@ -53,6 +67,32 @@ export default function GlossaryPage() {
       }
     },
   });
+
+  useEffect(() => {
+    IC.getBackend((result: _SERVICE) => {
+      setBackend(result);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (backend) {
+      backend
+        ?.getUserGlossaries(Principal.fromText(name ?? ""))
+        ?.then((result) => {
+          const currentUserGlossaries = result?.[0] ?? [];
+          if (
+            totalGlossaryResult?.length > 0 &&
+            currentUserGlossaries?.length > 0
+          ) {
+            const commonIds = selectCommonIds(
+              totalGlossaryResult,
+              currentUserGlossaries
+            );
+            setCurrentGlossaries(commonIds);
+          }
+        });
+    }
+  }, [backend, totalGlossaryResult]);
 
   return (
     <ShowcaseLayout>
@@ -79,6 +119,32 @@ export default function GlossaryPage() {
           </a>
         </div>
         <SearchBar />
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {currentGlossaries?.map((item: GlossaryData) => (
+            <div
+              key={item.id}
+              className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
+            >
+              <img
+                src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+                alt="character"
+                className="w-full h-64 object-cover rounded-t-xl"
+                width={400}
+                height={300}
+              />
+              <div className="p-4  ">
+                <>
+                  <h3 className="text-base font-semibold dark:text-white text-zinc-800">
+                    {item.name}
+                  </h3>
+                  <p className="bg-purple-500 mt-2 text-white text-xs font-medium px-2 py-1 rounded-full w-fit">
+                    {item.timestamp?.slice(0, 10)}
+                  </p>
+                </>
+              </div>
+            </div>
+          ))}
+        </div>
         <AnimatedModal
           isOpen={isOpen}
           onClose={() => {

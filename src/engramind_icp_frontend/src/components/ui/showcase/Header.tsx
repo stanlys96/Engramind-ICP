@@ -3,30 +3,22 @@ import { BellDot, MenuIcon } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "../../../theme/theme-toggle";
+import Cookies from "js-cookie";
+import IC from "../../../utils/IC";
+import { AnimatedModal } from "../AnimatedModal";
 
 interface HeaderProps {
   name: string;
   setIsOpenDrawer: (value: boolean) => void;
+  setShowConfirm: (value: boolean) => void;
 }
 
 export const ShowcaseHeader = (
-  { name, setIsOpenDrawer }: HeaderProps // Default value for name
+  { name, setIsOpenDrawer, setShowConfirm }: HeaderProps // Default value for name
 ) => {
   const location = useLocation();
   const pathname = location.pathname;
   const navigate = useNavigate();
-  const [showConfirm, setShowConfirm] = useState(false);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    sessionStorage.clear();
-    document.cookie.split(";").forEach((c) => {
-      document.cookie = c
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
-    });
-    navigate("/");
-  };
 
   return (
     <header className="w-full border-b border-zinc-200 bg-white/50 backdrop-blur-sm dark:bg-zinc-800 dark:border-neutral-800">
@@ -128,29 +120,6 @@ export const ShowcaseHeader = (
           <ThemeToggle customClassName="md:block hidden" />
         </div>
       </div>
-      {showConfirm && (
-        <div className="fixed inset-0 z-50 bg-zinc-900/50 backdrop-blur-sm flex items-center justify-center">
-          <div className="bg-white dark:bg-zinc-800 p-6 shadow-md text-center rounded-lg">
-            <p className="text-lg mb-4 text-zinc-800 font-semibold dark:text-zinc-100">
-              Are you sure you want to logout?
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={handleLogout}
-                className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };

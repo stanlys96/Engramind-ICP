@@ -1,0 +1,13 @@
+{
+  "code": 200,
+  "is_success": true,
+  "message": "Success",
+  "data": {
+    "glossary": "eyyyy",
+    "id": "92a4048d-4363-4337-b4ec-ee27c4aa6a3f",
+    "name": "heyh",
+    "organization_id": null,
+    "timestamp": "2025-07-14T09:35:41",
+    "user_id": 1242
+  }
+}

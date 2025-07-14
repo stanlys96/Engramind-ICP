@@ -1,25 +1,72 @@
-import { ShowcaseHeader, SideDrawer } from "../../components/ui";
+import { AnimatedModal, ShowcaseHeader, SideDrawer } from "../../components/ui";
 import Cookies from "js-cookie";
 import ShowcaseClientLayout from "./client-layout";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../../theme/theme-toggle";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
+import IC from "../../utils/IC";
+import { useNavigate } from "react-router-dom";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const name = Cookies.get("principal") ?? "";
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+    Cookies.remove("principal");
+    IC.logout();
+    navigate("/");
+  };
   const location = useLocation();
   const pathname = location.pathname;
 
   return (
     <ShowcaseClientLayout name={name}>
       <div className="relative bg-zinc-50 dark:bg-zinc-900 min-h-screen overflow-auto">
-        <ShowcaseHeader setIsOpenDrawer={setIsOpenDrawer} name={name} />
+        <ShowcaseHeader
+          setShowConfirm={setShowConfirm}
+          setIsOpenDrawer={setIsOpenDrawer}
+          name={name}
+        />
         <div className="max-w-7xl mx-auto px-4 py-10 text-neutral-900 dark:text-neutral-100">
           {children}
         </div>
       </div>
+      <AnimatedModal
+        showCrossIcon={false}
+        widthFitContainer
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+      >
+        <div>
+          <p className="text-lg mb-4 text-zinc-800 font-semibold dark:text-zinc-100 text-center">
+            Are you sure you want to logout?
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => setShowConfirm(false)}
+              className="px-4 py-2 cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </AnimatedModal>
       <SideDrawer
         isOpen={isOpenDrawer}
         onClose={() => {

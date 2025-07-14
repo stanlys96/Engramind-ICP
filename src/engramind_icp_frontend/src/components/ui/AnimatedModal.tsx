@@ -38,12 +38,16 @@ interface AnimatedModalProps {
   isOpen: boolean;
   onClose: () => void;
   children?: ReactNode;
+  widthFitContainer?: boolean;
+  showCrossIcon?: boolean;
 }
 
 export const AnimatedModal = ({
   isOpen,
   onClose,
   children,
+  widthFitContainer = false,
+  showCrossIcon = true,
 }: AnimatedModalProps) => {
   useEffect(() => {
     const handleEsc = (e: any) => e.key === "Escape" && onClose();
@@ -63,19 +67,23 @@ export const AnimatedModal = ({
           onClick={onClose}
         >
           <motion.div
-            className="absolute top-1/2 left-1/2 bg-zinc-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-6 w-full lg:w-[80%]"
+            className={`absolute top-1/2 left-1/2 bg-zinc-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-6 ${
+              widthFitContainer ? "" : "w-full lg:w-[80%]"
+            }`}
             variants={modal}
             initial="hidden"
             animate="visible"
             exit="exit"
             onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={onClose}
-              className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
-            >
-              ✕
-            </button>
+            {showCrossIcon && (
+              <button
+                onClick={onClose}
+                className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
+              >
+                ✕
+              </button>
+            )}
             {children}
           </motion.div>
         </motion.div>
