@@ -8,15 +8,10 @@ actor {
   public type ContentItem = { id: Text };
 
   public type Persona = ContentItem;
-
   public type Rubrics = ContentItem;
-
   public type Glossary = ContentItem;
-
   public type File = ContentItem;
-
   public type Scenario = ContentItem;
-
   public type Roleplay = ContentItem;
 
   public type ContentKind = {
