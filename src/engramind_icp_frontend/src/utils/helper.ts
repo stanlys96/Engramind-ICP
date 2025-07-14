@@ -1,9 +1,6 @@
 import { PersonaData } from "../interface";
 
-export function selectCommonIds(
-  firstArray: any,
-  secondArray: any
-): PersonaData[] {
+export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
     secondArray.map((item: any) => item.id)
   );
