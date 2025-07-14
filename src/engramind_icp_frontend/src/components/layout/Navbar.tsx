@@ -6,6 +6,7 @@ import ThemeToggle from "../../theme/theme-toggle";
 import IC from "../../utils/IC";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 type NavbarProps = {
   showMenu: boolean;
@@ -28,6 +29,8 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getIdentity()
             ?.getPrincipal()
             ?.toText();
+          await backend?.addNewUser(authClient?.getIdentity()?.getPrincipal());
+          Cookies.set("principal", principalText);
           navigate("/showcase");
         },
         onError: () => {

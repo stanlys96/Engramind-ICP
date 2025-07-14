@@ -108,7 +108,7 @@ export const ShowcaseHeader = (
         </nav>
         <div className="flex gap-4 items-center relative">
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-            Hi, {name}
+            Hi, {name?.slice(0, 12) + "..."}
           </div>
           <BellDot className="text-purple-600 dark:text-purple-400 md:block hidden" />
           <img

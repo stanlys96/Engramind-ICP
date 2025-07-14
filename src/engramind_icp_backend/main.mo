@@ -66,6 +66,10 @@ actor {
     userHashMap.put(user, newUser);
   };
 
+  public shared func getUserByPrincipalText(user: Text): async ?User {
+    return userHashMap.get(Principal.fromText(user));
+  };
+
   public shared func getUser(user: Principal): async ?User {
     return userHashMap.get(user);
   };
@@ -287,7 +291,7 @@ actor {
     };
   };
 
-  public shared query func roleplays(userP: Principal): async ?[Roleplay] {
+  public shared query func getUserRoleplays(userP: Principal): async ?[Roleplay] {
     switch (userHashMap.get(userP)) {
       case (?userRecord) {
         return ?userRecord.roleplays;

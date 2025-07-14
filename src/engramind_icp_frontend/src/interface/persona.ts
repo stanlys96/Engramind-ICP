@@ -2,10 +2,10 @@ export interface PersonaResponse {
   code: number;
   is_success: boolean;
   message: string;
-  data: Data;
+  data: PersonaData;
 }
 
-export interface Data {
+export interface PersonaData {
   id: string;
   name: string;
   organization_id: any;

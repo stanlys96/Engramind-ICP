@@ -16,11 +16,12 @@ import {
 } from "../../../formik";
 import axios from "axios";
 import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
-  const { name } = useUser();
+  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { addToast } = useToast();
@@ -61,7 +62,7 @@ export default function ScenariosPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name}
+              Welcome, {name?.slice(0, 12) + "..."}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your roleplay scenarios

@@ -4,25 +4,13 @@ import ShowcaseClientLayout from "./client-layout";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../../theme/theme-toggle";
+import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const token = Cookies.get("token");
-  let name = "Guest";
+  const name = Cookies.get("principal") ?? "";
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const location = useLocation();
   const pathname = location.pathname;
-  if (token) {
-    try {
-      if (token) {
-        // const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-        //   name?: string;
-        // };
-        name = "User";
-      }
-    } catch {
-      name = "Guest";
-    }
-  }
 
   return (
     <ShowcaseClientLayout name={name}>

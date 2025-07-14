@@ -1,5 +1,4 @@
 "use client";
-import { useUser } from "../../../context/UserContext";
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { useState } from "react";
@@ -15,11 +14,12 @@ import axios from "axios";
 import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
 import { FinalRubric, RubricsResponse } from "../../../interface";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
-  const { name } = useUser();
+  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,7 +86,7 @@ export default function RubricsPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name}
+              Welcome, {name?.slice(0, 12) + "..."}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create your own scoring criteria.
