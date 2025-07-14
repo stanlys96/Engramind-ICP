@@ -33,6 +33,7 @@ import { selectCommonIds } from "../../utils/helper";
 
 export default function ShowcasePage() {
   const name = Cookies.get("principal");
+  console.log(name);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [loading, setLoading] = useState(false);
