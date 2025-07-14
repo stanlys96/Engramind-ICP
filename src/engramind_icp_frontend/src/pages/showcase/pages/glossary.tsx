@@ -48,6 +48,7 @@ export default function GlossaryPage() {
           {
             name: values.name,
             glossary: values.content,
+            organization_id: name,
           }
         );
         const result = response.data as GlossaryResponse;

@@ -152,7 +152,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               height={300}
             />
             <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-              {name}
+              {name?.slice(0, 12) + "..."}
             </div>
           </div>
           <button

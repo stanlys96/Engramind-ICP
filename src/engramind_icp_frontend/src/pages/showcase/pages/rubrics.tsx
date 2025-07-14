@@ -50,6 +50,7 @@ export default function RubricsPage() {
           {
             name: values.name,
             persona_prompt: values.description,
+            organization_id: name,
           }
         );
         const result = response.data as RubricsResponse;

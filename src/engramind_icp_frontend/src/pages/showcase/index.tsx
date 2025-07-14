@@ -76,6 +76,7 @@ export default function ShowcasePage() {
           {
             name: values.name,
             persona_prompt: values.personaPrompt,
+            organization_id: name,
           }
         );
         const personaResponse = response.data as PersonaResponse;
