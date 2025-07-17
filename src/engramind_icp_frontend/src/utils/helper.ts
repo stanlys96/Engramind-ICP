@@ -110,3 +110,11 @@ export const personalityProfileData = (persona: PersonaData | null) => [
       persona?.persona_details?.personalityTraits?.bigFive?.openness ?? "0",
   },
 ];
+
+export const capitalCase = (str: string) =>
+  str
+    .replace(/_/g, " ") // replace underscores with spaces
+    .replace(
+      /\w\S*/g,
+      (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
+    );

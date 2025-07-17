@@ -2,7 +2,6 @@
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
 import { useCallback, useEffect, useState } from "react";
-import { useToast } from "../../toast/toast";
 import { axiosElwyn, fetcherElwyn } from "../../utils/api";
 import { useFormik } from "formik";
 import useSWR from "swr";
@@ -29,7 +28,6 @@ import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../utils/IC";
 import { Principal } from "@dfinity/principal";
-import { selectCommonIds } from "../../utils/helper";
 import { PersonaDetails } from "../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
 
@@ -46,7 +44,6 @@ export default function ShowcasePage() {
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
-  const { addToast } = useToast();
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
     `/assessment/persona-characters`,
     fetcherElwyn

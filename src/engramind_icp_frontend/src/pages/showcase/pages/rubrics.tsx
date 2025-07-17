@@ -2,7 +2,6 @@
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { useEffect, useState } from "react";
-import { useToast } from "../../../toast/toast";
 import {
   SearchBar,
   AnimatedModal,
@@ -12,13 +11,19 @@ import { useFormik } from "formik";
 import { createRubricInitialValues, CreateRubricValues } from "../../../formik";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
-import { Assessment, FinalRubric, RubricsResponse } from "../../../interface";
+import {
+  Assessment,
+  AssessmentRaw,
+  FinalRubric,
+  RubricsResponse,
+} from "../../../interface";
 import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import useSWR from "swr";
-import { selectCommonIds } from "../../../utils/helper";
+import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
+import { toast } from "sonner";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -26,7 +31,12 @@ export default function RubricsPage() {
   const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
+  const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
+    useState<boolean>(false);
   const [currentRubrics, setCurrentRubrics] = useState<Assessment[]>();
+  const [selectedRubrics, setSelectedRubrics] = useState<Assessment | null>(
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [rubricId, setRubricId] = useState("");
@@ -35,7 +45,6 @@ export default function RubricsPage() {
     `/assessment/rubrics`,
     fetcherElwyn
   );
-  const { addToast } = useToast();
   const totalRubricsResult = totalRubricsData?.data?.data;
   const [updateRubricsFormValues, setUpdateRubricsFormValues] =
     useState<FlatFormValues>({});
@@ -43,6 +52,10 @@ export default function RubricsPage() {
   const createFormik = useFormik<CreateRubricValues>({
     initialValues: createRubricInitialValues,
     onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Adding rubrics...", {
+        id: "adding-rubrics",
+        duration: Infinity,
+      });
       try {
         setLoading(true);
         const response = await axiosElwyn.post(
@@ -60,6 +73,10 @@ export default function RubricsPage() {
           result?.data?.assessment?.rubric_id
         );
         rubricsMutate();
+        toast.success("Rubrics added successfully!", {
+          id: toastId,
+          duration: 4000,
+        });
         const raw = result?.data?.final_rubric;
         const cleaned = raw
           .replace(/^"```json\\n/, "") // Remove leading "```json\n
@@ -79,12 +96,15 @@ export default function RubricsPage() {
         };
         setRubricId(result?.data?.assessment?.id);
         setUpdateRubricsFormValues(finalResult);
-        addToast({ message: "Successfully created your rubrics!" });
         setLoading(false);
         setIsOpen(false);
         setIsOpenEditRubrics(true);
         resetForm();
       } catch (e) {
+        toast.error(e?.toString(), {
+          id: toastId,
+          duration: 4000,
+        });
         console.log(e, "<<<< EEE");
         setLoading(false);
       }
@@ -99,13 +119,29 @@ export default function RubricsPage() {
 
   useEffect(() => {
     if (totalRubricsResult?.length > 0) {
-      const theUserRubrics = totalRubricsResult
-        ?.filter((rubrics: Assessment) => rubrics.organization_id === name)
+      const theUserRubrics: Assessment[] = totalRubricsResult
+        ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
+        ?.map((rubricsData: AssessmentRaw) => {
+          const cleaned = rubricsData?.rubrics
+            ?.replace(/^"```json\\n/, "") // Remove leading "```json\n
+            .replace(/\\n```"$/, "") // Remove trailing \n```"
+            .replace(/\\"/g, '"') // Convert escaped quotes
+            .replace(/\\n/g, "\n")
+            .replaceAll("```json", "")
+            .replaceAll("```", "")
+            .trim();
+          const finalRubricParsed = JSON.parse(cleaned) as FinalRubric;
+          return {
+            ...rubricsData,
+            rubrics: finalRubricParsed,
+          };
+        })
         .sort((a: any, b: any) => {
           const dateA = new Date(a.timestamp).getTime();
           const dateB = new Date(b.timestamp).getTime();
           return dateB - dateA;
         });
+
       setCurrentRubrics(theUserRubrics);
     }
   }, [totalRubricsResult]);
@@ -138,6 +174,10 @@ export default function RubricsPage() {
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentRubrics?.map((item: Assessment) => (
             <div
+              onClick={() => {
+                setSelectedRubrics(item);
+                setIsOpenRubricsDetail(true);
+              }}
               key={item.id}
               className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
             >
@@ -148,7 +188,7 @@ export default function RubricsPage() {
                 width={400}
                 height={300}
               />
-              <div className="p-4  ">
+              <div className="p-4">
                 <>
                   <h3 className="text-base font-semibold dark:text-white text-zinc-800">
                     {item.name}
@@ -190,6 +230,13 @@ export default function RubricsPage() {
             updateRubricsFormValues={updateRubricsFormValues}
             setLoading={setLoading}
           />
+        </AnimatedModal>
+        <AnimatedModal
+          className="h-[85vh] overflow-scroll"
+          isOpen={isOpenRubricsDetail}
+          onClose={() => setIsOpenRubricsDetail(false)}
+        >
+          <RubricsDetail rubrics={selectedRubrics} />
         </AnimatedModal>
       </div>
     </ShowcaseLayout>

@@ -3,6 +3,7 @@ import { AnimatedSpinner } from "../AnimatedSpinner";
 import { Trash2 } from "lucide-react";
 import { FlatFormValues } from "../../../pages/showcase/pages/rubrics";
 import { EditableKeyValue } from "./EditableKeyValue";
+import { capitalCase } from "../../../utils/helper";
 
 interface UpdateRubricsForm {
   loading: boolean;
@@ -11,14 +12,6 @@ interface UpdateRubricsForm {
   rubricId: string;
   setLoading: (value: boolean) => void;
 }
-
-const capitalCase = (str: string) =>
-  str
-    .replace(/_/g, " ") // replace underscores with spaces
-    .replace(
-      /\w\S*/g,
-      (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
-    );
 
 export const UpdateRubricsForm = ({
   loading,

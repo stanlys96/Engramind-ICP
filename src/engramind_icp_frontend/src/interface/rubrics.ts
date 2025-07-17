@@ -18,6 +18,21 @@ export interface Assessment {
   scenario_id: any;
   timestamp: string;
   user_id: number;
+  material_id: string;
+  rubrics: FinalRubric;
+  visibility: boolean;
+}
+
+export interface AssessmentRaw {
+  id: string;
+  name: string;
+  organization_id: any;
+  rubric_id: string;
+  scenario_id: any;
+  timestamp: string;
+  user_id: number;
+  material_id: string;
+  rubrics: string;
 }
 
 export interface FinalRubric {
@@ -44,6 +59,9 @@ export interface PerformanceLevels {
   "Not Provided"?: string;
   Checklist?: string;
   Qualitative?: string;
+  Excellent: string;
+  Fair: string;
+  "No Attempt": string;
 }
 
 export interface ScoringGuide {
@@ -61,4 +79,7 @@ export interface PerformanceLevelsSummary {
   "Not Provided": string;
   Checklist: string;
   Qualitative: string;
+  Excellent: string;
+  Fair: string;
+  "No Attempt": string;
 }
