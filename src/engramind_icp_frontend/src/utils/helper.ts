@@ -85,26 +85,26 @@ export const personalityProfileData = (persona: PersonaData | null) => [
       "0",
   },
   {
-    id: 1,
+    id: 2,
     title: "Conscientiousness",
     value:
       persona?.persona_details?.personalityTraits?.bigFive?.conscientiousness ??
       "0",
   },
   {
-    id: 1,
+    id: 3,
     title: "Extraversion",
     value:
       persona?.persona_details?.personalityTraits?.bigFive?.extraversion ?? "0",
   },
   {
-    id: 1,
+    id: 4,
     title: "Neuroticism",
     value:
       persona?.persona_details?.personalityTraits?.bigFive?.neuroticism ?? "0",
   },
   {
-    id: 1,
+    id: 5,
     title: "Openness",
     value:
       persona?.persona_details?.personalityTraits?.bigFive?.openness ?? "0",
