@@ -5,4 +5,5 @@ export interface FileResponse {
   metadata: any;
   organization_id: any;
   status: string;
+  created_at: string;
 }

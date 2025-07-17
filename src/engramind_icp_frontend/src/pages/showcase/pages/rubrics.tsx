@@ -98,24 +98,17 @@ export default function RubricsPage() {
   }, []);
 
   useEffect(() => {
-    if (backend) {
-      backend
-        ?.getUserRubrics(Principal.fromText(name ?? ""))
-        ?.then((result) => {
-          const currentUserRubrics = result?.[0] ?? [];
-          if (
-            totalRubricsResult?.length > 0 &&
-            currentUserRubrics?.length > 0
-          ) {
-            const commonIds = selectCommonIds(
-              totalRubricsResult,
-              currentUserRubrics
-            );
-            setCurrentRubrics(commonIds);
-          }
+    if (totalRubricsResult?.length > 0) {
+      const theUserRubrics = totalRubricsResult
+        ?.filter((rubrics: Assessment) => rubrics.organization_id === name)
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.timestamp).getTime();
+          const dateB = new Date(b.timestamp).getTime();
+          return dateB - dateA;
         });
+      setCurrentRubrics(theUserRubrics);
     }
-  }, [backend, totalRubricsResult]);
+  }, [totalRubricsResult]);
 
   return (
     <ShowcaseLayout>

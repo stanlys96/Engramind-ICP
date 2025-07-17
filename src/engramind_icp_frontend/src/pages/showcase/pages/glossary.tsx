@@ -76,24 +76,17 @@ export default function GlossaryPage() {
   }, []);
 
   useEffect(() => {
-    if (backend) {
-      backend
-        ?.getUserGlossaries(Principal.fromText(name ?? ""))
-        ?.then((result) => {
-          const currentUserGlossaries = result?.[0] ?? [];
-          if (
-            totalGlossaryResult?.length > 0 &&
-            currentUserGlossaries?.length > 0
-          ) {
-            const commonIds = selectCommonIds(
-              totalGlossaryResult,
-              currentUserGlossaries
-            );
-            setCurrentGlossaries(commonIds);
-          }
+    if (totalGlossaryResult?.length > 0) {
+      const theUserGlossaries = totalGlossaryResult
+        ?.filter((glossary: GlossaryData) => glossary.organization_id === name)
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.timestamp).getTime();
+          const dateB = new Date(b.timestamp).getTime();
+          return dateB - dateA;
         });
+      setCurrentGlossaries(theUserGlossaries);
     }
-  }, [backend, totalGlossaryResult]);
+  }, [totalGlossaryResult]);
 
   return (
     <ShowcaseLayout>

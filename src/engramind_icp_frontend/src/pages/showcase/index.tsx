@@ -105,24 +105,17 @@ export default function ShowcasePage() {
   }, []);
 
   useEffect(() => {
-    if (backend) {
-      backend
-        ?.getUserPersonas(Principal.fromText(name ?? ""))
-        ?.then((result) => {
-          const currentUserPersonas = result?.[0] ?? [];
-          if (
-            totalPersonaResult?.length > 0 &&
-            currentUserPersonas?.length > 0
-          ) {
-            const commonIds = selectCommonIds(
-              totalPersonaResult,
-              currentUserPersonas
-            );
-            setCurrentPersonas(commonIds);
-          }
+    if (totalPersonaResult?.length > 0) {
+      const theUserPersonas = totalPersonaResult
+        ?.filter((persona: PersonaData) => persona.organization_id === name)
+        .sort((a: any, b: any) => {
+          const dateA = new Date(a.timestamp).getTime();
+          const dateB = new Date(b.timestamp).getTime();
+          return dateB - dateA;
         });
+      setCurrentPersonas(theUserPersonas);
     }
-  }, [backend, totalPersonaResult]);
+  }, [totalPersonaResult]);
 
   return (
     <ShowcaseLayout>
