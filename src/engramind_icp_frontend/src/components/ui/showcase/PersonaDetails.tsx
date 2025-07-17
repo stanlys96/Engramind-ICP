@@ -28,16 +28,16 @@ export const PersonaDetails = ({ persona, onEditPress }: Props) => {
           <p className="text-center dark:text-white text-black text-[26px] font-bold">
             {persona?.persona_details?.name}
           </p>
-          <div className="flex gap-x-2 items-center justify-center text-[#A1A1AA] mt-2">
+          <div className="flex md:flex-row flex-col gap-x-2 items-center justify-center text-[#A1A1AA] mt-2">
             <p>{persona?.persona_details?.occupation}</p>
-            <span>•</span>
+            <span className="md:block hidden">•</span>
             <p>{persona?.persona_details?.age} years old</p>
-            <span>•</span>
+            <span className="md:block hidden">•</span>
             <p>{persona?.persona_details?.nationality}</p>
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-2 gap-4 mt-[20px]">
+          <div className="grid md:grid-cols-2 gap-4 mt-[20px]">
             <div className="w-full bg-white dark:bg-[#27272A] rounded-[8px] p-[20px]">
               <p className="font-bold text-[18px]">Personal Details</p>
               {personalDetailsData(persona).map((personalDetail) => (
@@ -94,7 +94,7 @@ export const PersonaDetails = ({ persona, onEditPress }: Props) => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-4">
             <div className="w-full bg-white dark:bg-[#27272A] rounded-[8px] p-[20px]">
               <p className="font-bold text-[18px]">Skills & Abilities</p>
               <div className="my-3">
