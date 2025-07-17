@@ -198,6 +198,7 @@ export default function ShowcasePage() {
           />
         </AnimatedModal>
         <AnimatedModal
+          className="h-[85vh] overflow-scroll"
           isOpen={isOpenEditPersona}
           onClose={() => setIsOpenEditPersona(false)}
         >

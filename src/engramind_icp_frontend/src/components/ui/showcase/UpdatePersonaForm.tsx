@@ -14,10 +14,7 @@ export const UpdatePersonaForm = ({
   setIsOpen,
 }: UpdatePersonaForm) => {
   return (
-    <form
-      onSubmit={updateFormik.handleSubmit}
-      className="h-[85vh] overflow-scroll"
-    >
+    <form onSubmit={updateFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
         Edit Persona: {updateFormik.values.name}
       </h2>
