@@ -31,6 +31,7 @@ import IC from "../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { selectCommonIds } from "../../utils/helper";
 import { PersonaDetails } from "../../components/ui/showcase/PersonaDetails";
+import { toast } from "sonner";
 
 export default function ShowcasePage() {
   const name = Cookies.get("principal");
@@ -54,18 +55,29 @@ export default function ShowcasePage() {
   const updateFormik = useFormik<EditFormValues>({
     initialValues: updatePersonaInitialValues,
     onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Updating persona...", {
+        id: "update-persona",
+        duration: Infinity,
+      });
       try {
         setLoading(true);
         await axiosElwyn.put(
           `/assessment/persona-characters/${values.id}`,
           handleUpdateFormikBody(values)
         );
+        toast.success("Persona updated successfully!", {
+          id: toastId,
+          duration: 4000,
+        });
         personaMutate();
-        addToast({ message: "Successfully updated your persona!" });
         setLoading(false);
         setIsOpenEditPersona(false);
         resetForm();
       } catch (e) {
+        toast.error(e?.toString(), {
+          id: toastId,
+          duration: 4000,
+        });
         setLoading(false);
       }
     },
@@ -74,8 +86,13 @@ export default function ShowcasePage() {
   const createFormik = useFormik<CreateFormValues>({
     initialValues: createPersonaInitialValues,
     onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Creating persona...", {
+        id: "create-persona",
+        duration: Infinity,
+      });
       try {
         setLoading(true);
+
         const response = await axiosElwyn.post(
           "/assessment/live/persona-characters/create",
           {
@@ -91,13 +108,20 @@ export default function ShowcasePage() {
           personaResponse?.data?.id
         );
         personaMutate();
-        addToast({ message: "Successfully created your persona!" });
         populateUpdateFormik(updateFormik, personaResponse?.data);
         setLoading(false);
         setIsOpen(false);
         setIsOpenEditPersona(true);
         resetForm();
+        toast.success("Persona created successfully!", {
+          id: toastId,
+          duration: 4000,
+        });
       } catch (e) {
+        toast.error(e?.toString(), {
+          id: toastId,
+          duration: 4000,
+        });
         setLoading(false);
       }
     },

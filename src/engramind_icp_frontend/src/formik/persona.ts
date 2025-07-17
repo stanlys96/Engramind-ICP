@@ -6,6 +6,7 @@ export const createPersonaInitialValues = {
 export const updatePersonaInitialValues = {
   id: "",
   name: "",
+  persona_name: "",
   age: "",
   gender: "",
   occupation: "",

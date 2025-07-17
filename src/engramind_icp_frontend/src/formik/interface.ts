@@ -6,6 +6,7 @@ export interface CreateFormValues {
 export interface EditFormValues {
   id: string;
   name: string;
+  persona_name: string;
   age: string;
   gender: string;
   occupation: string;

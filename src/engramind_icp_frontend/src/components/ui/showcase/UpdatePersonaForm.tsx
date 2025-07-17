@@ -22,16 +22,16 @@ export const UpdatePersonaForm = ({
         <div className="flex gap-x-4 w-full">
           <div className="w-full">
             <label
-              htmlFor="name"
+              htmlFor="persona_name"
               className="block mb-1 text-gray-700 text-md dark:text-white"
             >
               Name
             </label>
             <input
-              id="name"
-              name="name"
+              id="persona_name"
+              name="persona_name"
               type="text"
-              value={updateFormik.values.name}
+              value={updateFormik.values.persona_name}
               onChange={updateFormik.handleChange}
               onBlur={updateFormik.handleBlur}
               placeholder="Enter persona name"

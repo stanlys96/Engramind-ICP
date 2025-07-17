@@ -7,7 +7,11 @@ export const populateUpdateFormik = (
   personaData: PersonaData
 ) => {
   updateFormik.setFieldValue("id", personaData?.id);
-  updateFormik.setFieldValue("name", personaData?.persona_details?.name);
+  updateFormik.setFieldValue("name", personaData?.name);
+  updateFormik.setFieldValue(
+    "persona_name",
+    personaData?.persona_details?.name
+  );
   updateFormik.setFieldValue("age", personaData?.persona_details?.age);
   updateFormik.setFieldValue("gender", personaData?.persona_details?.gender);
   updateFormik.setFieldValue(
@@ -124,7 +128,7 @@ export const handleUpdateFormikBody = (values: EditFormValues) => {
   return {
     name: values.name,
     persona_details: {
-      name: values.name,
+      name: values.persona_name,
       age: values.age,
       gender: values.gender,
       occupation: values.occupation,
