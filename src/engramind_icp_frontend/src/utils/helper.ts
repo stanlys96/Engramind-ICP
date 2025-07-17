@@ -1,3 +1,5 @@
+import { PersonaData } from "../interface";
+
 export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
     secondArray.map((item: any) => item.id)
@@ -41,3 +43,70 @@ export function selectCommonFiles(firstArray: any, secondArray: any): any {
 
   return commonItems;
 }
+
+export function formatBackgroundInput(text: string): string {
+  const [main, context] = text.split("--- Input Context/Rubric Provided: ---");
+
+  const cleanedMain = main.trim();
+  const cleanedContext = context?.trim();
+
+  return `${cleanedMain}<br/><br/>--- Input Context/Rubric Provided: ---<br/>${cleanedContext}`;
+}
+
+export const personalDetailsData = (persona: PersonaData | null) => [
+  {
+    id: 1,
+    title: "Birthdate",
+    value: persona?.persona_details?.birthdate,
+  },
+  {
+    id: 2,
+    title: "Gender",
+    value: persona?.persona_details?.gender,
+  },
+  {
+    id: 3,
+    title: "Hometown",
+    value: persona?.persona_details?.hometown,
+  },
+  {
+    id: 4,
+    title: "Languages",
+    value: persona?.persona_details?.language,
+  },
+];
+
+export const personalityProfileData = (persona: PersonaData | null) => [
+  {
+    id: 1,
+    title: "Agreeableness",
+    value:
+      persona?.persona_details?.personalityTraits?.bigFive?.agreeableness ??
+      "0",
+  },
+  {
+    id: 1,
+    title: "Conscientiousness",
+    value:
+      persona?.persona_details?.personalityTraits?.bigFive?.conscientiousness ??
+      "0",
+  },
+  {
+    id: 1,
+    title: "Extraversion",
+    value:
+      persona?.persona_details?.personalityTraits?.bigFive?.extraversion ?? "0",
+  },
+  {
+    id: 1,
+    title: "Neuroticism",
+    value:
+      persona?.persona_details?.personalityTraits?.bigFive?.neuroticism ?? "0",
+  },
+  {
+    id: 1,
+    title: "Openness",
+    value:
+      persona?.persona_details?.personalityTraits?.bigFive?.openness ?? "0",
+  },
+];

@@ -771,7 +771,7 @@ export const UpdatePersonaForm = ({
             />
           </div>
         </div>
-        <div className="bg-zinc-200 h-[1px] w-full" />
+        <div className="dark:bg-[#88888850] bg-zinc-200 h-[1px] w-full" />
         <div className="mt-3 flex gap-x-2 justify-end">
           <button
             type="button"

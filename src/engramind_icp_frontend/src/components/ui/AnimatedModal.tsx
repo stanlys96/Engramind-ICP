@@ -40,6 +40,7 @@ interface AnimatedModalProps {
   children?: ReactNode;
   widthFitContainer?: boolean;
   showCrossIcon?: boolean;
+  className?: string;
 }
 
 export const AnimatedModal = ({
@@ -48,6 +49,7 @@ export const AnimatedModal = ({
   children,
   widthFitContainer = false,
   showCrossIcon = true,
+  className,
 }: AnimatedModalProps) => {
   useEffect(() => {
     const handleEsc = (e: any) => e.key === "Escape" && onClose();
@@ -67,7 +69,7 @@ export const AnimatedModal = ({
           onClick={onClose}
         >
           <motion.div
-            className={`absolute top-1/2 left-1/2 bg-zinc-50 dark:bg-zinc-900 rounded-2xl shadow-xl p-6 ${
+            className={`${className} absolute border dark:border-zinc-700 border-zinc-200 top-1/2 left-1/2 bg-[#FEFEFE] dark:bg-[#101213] rounded-2xl shadow-xl p-6 ${
               widthFitContainer ? "" : "w-full lg:w-[80%]"
             }`}
             variants={modal}

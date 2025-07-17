@@ -1,133 +1,122 @@
 import { FormikProps } from "formik";
 import { EditFormValues } from "../formik";
-import { PersonaResponse } from "../interface";
+import { PersonaData } from "../interface";
 
 export const populateUpdateFormik = (
   updateFormik: FormikProps<EditFormValues>,
-  personaResponse: PersonaResponse
+  personaData: PersonaData
 ) => {
-  updateFormik.setFieldValue("id", personaResponse?.data?.id);
-  updateFormik.setFieldValue("name", personaResponse?.data?.name);
-  updateFormik.setFieldValue(
-    "age",
-    personaResponse?.data?.persona_details?.age
-  );
-  updateFormik.setFieldValue(
-    "gender",
-    personaResponse?.data?.persona_details?.gender
-  );
+  updateFormik.setFieldValue("id", personaData?.id);
+  updateFormik.setFieldValue("name", personaData?.persona_details?.name);
+  updateFormik.setFieldValue("age", personaData?.persona_details?.age);
+  updateFormik.setFieldValue("gender", personaData?.persona_details?.gender);
   updateFormik.setFieldValue(
     "occupation",
-    personaResponse?.data?.persona_details?.occupation
+    personaData?.persona_details?.occupation
   );
   updateFormik.setFieldValue(
     "language",
-    personaResponse?.data?.persona_details?.language
+    personaData?.persona_details?.language
   );
   updateFormik.setFieldValue(
     "hometown",
-    personaResponse?.data?.persona_details?.hometown
+    personaData?.persona_details?.hometown
   );
   updateFormik.setFieldValue(
     "birthdate",
-    personaResponse?.data?.persona_details?.birthdate
+    personaData?.persona_details?.birthdate
   );
   updateFormik.setFieldValue(
     "nationality",
-    personaResponse?.data?.persona_details?.nationality
+    personaData?.persona_details?.nationality
   );
   updateFormik.setFieldValue(
     "background",
-    personaResponse?.data?.persona_details?.background
+    personaData?.persona_details?.background
   );
   updateFormik.setFieldValue(
     "scenarioSnippet",
-    personaResponse?.data?.persona_details?.scenarioSnippet
+    personaData?.persona_details?.scenarioSnippet
   );
   updateFormik.setFieldValue(
     "mbtiType",
-    personaResponse?.data?.persona_details?.personalityTraits?.mbtiType
+    personaData?.persona_details?.personalityTraits?.mbtiType
   );
   updateFormik.setFieldValue(
     "enneagramType",
-    personaResponse?.data?.persona_details?.personalityTraits?.enneagramType
+    personaData?.persona_details?.personalityTraits?.enneagramType
   );
   updateFormik.setFieldValue(
     "openness",
-    personaResponse?.data?.persona_details?.personalityTraits?.bigFive?.openness
+    personaData?.persona_details?.personalityTraits?.bigFive?.openness
   );
   updateFormik.setFieldValue(
     "conscientiousness",
-    personaResponse?.data?.persona_details?.personalityTraits?.bigFive
-      ?.conscientiousness
+    personaData?.persona_details?.personalityTraits?.bigFive?.conscientiousness
   );
   updateFormik.setFieldValue(
     "extraversion",
-    personaResponse?.data?.persona_details?.personalityTraits?.bigFive
-      ?.extraversion
+    personaData?.persona_details?.personalityTraits?.bigFive?.extraversion
   );
   updateFormik.setFieldValue(
     "agreeableness",
-    personaResponse?.data?.persona_details?.personalityTraits?.bigFive
-      ?.agreeableness
+    personaData?.persona_details?.personalityTraits?.bigFive?.agreeableness
   );
   updateFormik.setFieldValue(
     "neuroticism",
-    personaResponse?.data?.persona_details?.personalityTraits?.bigFive
-      ?.neuroticism
+    personaData?.persona_details?.personalityTraits?.bigFive?.neuroticism
   );
   updateFormik.setFieldValue(
     "skillsAndAbilities",
-    personaResponse?.data?.persona_details?.skillsAndAbilities
+    personaData?.persona_details?.skillsAndAbilities
   );
   updateFormik.setFieldValue(
     "motivationsAndGoals",
-    personaResponse?.data?.persona_details?.motivationsAndGoals
+    personaData?.persona_details?.motivationsAndGoals
   );
   updateFormik.setFieldValue(
     "build",
-    personaResponse?.data?.persona_details?.physicalDescription?.build
+    personaData?.persona_details?.physicalDescription?.build
   );
   updateFormik.setFieldValue(
     "height",
-    personaResponse?.data?.persona_details?.physicalDescription?.height
+    personaData?.persona_details?.physicalDescription?.height
   );
   updateFormik.setFieldValue(
     "eyeColor",
-    personaResponse?.data?.persona_details?.physicalDescription?.eyeColor
+    personaData?.persona_details?.physicalDescription?.eyeColor
   );
   updateFormik.setFieldValue(
     "skinTone",
-    personaResponse?.data?.persona_details?.physicalDescription?.skinTone
+    personaData?.persona_details?.physicalDescription?.skinTone
   );
   updateFormik.setFieldValue(
     "hairColor",
-    personaResponse?.data?.persona_details?.physicalDescription?.hairColor
+    personaData?.persona_details?.physicalDescription?.hairColor
   );
   updateFormik.setFieldValue(
     "hairStyle",
-    personaResponse?.data?.persona_details?.physicalDescription?.hairStyle
+    personaData?.persona_details?.physicalDescription?.hairStyle
   );
   updateFormik.setFieldValue(
     "typicalAttire",
-    personaResponse?.data?.persona_details?.physicalDescription?.typicalAttire
+    personaData?.persona_details?.physicalDescription?.typicalAttire
   );
   updateFormik.setFieldValue(
     "distinguishingFeatures",
-    personaResponse?.data?.persona_details?.physicalDescription
-      ?.distinguishingFeatures
+    personaData?.persona_details?.physicalDescription?.distinguishingFeatures
   );
   updateFormik.setFieldValue(
     "industryRelevance",
-    personaResponse?.data?.persona_details?.industryRelevance
+    personaData?.persona_details?.industryRelevance
   );
   updateFormik.setFieldValue(
     "relevanceToScenario",
-    personaResponse?.data?.persona_details?.relevanceToScenario
+    personaData?.persona_details?.relevanceToScenario
   );
   updateFormik.setFieldValue(
     "challengesAndGrowthAreas",
-    personaResponse?.data?.persona_details?.challengesAndGrowthAreas
+    personaData?.persona_details?.challengesAndGrowthAreas
   );
 };
 

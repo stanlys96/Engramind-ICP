@@ -1,7 +1,7 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useToast } from "../../toast/toast";
 import { axiosElwyn, fetcherElwyn } from "../../utils/api";
 import { useFormik } from "formik";
@@ -30,16 +30,21 @@ import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engrami
 import IC from "../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { selectCommonIds } from "../../utils/helper";
+import { PersonaDetails } from "../../components/ui/showcase/PersonaDetails";
 
 export default function ShowcasePage() {
   const name = Cookies.get("principal");
-  console.log(name);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
+  const [isOpenPersonaDetails, setIsOpenPersonaDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
   const [currentPersonas, setCurrentPersonas] = useState<PersonaData[]>();
+  const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
+    null
+  );
   const { addToast } = useToast();
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
     `/assessment/persona-characters`,
@@ -87,7 +92,7 @@ export default function ShowcasePage() {
         );
         personaMutate();
         addToast({ message: "Successfully created your persona!" });
-        populateUpdateFormik(updateFormik, personaResponse);
+        populateUpdateFormik(updateFormik, personaResponse?.data);
         setLoading(false);
         setIsOpen(false);
         setIsOpenEditPersona(true);
@@ -97,6 +102,12 @@ export default function ShowcasePage() {
       }
     },
   });
+
+  const handleSelectedPersona = useCallback((persona: PersonaData) => {
+    setIsOpen(false);
+    setIsOpenPersonaDetails(true);
+    setSelectedPersona(persona);
+  }, []);
 
   useEffect(() => {
     IC.getBackend((result: _SERVICE) => {
@@ -147,7 +158,7 @@ export default function ShowcasePage() {
           {currentPersonas?.map((item: PersonaData) => (
             <div
               key={item.id}
-              // onClick={() => handleSelectedScenario(item)}
+              onClick={() => handleSelectedPersona(item)}
               className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
             >
               <img
@@ -194,6 +205,22 @@ export default function ShowcasePage() {
             loading={loading}
             updateFormik={updateFormik}
             setIsOpen={setIsOpenEditPersona}
+          />
+        </AnimatedModal>
+        <AnimatedModal
+          className="h-[85vh] overflow-scroll"
+          isOpen={isOpenPersonaDetails}
+          onClose={() => setIsOpenPersonaDetails(false)}
+        >
+          <PersonaDetails
+            onEditPress={() => {
+              if (selectedPersona) {
+                populateUpdateFormik(updateFormik, selectedPersona);
+              }
+              setIsOpenPersonaDetails(false);
+              setIsOpenEditPersona(true);
+            }}
+            persona={selectedPersona}
           />
         </AnimatedModal>
       </div>
