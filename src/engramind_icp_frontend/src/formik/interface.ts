@@ -64,4 +64,6 @@ interface PerformanceLevel {
 export interface CreateUpdateGlossaryValues {
   name: string;
   content: string;
+  createOrUpdate: string;
+  createdOn: string;
 }

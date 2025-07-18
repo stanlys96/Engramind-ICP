@@ -1,6 +1,7 @@
 import { FormikProps } from "formik";
 import { CreateUpdateGlossaryValues } from "../../../formik/interface";
 import { AnimatedSpinner } from "../AnimatedSpinner";
+import { useRef } from "react";
 
 interface CreateOrUpdateGlossaryForm {
   loading: boolean;
@@ -13,11 +14,24 @@ export const CreateOrUpdateGlossaryForm = ({
   createFormik,
   setIsOpen,
 }: CreateOrUpdateGlossaryForm) => {
+  const nameCopyRef = useRef(createFormik?.values?.name);
   return (
     <form onSubmit={createFormik.handleSubmit}>
-      <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
-        ⚡ Create New Glossary
+      <h2
+        className={`text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white ${
+          createFormik?.values?.createOrUpdate === "create" ? "mb-[15px]" : ""
+        }`}
+      >
+        ⚡{" "}
+        {createFormik?.values?.createOrUpdate === "create"
+          ? "Create New Glossary"
+          : nameCopyRef?.current}
       </h2>
+      {createFormik?.values?.createOrUpdate === "update" && (
+        <p className="text-[#73808C] mb-2">
+          Created on {createFormik?.values?.createdOn?.slice(0, 10)}
+        </p>
+      )}
       <label
         htmlFor="name"
         className="block mb-1 text-gray-700 text-md dark:text-white"
@@ -81,7 +95,13 @@ export const CreateOrUpdateGlossaryForm = ({
           }`}
         >
           <AnimatedSpinner show={loading} />
-          {loading ? "Creating..." : "Create Glossary"}
+          {loading
+            ? createFormik?.values?.createOrUpdate === "create"
+              ? "Creating..."
+              : "Updating..."
+            : createFormik?.values?.createOrUpdate === "create"
+            ? "Create Glossary"
+            : "Update Glossary"}
         </button>
       </div>
     </form>
