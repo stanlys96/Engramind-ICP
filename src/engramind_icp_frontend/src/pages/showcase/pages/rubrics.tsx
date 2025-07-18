@@ -24,6 +24,7 @@ import { Principal } from "@dfinity/principal";
 import useSWR from "swr";
 import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
+import { extractAndParseRubricJSON } from "../../../utils/helper";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -78,15 +79,7 @@ export default function RubricsPage() {
           duration: 4000,
         });
         const raw = result?.data?.final_rubric;
-        const cleaned = raw
-          .replace(/^"```json\\n/, "") // Remove leading "```json\n
-          .replace(/\\n```"$/, "") // Remove trailing \n```"
-          .replace(/\\"/g, '"') // Convert escaped quotes
-          .replace(/\\n/g, "\n")
-          .replaceAll("```json", "")
-          .replaceAll("```", "")
-          .trim();
-        const finalRubricParsed = JSON.parse(cleaned) as FinalRubric;
+        const finalRubricParsed = extractAndParseRubricJSON(raw);
         const finalResult = {
           ...finalRubricParsed,
           name: result?.data?.assessment?.name?.replace(
@@ -122,18 +115,9 @@ export default function RubricsPage() {
       const theUserRubrics: Assessment[] = totalRubricsResult
         ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
         ?.map((rubricsData: AssessmentRaw) => {
-          const cleaned = rubricsData?.rubrics
-            ?.replace(/^"```json\\n/, "") // Remove leading "```json\n
-            .replace(/\\n```"$/, "") // Remove trailing \n```"
-            .replace(/\\"/g, '"') // Convert escaped quotes
-            .replace(/\\n/g, "\n")
-            .replaceAll("```json", "")
-            .replaceAll("```", "")
-            .trim();
-          const finalRubricParsed = JSON.parse(cleaned) as FinalRubric;
           return {
             ...rubricsData,
-            rubrics: finalRubricParsed,
+            rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
           };
         })
         .sort((a: any, b: any) => {

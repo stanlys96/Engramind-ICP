@@ -1,4 +1,4 @@
-import { PersonaData } from "../interface";
+import { Assessment, PersonaData } from "../interface";
 
 export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
@@ -118,3 +118,21 @@ export const capitalCase = (str: string) =>
       /\w\S*/g,
       (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()
     );
+
+export function extractAndParseRubricJSON(input: string): Assessment | null {
+  const jsonRegex = /```json\s*({[\s\S]*?})\s*```/;
+  const match = input.match(jsonRegex);
+
+  if (match && match[1]) {
+    try {
+      const json = JSON.parse(match[1]);
+      return json;
+    } catch (error) {
+      console.error("Failed to parse JSON:", error);
+      return null;
+    }
+  } else {
+    console.warn("No valid JSON block found in the input.");
+    return null;
+  }
+}
