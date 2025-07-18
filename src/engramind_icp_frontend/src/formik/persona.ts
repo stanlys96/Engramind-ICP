@@ -1,6 +1,7 @@
 export const createPersonaInitialValues = {
   name: "",
   personaPrompt: "",
+  files: [],
 };
 
 export const updatePersonaInitialValues = {
@@ -41,4 +42,5 @@ export const updatePersonaInitialValues = {
 export const createRubricInitialValues = {
   name: "",
   description: "",
+  files: [],
 };

@@ -5,6 +5,11 @@ import { AnimatedSpinner } from "../AnimatedSpinner";
 import { AnimatedModal } from "../AnimatedModal";
 import { UploadFileForm } from "./UploadFileForm";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import useSWR from "swr";
+import { fetcherElwyn } from "../../../utils/api";
+import { FileResponse } from "../../../interface";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 interface CreateRubricForm {
   loading: boolean;
@@ -22,6 +27,14 @@ export const CreateRubricForm = ({
   setUploading,
 }: CreateRubricForm) => {
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
+  const name = Cookies.get("principal");
+
+  const { data: totalFilesData, mutate: filesMutate } = useSWR(
+    `/conversational/files/organization?organization_id=${name}`,
+    fetcherElwyn
+  );
+
+  const totalFilesResult = totalFilesData?.data?.files;
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
@@ -34,8 +47,20 @@ export const CreateRubricForm = ({
         <AnimatedDropdown
           loading={loading}
           label="Select file to add..."
-          options={["Profile", "Settings", "Logout"]}
-          onSelect={(e) => {}}
+          options={totalFilesResult
+            ?.filter((x: FileResponse) => {
+              const currentIds = createFormik.values.files.map(
+                (x: FileResponse) => x.file_id
+              );
+              return !currentIds.includes(x.file_id);
+            })
+            .map((result: FileResponse) => result.filename)}
+          onSelect={(e) => {
+            createFormik.setFieldValue("files", [
+              ...createFormik.values.files,
+              totalFilesResult?.find((x: FileResponse) => x.filename === e),
+            ]);
+          }}
           customClassName="w-[100%] md:w-[80%]"
         />
       </div>
@@ -52,6 +77,41 @@ export const CreateRubricForm = ({
           Upload New File
         </button>
       </div>
+      {createFormik?.values?.files &&
+        createFormik?.values?.files?.length > 0 && (
+          <div className="mb-2 w-full">
+            <p>Selected files:</p>
+            <div className={`relative inline-block text-left mt-1 w-full`}>
+              <div
+                className={`w-full flex gap-x-2 flex-wrap shadow-sm border text-[#888] focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded text-left px-2 py-1 text-[14px]`}
+              >
+                {createFormik?.values?.files?.map(
+                  (val: FileResponse, index) => (
+                    <div
+                      key={index}
+                      className="flex gap-x-2 items-center rounded-md dark:bg-zinc-800 bg-zinc-200 px-2 py-1 text-sm my-1"
+                    >
+                      <p>{val?.filename}</p>
+                      <div
+                        onClick={() => {
+                          createFormik.setFieldValue(
+                            "files",
+                            createFormik.values.files.filter(
+                              (x: FileResponse) => x.file_id !== val.file_id
+                            )
+                          );
+                        }}
+                        className="cursor-pointer p-[2px] rounded-full hover:bg-black dark:hover:bg-white"
+                      >
+                        <Cross2Icon fontSize={5} />
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       <label
         htmlFor="name"
         className="block mb-1 text-gray-700 text-md dark:text-white"
@@ -134,6 +194,7 @@ export const CreateRubricForm = ({
           setLoading={setUploading}
           setIsOpen={setAnimatedModalOpen}
           loading={uploading}
+          filesMutate={filesMutate}
         />
       </AnimatedModal>
     </form>

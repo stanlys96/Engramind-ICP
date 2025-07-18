@@ -2,7 +2,6 @@
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { useEffect, useState } from "react";
-import { useToast } from "../../../toast/toast";
 import {
   SearchBar,
   AnimatedModal,
@@ -20,7 +19,6 @@ import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
-import { selectCommonIds } from "../../../utils/helper";
 import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
 
@@ -74,14 +72,13 @@ export default function GlossaryPage() {
             result.data.id
           );
         } else {
-          const response = await axiosElwyn.put(
+          await axiosElwyn.put(
             `/assessment/scenario-glossary/${selectedGlossary?.id}`,
             {
               name: values.name,
               glossary: values.content,
             }
           );
-          console.log(response);
         }
 
         glossaryMutate();

@@ -30,6 +30,7 @@ import IC from "../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { PersonaDetails } from "../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
+import { FileResponse } from "../../interface";
 
 export default function ShowcasePage() {
   const name = Cookies.get("principal");
@@ -89,13 +90,14 @@ export default function ShowcasePage() {
       });
       try {
         setLoading(true);
-
+        const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosElwyn.post(
           "/assessment/live/persona-characters/create",
           {
             name: values.name,
             persona_prompt: values.personaPrompt,
             organization_id: name,
+            file_ids: fileIdsTemp,
           }
         );
         const personaResponse = response.data as PersonaResponse;

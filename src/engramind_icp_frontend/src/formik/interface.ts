@@ -1,6 +1,9 @@
+import { FileResponse } from "../interface";
+
 export interface CreateFormValues {
   name: string;
   personaPrompt: string;
+  files: FileResponse[];
 }
 
 export interface EditFormValues {
@@ -41,6 +44,7 @@ export interface EditFormValues {
 export interface CreateRubricValues {
   name: string;
   description: string;
+  files: FileResponse[];
 }
 
 export interface EditRubricValues {

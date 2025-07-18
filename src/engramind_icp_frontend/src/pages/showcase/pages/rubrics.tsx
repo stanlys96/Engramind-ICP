@@ -14,6 +14,7 @@ import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricFo
 import {
   Assessment,
   AssessmentRaw,
+  FileResponse,
   FinalRubric,
   RubricsResponse,
 } from "../../../interface";
@@ -59,12 +60,14 @@ export default function RubricsPage() {
       });
       try {
         setLoading(true);
+        const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
         const response = await axiosElwyn.post(
           "/assessment/live/rubrics/create",
           {
             name: values.name,
-            persona_prompt: values.description,
+            rubrics_description: values.description,
             organization_id: name,
+            file_ids: fileIdsTemp,
           }
         );
         const result = response.data as RubricsResponse;
