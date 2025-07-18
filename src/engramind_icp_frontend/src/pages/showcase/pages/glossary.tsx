@@ -21,6 +21,7 @@ import { Principal } from "@dfinity/principal";
 import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
 import { selectCommonIds } from "../../../utils/helper";
+import { toast } from "sonner";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -30,17 +31,25 @@ export default function GlossaryPage() {
   const [loading, setLoading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
   const [currentGlossaries, setCurrentGlossaries] = useState<GlossaryData[]>();
+  const [selectedGlossary, setSelectedGlossary] = useState<GlossaryData | null>(
+    null
+  );
+  const [isOpenGlossaryDetail, setIsOpenGlossaryDetail] =
+    useState<boolean>(false);
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
     `/assessment/scenario-glossary`,
     fetcherElwyn
   );
-  const { addToast } = useToast();
 
   const totalGlossaryResult = totalGlossaryData?.data?.data;
 
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
     onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Adding rubrics...", {
+        id: "adding-rubrics",
+        duration: Infinity,
+      });
       try {
         setLoading(true);
         const response = await axiosElwyn.post(
@@ -58,7 +67,6 @@ export default function GlossaryPage() {
           result.data.id
         );
         glossaryMutate();
-        addToast({ message: "Successfully created your glossary!" });
         setLoading(false);
         setIsOpen(false);
         resetForm();
@@ -152,6 +160,10 @@ export default function GlossaryPage() {
             setIsOpen={setIsOpen}
           />
         </AnimatedModal>
+        <AnimatedModal
+          isOpen={isOpenGlossaryDetail}
+          onClose={() => setIsOpenGlossaryDetail(false)}
+        ></AnimatedModal>
       </div>
     </ShowcaseLayout>
   );
