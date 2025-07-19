@@ -1,29 +1,16 @@
 "use client";
 import { EllipsisVertical, PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
-import { useEffect, useRef, useState } from "react";
-import { useToast } from "../../toast/toast";
+import { useState } from "react";
 import { SearchBar, AnimatedModal, CategoryFilter } from "../../components/ui";
-import { useFormik } from "formik";
-import {
-  createUpdateGlossaryInitialValues,
-  CreateUpdateGlossaryValues,
-} from "../../formik";
-import axios from "axios";
-import {
-  API_BASE_URL,
-  API_KEY,
-  API_REQUEST_FROM,
-  axiosElwyn,
-  fetcherElwyn,
-} from "../../utils/api";
+import { axiosElwyn, fetcherElwyn } from "../../utils/api";
 import Cookies from "js-cookie";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
 import { Category } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
-import { Button, Popover } from "antd";
+import { Popover } from "antd";
 import { ConversationForm } from "../../components/ui/showcase/ConversationForm";
 
 export type FlatFormValues = Record<string, any>;
@@ -37,16 +24,7 @@ export default function ScenariosPage() {
   const [currentConversation, setCurrentConversation] =
     useState<RoleplayResponse | null>(null);
   const [conversationId, setConversationId] = useState<string>("");
-  const [open, setOpen] = useState(false);
 
-  const hide = () => {
-    setOpenPopoverIndex(null);
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen);
-  };
-  const { addToast } = useToast();
   const navigate = useNavigate();
 
   const { data: totalScenariosData, mutate: totalScenariosMutate } = useSWR(
@@ -60,35 +38,6 @@ export default function ScenariosPage() {
       description: JSON.parse(result?.description),
     })
   );
-
-  const createFormik = useFormik<CreateUpdateGlossaryValues>({
-    initialValues: createUpdateGlossaryInitialValues,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        setLoading(true);
-        const response = await axios.post(
-          `${API_BASE_URL}/assessment/scenario-glossary`,
-          {
-            name: values.name,
-            glossary: values.content,
-          },
-          {
-            headers: {
-              "X-AI_TOKEN": API_KEY,
-              "X-REQUEST_FROM": API_REQUEST_FROM,
-            },
-          }
-        );
-        addToast({ message: "Successfully created your glossary!" });
-        setLoading(false);
-        setIsOpen(false);
-        resetForm();
-      } catch (e) {
-        console.log(e, "<<<< EEE");
-        setLoading(false);
-      }
-    },
-  });
 
   return (
     <ShowcaseLayout>

@@ -5,9 +5,10 @@ import {
   LucideSendHorizontal,
   MonitorSpeaker,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
 import { RoleplayResponse } from "../../../interface";
+import ChatLoading from "./ChatLoading";
 
 interface Props {
   currentConversation: RoleplayResponse | null;
@@ -15,6 +16,8 @@ interface Props {
   onClose?: () => void;
 }
 
+const apiKey =
+  "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";
 export const ConversationForm = ({
   currentConversation,
   conversationId,
@@ -23,39 +26,119 @@ export const ConversationForm = ({
   const [responseText, setResponseText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [conversationMessages, setConversationMessages] = useState<any>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleStream = async () => {
-    setIsLoading(true);
-    setResponseText("");
-    const res = await fetch(`${API_BASE_URL}/conversational/roleplay-chat`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-AI_TOKEN": API_KEY,
-        "X-REQUEST_FROM": API_REQUEST_FROM,
-      },
-      body: JSON.stringify({
-        scenario_conv_list_id: conversationId,
-        message: message,
-      }),
-    });
+    try {
+      setConversationMessages((prevState: any) => [
+        ...prevState,
+        { user: "person", message: message },
+      ]);
+      setMessage("");
 
-    const reader = res.body?.getReader();
-    const decoder = new TextDecoder("utf-8");
+      setIsLoading(true);
+      setResponseText("");
+      let result = "";
+      // --- REAL IMPLEMENTATION OF ELWYN CONVERSATIONS ---
+      // const res = await fetch(`${API_BASE_URL}/conversational/roleplay-chat`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "X-AI_TOKEN": API_KEY,
+      //     "X-REQUEST_FROM": API_REQUEST_FROM,
+      //   },
+      //   body: JSON.stringify({
+      //     scenario_conv_list_id: conversationId,
+      //     message: message,
+      //   }),
+      // });
 
-    let result = "";
-    while (true) {
-      const { done, value } = await reader!.read();
-      if (done) break;
-      result += decoder.decode(value, { stream: true });
-      setResponseText(result);
+      // const reader = res.body?.getReader();
+      // const decoder = new TextDecoder("utf-8");
+
+      // while (true) {
+      //   const { done, value } = await reader!.read();
+      //   if (done) break;
+      //   result += decoder.decode(value, { stream: true });
+      //   setResponseText(result);
+      // }
+
+      // result += decoder.decode();
+      // setResponseText("");
+      // setConversationMessages((prevState: any) => [
+      //   ...prevState,
+      //   { user: "bot", message: result },
+      // ]);
+
+      // --- MOCK IMPLEMENTATION WITH OPEN ROUTER API ---
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-3.5-turbo",
+          stream: true,
+          messages: [{ role: "user", content: message }],
+        }),
+      });
+      setIsLoading(false);
+      const reader = res.body?.getReader();
+      if (!reader) {
+        throw new Error("Response body is not readable");
+      }
+      const decoder = new TextDecoder();
+      let buffer = "";
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          // Append new chunk to buffer
+          buffer += decoder.decode(value, { stream: true });
+          // Process complete lines from buffer
+          while (true) {
+            const lineEnd = buffer.indexOf("\n");
+            if (lineEnd === -1) break;
+            const line = buffer.slice(0, lineEnd).trim();
+            buffer = buffer.slice(lineEnd + 1);
+            if (line.startsWith("data: ")) {
+              const data = line.slice(6);
+              if (data === "[DONE]") break;
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices[0].delta.content;
+                if (content) {
+                  console.log(content, "<< CONTENT");
+                  result += content;
+                  setResponseText(result);
+                }
+              } catch (e) {
+                // Ignore invalid JSON
+              }
+            }
+          }
+        }
+      } finally {
+        setResponseText("");
+        setIsLoading(false);
+        setConversationMessages((prevState: any) => [
+          ...prevState,
+          { user: "bot", message: result },
+        ]);
+        reader.cancel();
+      }
+    } catch (e) {
+      setIsLoading(false);
     }
-
-    result += decoder.decode();
-    setResponseText(result);
   };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [conversationMessages, isLoading, responseText]);
   return (
-    <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
+    <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
       <button
         type="button"
         onClick={onClose}
@@ -83,68 +166,106 @@ export const ConversationForm = ({
                 <small className="text-sm font-medium leading-none">
                   Assistant
                 </small>
-                <div className="rounded-xl border bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
+                <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
                   <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
                     <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
                       <ul>
                         <li>
-                          <MonitorSpeaker />
+                          <MonitorSpeaker size={20} />
                         </li>
                       </ul>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-between mt-0.25">
-                  <button className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75">
-                    <LucideCopy />
+                  <button className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75">
+                    <LucideCopy size={15} />
                   </button>
                 </div>
               </div>
             </div>
-            <div className="ml-4 md:ml-10 my-2 flex flex-col items-end">
-              <div className="flex-col max-w-[calc(100%-3.5rem)]">
-                <div className="rounded-xl border bg-card text-card-foreground shadow pt-5 rounded-tr">
-                  <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content break-words">
-                    <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                      <p>hey</p>
+            {conversationMessages?.map((conversationMessage: any) =>
+              conversationMessage?.user === "person" ? (
+                <div className="ml-4 md:ml-10 my-2 flex flex-col items-end">
+                  <div className="flex-col max-w-[calc(100%-3.5rem)]">
+                    <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tr">
+                      <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content break-words">
+                        <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
+                          <p>{conversationMessage?.message}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <div className="mr-4 md:mr-10 my-2 flex gap-2">
-              <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
-                AI
-              </div>
-              <div className="flex-col max-w-[calc(100%-3.5rem)]">
-                <small className="text-sm font-medium leading-none">
-                  Assistant
-                </small>
-                <div className="rounded-xl border bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
-                  <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content break-words">
-                    <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                      <p>{responseText}</p>
+              ) : (
+                <div className="mr-4 md:mr-10 my-2 flex gap-2">
+                  <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
+                    AI
+                  </div>
+                  <div className="flex-col max-w-[calc(100%-3.5rem)]">
+                    <small className="text-sm font-medium leading-none">
+                      Assistant
+                    </small>
+                    <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
+                      <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content break-words">
+                        <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
+                          <p>{conversationMessage?.message}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mt-0.25">
+                      <button
+                        type="button"
+                        className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75"
+                      >
+                        <LucideCopy size={15} />
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between mt-0.25">
-                  <button
-                    type="button"
-                    className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75"
-                  >
-                    <LucideCopy />
-                  </button>
+              )
+            )}
+            {responseText && (
+              <div className="mr-4 md:mr-10 my-2 flex gap-2">
+                <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
+                  AI
+                </div>
+                <div className="flex-col max-w-[calc(100%-3.5rem)]">
+                  <small className="text-sm font-medium leading-none">
+                    Assistant
+                  </small>
+                  <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
+                    <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content break-words">
+                      <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
+                        <p>{responseText}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-0.25">
+                    <button
+                      type="button"
+                      className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75"
+                    >
+                      <LucideCopy size={15} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+            {isLoading && <ChatLoading />}
+            <div ref={messagesEndRef} />
           </div>
-          <div className="p-2 md:p-4 border-t dark:border-zinc-700">
+          <div className="p-2 md:p-4 border-t border-[#88888850] dark:border-zinc-700">
             <div className="flex-shrink-0 gap-2">
               <div className="flex flex-col flex-grow gap-1 mb-4">
-                <div className="flex flex-row bg-slate-50 dark:bg-zinc-700 rounded-2xl p-2 border items-center">
+                <div className="flex flex-row bg-slate-50 dark:bg-zinc-700 rounded-2xl p-2 border border-[#88888850] items-center">
                   <div className="flex justify-end space-x-2">
-                    <button className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-input bg-background hover:bg-accent hover:text-accent-foreground border shadow-sm w-10 h-10 rounded-full p-0">
-                      <LucidePaperclip />
+                    <button
+                      type="button"
+                      disabled={isLoading}
+                      className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-[#88888850] bg-white dark:bg-white hover:bg-accent hover:text-accent-foreground border shadow-sm w-10 h-10 rounded-full p-0"
+                    >
+                      <LucidePaperclip color="black" size={15} />
                     </button>
                   </div>
                   <div className="flex flex-grow items-center space-x-2 mb-2">
@@ -160,17 +281,19 @@ export const ConversationForm = ({
                   <div className="flex justify-end space-x-2">
                     <div className="flex items-center gap-4">
                       <button
+                        disabled={isLoading}
                         type="button"
-                        className="focus-visible:ring-ring items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 shadow h-9 w-9 flex shrink-0 rounded-full transition-all duration-200"
+                        className="focus-visible:ring-ring items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 w-9 flex shrink-0 rounded-full transition-all duration-200"
                       >
-                        <LucideMic />
+                        <LucideMic color="black" size={15} />
                       </button>
                       <button
+                        disabled={isLoading}
                         onClick={() => handleStream()}
                         type="button"
-                        className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 shadow h-9 p-2 rounded-full flex-shrink-0"
+                        className="focus-visible:ring-ring rounded-full cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 p-2 rounded-full flex-shrink-0"
                       >
-                        <LucideSendHorizontal />
+                        <LucideSendHorizontal color="black" size={15} />
                       </button>
                     </div>
                   </div>
