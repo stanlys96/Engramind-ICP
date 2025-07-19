@@ -1,7 +1,7 @@
 "use client";
-import { PlusIcon } from "lucide-react";
+import { EllipsisVertical, PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "../../toast/toast";
 import { SearchBar, AnimatedModal, CategoryFilter } from "../../components/ui";
 import { useFormik } from "formik";
@@ -10,11 +10,21 @@ import {
   CreateUpdateGlossaryValues,
 } from "../../formik";
 import axios from "axios";
-import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../utils/api";
+import {
+  API_BASE_URL,
+  API_KEY,
+  API_REQUEST_FROM,
+  axiosElwyn,
+  fetcherElwyn,
+} from "../../utils/api";
 import Cookies from "js-cookie";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
 import { Category } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
+import { Button, Popover } from "antd";
+import { ConversationForm } from "../../components/ui/showcase/ConversationForm";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -22,8 +32,34 @@ export default function ScenariosPage() {
   const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
+  const [conversationOpen, setConversationOpen] = useState(false);
+  const [currentConversation, setCurrentConversation] =
+    useState<RoleplayResponse | null>(null);
+  const [conversationId, setConversationId] = useState<string>("");
+  const [open, setOpen] = useState(false);
+
+  const hide = () => {
+    setOpenPopoverIndex(null);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
   const { addToast } = useToast();
   const navigate = useNavigate();
+
+  const { data: totalScenariosData, mutate: totalScenariosMutate } = useSWR(
+    `/assessment/scenarios/organization/all?organization_id=${name}`,
+    fetcherElwyn
+  );
+
+  const totalScenariosResult = totalScenariosData?.data?.data?.map(
+    (result: RoleplayResponseRaw) => ({
+      ...result,
+      description: JSON.parse(result?.description),
+    })
+  );
 
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
@@ -80,6 +116,75 @@ export default function ScenariosPage() {
         </div>
         <SearchBar showRoleOption />
         <CategoryFilter />
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {totalScenariosResult?.map(
+            (item: RoleplayResponse, index: number) => (
+              <div
+                key={item.id}
+                // onClick={() => handleSelectedPersona(item)}
+                className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
+              >
+                <img
+                  src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+                  alt="character"
+                  className="w-full h-64 object-cover rounded-t-xl"
+                  width={400}
+                  height={300}
+                />
+                <div className="p-4">
+                  <div className="relative">
+                    <h3 className="text-base font-semibold dark:text-white text-zinc-800">
+                      {item.name}
+                    </h3>
+                    <p className="text-base text-[#627084]">
+                      {item.description.charactersName}
+                    </p>
+                    <p className="text-sm text-[#627084]">
+                      Gender: {item.description.charactersGender}
+                    </p>
+                    <p className="text-base text-[#627084]">
+                      Visibility:{" "}
+                      <span className="font-bold">
+                        {!item.visibility ? "Private" : "Public"}
+                      </span>
+                    </p>
+                    <div className="flex w-full justify-end">
+                      <Popover
+                        content={
+                          <button
+                            className="cursor-pointer"
+                            onClick={async () => {
+                              const response = await axiosElwyn.post(
+                                "/assessment/scenario-conversation/create",
+                                {
+                                  scenario_id: item.id,
+                                }
+                              );
+                              console.log(response.data);
+                              setConversationId(response.data.data.id);
+                              setOpenPopoverIndex(null);
+                              setConversationOpen(true);
+                              setCurrentConversation(item);
+                            }}
+                          >
+                            Vibes Check
+                          </button>
+                        }
+                        trigger="click"
+                        open={openPopoverIndex === index}
+                        onOpenChange={(visible) => {
+                          setOpenPopoverIndex(visible ? index : null);
+                        }}
+                      >
+                        <EllipsisVertical />
+                      </Popover>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
         <AnimatedModal
           widthFitContainer
           isOpen={isOpen}
@@ -97,6 +202,24 @@ export default function ScenariosPage() {
               }
             }}
             onClose={() => setIsOpen(false)}
+          />
+        </AnimatedModal>
+        <AnimatedModal
+          isConversation
+          isOpen={conversationOpen}
+          showCrossIcon={false}
+          onClose={() => {
+            if (loading) return;
+            setConversationOpen(false);
+          }}
+        >
+          <ConversationForm
+            onClose={() => {
+              if (loading) return;
+              setConversationOpen(false);
+            }}
+            conversationId={conversationId}
+            currentConversation={currentConversation}
           />
         </AnimatedModal>
       </div>

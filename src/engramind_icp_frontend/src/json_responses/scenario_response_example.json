@@ -1,0 +1,10 @@
+{
+  "code": 201,
+  "is_success": true,
+  "message": "Successfully completed all agent interactions and save steps for quick scenario",
+  "data": {
+    "assessment_id": "c081aa27-4b8c-4abe-bc8b-4e372587dbc2",
+    "roleplay_agent_id": "0c6f5899-e026-42ab-84bc-07c4f3dfc4bf",
+    "scenario_id": "2401cf19-ef08-4772-a8ad-a233fcf96725"
+  }
+}

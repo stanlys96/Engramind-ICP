@@ -4,16 +4,17 @@ import ModalDone from "../../../components/ui/showcase/ModalDone";
 import ModalProgress from "../../../components/ui/showcase/ModalProgress";
 import RenderIf from "../../../utils/RenderIf";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
 import { FileResponse } from "../../../interface";
-import { AnimatedDropdown } from "../../../components/ui";
+import { AnimatedDropdown, AnimatedSpinner } from "../../../components/ui";
 import useSWR from "swr";
-import { fetcherElwyn } from "../../../utils/api";
+import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { useFormik } from "formik";
 import {
   createQuickScenarioInitialValues,
+  createQuickScenarioSchema,
   CreateQuickScenarioValues,
   QuickScenarioValues,
 } from "../../../formik";
@@ -48,9 +49,35 @@ export default function ShowcaseQuickCreatePage() {
 
   const createFormik = useFormik<CreateQuickScenarioValues>({
     initialValues: createQuickScenarioInitialValues,
-    onSubmit: async (values, { resetForm }) => {},
+    validationSchema: createQuickScenarioSchema,
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setLoading(true);
+        const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
+        const response = await axiosElwyn.post(
+          "/assessment/live/scenarios/quick-create",
+          {
+            scenario_title: values.scenario_title,
+            ai_role: values.ai_role,
+            my_role: values.my_role,
+            scenario_description: values.scenario_description,
+            organization_id: name,
+            file_ids: fileIdsTemp,
+          }
+        );
+        alert(response.data.message);
+        setLoading(false);
+      } catch (e) {
+        setLoading(false);
+        console.log(e);
+      }
+    },
   });
-
+  useEffect(() => {
+    (async () => {
+      await createFormik.validateForm();
+    })();
+  }, []);
   return (
     <ShowcaseLayout>
       <div className="max-w-3xl mx-auto px-6 pb-6 space-y-6 text-gray-900 dark:text-white">
@@ -108,19 +135,21 @@ export default function ShowcaseQuickCreatePage() {
                 }
                 isNested
                 options={scenarioPresets}
-                onReset={() => {
+                onReset={async () => {
                   createFormik.resetForm();
                   setChosenScenarioPreset("");
+                  await createFormik.validateForm();
                 }}
-                onSelect={(e: QuickScenarioValues) => {
+                onSelect={async (e: QuickScenarioValues) => {
                   setChosenScenarioPreset(e.title);
-                  createFormik.setFieldValue("my_role", e.my_role);
-                  createFormik.setFieldValue("ai_role", e.ai_role);
-                  createFormik.setFieldValue(
+                  await createFormik.setFieldValue("my_role", e.my_role);
+                  await createFormik.setFieldValue("ai_role", e.ai_role);
+                  await createFormik.setFieldValue(
                     "scenario_description",
                     e.scenario_description
                   );
-                  createFormik.setFieldValue("scenario_title", e.title);
+                  await createFormik.setFieldValue("scenario_title", e.title);
+                  await createFormik.validateForm();
                 }}
                 customClassName="w-[100%]"
               />
@@ -279,22 +308,15 @@ export default function ShowcaseQuickCreatePage() {
               <button
                 type="submit"
                 disabled={
-                  !scenarioTitle ||
-                  !myRole ||
-                  !aiRole ||
-                  !scenarioDescription ||
-                  loading
+                  !(createFormik.isValid && createFormik.dirty) || loading
                 }
-                className={`bg-purple-600 text-white px-4 py-2 rounded cursor-pointer ${
-                  !scenarioTitle ||
-                  !myRole ||
-                  !aiRole ||
-                  !scenarioDescription ||
-                  loading
+                className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
+                  !(createFormik.isValid && createFormik.dirty) || loading
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-purple-700"
                 }`}
               >
+                <AnimatedSpinner show={loading} />
                 {loading ? "Creating..." : "Create Scenario"}
               </button>
             </div>
