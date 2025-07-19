@@ -10,7 +10,7 @@ import RoleplayDetail from "./pages/showcase/pages/roleplay";
 import RubricsPage from "./pages/showcase/pages/rubrics";
 import GlossaryPage from "./pages/showcase/pages/glossary";
 import FileManagementPage from "./pages/showcase/pages/file-management";
-import ScenariosPage from "./pages/showcase/pages/scenarios";
+import PersonaPage from "./pages/showcase/pages/persona";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/showcase/roleplay/:id" element={<RoleplayDetail />} />
         <Route path="/showcase/rubrics" element={<RubricsPage />} />
         <Route path="/showcase/glossary" element={<GlossaryPage />} />
-        <Route path="/showcase/scenarios" element={<ScenariosPage />} />
+        <Route path="/showcase/persona" element={<PersonaPage />} />
         <Route
           path="/showcase/file-management"
           element={<FileManagementPage />}

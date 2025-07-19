@@ -80,6 +80,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               pathname === "/showcase" ? "text-purple-600 font-bold" : ""
             }`}
           >
+            Roleplay Scenarios
+          </Link>
+          <Link
+            to="/showcase/persona"
+            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+              pathname === "/showcase/persona"
+                ? "text-purple-600 font-bold"
+                : ""
+            }`}
+          >
             Persona
           </Link>
           <Link
@@ -101,16 +111,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }`}
           >
             Glossary
-          </Link>
-          <Link
-            to="/showcase/scenarios"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/scenarios"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Scenarios
           </Link>
           <Link
             to="/showcase/file-management"
