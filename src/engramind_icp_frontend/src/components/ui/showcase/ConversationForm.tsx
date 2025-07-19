@@ -6,7 +6,12 @@ import {
   MonitorSpeaker,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { API_BASE_URL, API_KEY, API_REQUEST_FROM } from "../../../utils/api";
+import {
+  API_BASE_URL,
+  API_KEY,
+  API_REQUEST_FROM,
+  OPEN_ROUTER_API_KEY,
+} from "../../../utils/api";
 import { RoleplayResponse } from "../../../interface";
 import ChatLoading from "./ChatLoading";
 import { UserMessage } from "./UserMessage";
@@ -18,8 +23,6 @@ interface Props {
   onClose?: () => void;
 }
 
-const apiKey =
-  "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";
 export const ConversationForm = ({
   currentConversation,
   conversationId,
@@ -77,7 +80,7 @@ export const ConversationForm = ({
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${OPEN_ROUTER_API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
