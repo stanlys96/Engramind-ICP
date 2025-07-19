@@ -9,7 +9,7 @@ import { ProgressBar } from "./ProgressBar";
 
 interface Props {
   persona: PersonaData | null;
-  onEditPress: () => void;
+  onEditPress?: () => void;
 }
 
 export const PersonaDetails = ({ persona, onEditPress }: Props) => {
@@ -17,13 +17,15 @@ export const PersonaDetails = ({ persona, onEditPress }: Props) => {
     <div>
       <p className="font-bold text-[22px]">Selected Persona Details</p>
       <div className="rounded-[8px] bg-[#FAFAFA] dark:bg-[#18181B] p-[20px] mt-[10px] relative">
-        <button
-          type="button"
-          onClick={onEditPress}
-          className="cursor-pointer focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-[#88888850] bg-[#FAFAFA] dark:bg-[#18181B] hover:bg-accent hover:text-accent-foreground border shadow-sm h-9 w-9 absolute top-4 right-4"
-        >
-          <SquarePen size={15} />
-        </button>
+        {onEditPress && (
+          <button
+            type="button"
+            onClick={onEditPress}
+            className="cursor-pointer focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-[#88888850] bg-[#FAFAFA] dark:bg-[#18181B] hover:bg-accent hover:text-accent-foreground border shadow-sm h-9 w-9 absolute top-4 right-4"
+          >
+            <SquarePen size={15} />
+          </button>
+        )}
         <div>
           <p className="text-center dark:text-white text-black text-[26px] font-bold">
             {persona?.persona_details?.name}

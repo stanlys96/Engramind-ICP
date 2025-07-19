@@ -77,7 +77,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link
             to="/showcase"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase" ? "text-purple-600 font-bold" : ""
+              pathname?.includes("/showcase/roleplay") ||
+              pathname === "/showcase"
+                ? "text-purple-600 font-bold"
+                : ""
             }`}
           >
             Roleplay Scenarios
@@ -122,7 +125,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             File Management
           </Link>
-          <Link
+          {/* <Link
             to="/showcase/how-it-works"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
               pathname === "/showcase/how-it-works"
@@ -139,7 +142,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             }`}
           >
             FAQ
-          </Link>
+          </Link> */}
         </nav>
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">

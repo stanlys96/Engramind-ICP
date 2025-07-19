@@ -54,11 +54,14 @@ export const CreatePersonaForm = ({
               );
               return !currentIds.includes(x.file_id);
             })
-            .map((result: FileResponse) => result.filename)}
+            .map((result: FileResponse) => ({
+              name: result.filename,
+              id: result.file_id,
+            }))}
           onSelect={(e) => {
             createFormik.setFieldValue("files", [
               ...createFormik.values.files,
-              totalFilesResult?.find((x: FileResponse) => x.filename === e),
+              totalFilesResult?.find((x: FileResponse) => x.file_id === e.id),
             ]);
           }}
           customClassName="w-[100%] md:w-[80%]"

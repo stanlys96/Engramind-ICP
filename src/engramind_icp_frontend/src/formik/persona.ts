@@ -44,3 +44,11 @@ export const createRubricInitialValues = {
   description: "",
   files: [],
 };
+
+export const createQuickScenarioInitialValues = {
+  scenario_title: "",
+  scenario_description: "",
+  ai_role: "",
+  my_role: "",
+  files: [],
+};

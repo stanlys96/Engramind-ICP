@@ -1,5 +1,10 @@
 import { Assessment, PersonaData } from "../interface";
 
+export enum Category {
+  Quick,
+  Advanced,
+}
+
 export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
     secondArray.map((item: any) => item.id)
@@ -149,3 +154,76 @@ export function formatDateToLocal(input: string): string {
 
   return `${day} ${month} ${year} at ${hours}:${minutes}:${seconds}`;
 }
+
+export const scenarioPresets = [
+  {
+    id: 1,
+    type: "Customer Service",
+    options: [
+      {
+        title: "Handling Product Return Dispute",
+        ai_role: "Dissatisfied Customer",
+        my_role: "Customer Service Manager",
+        scenario_description:
+          "Context: Customer Service\nScenario: Handle a frustrated customer who received a defective product\n\nCreate a detailed roleplay scenario for a Handling Product Return Dispute situation between a Customer Service Manager and a Dissatisfied Customer.",
+        file_ids: [],
+      },
+    ],
+  },
+  {
+    id: 2,
+    type: "Leadership",
+    options: [
+      {
+        title: "Performance Improvement Discussion",
+        ai_role: "Underperforming Employee",
+        my_role: "Team Leader",
+        scenario_description:
+          "Context: Leadership\nScenario: Conduct a challenging performance review\n\nCreate a detailed roleplay scenario for a Performance Improvement Discussion situation between a Team Leader and a Underperforming Employee.",
+        file_ids: [],
+      },
+    ],
+  },
+  {
+    id: 3,
+    type: "Sales",
+    options: [
+      {
+        title: "Enterprise Deal Negotiation",
+        ai_role: "Procurement Director",
+        my_role: "Senior Sales Manager",
+        scenario_description:
+          "Context: Sales\nScenario: Negotiate a high-value contract with specific terms\n\nCreate a detailed roleplay scenario for a Enterprise Deal Negotiation situation between a Senior Sales Manager and a Procurement Director.",
+        file_ids: [],
+      },
+    ],
+  },
+  {
+    id: 4,
+    type: "HR",
+    options: [
+      {
+        title: "Workplace Harassment Investigation",
+        ai_role: "Employee Filing Complaint",
+        my_role: "HR Manager",
+        scenario_description:
+          "Context: HR\nScenario: Handle a sensitive workplace harassment report\n\nCreate a detailed roleplay scenario for a Workplace Harassment Investigation situation between a HR Manager and a Employee Filing Complaint.",
+        file_ids: [],
+      },
+    ],
+  },
+  {
+    id: 5,
+    type: "Project Management",
+    options: [
+      {
+        title: "Budget Overrun Meeting",
+        ai_role: "Finance Manager",
+        my_role: "Program Director",
+        scenario_description:
+          "Context: Project Management\nScenario: Justify and discuss project budget increases\n\nCreate a detailed roleplay scenario for a Budget Overrun Meeting situation between a Program Director and a Finance Manager.",
+        file_ids: [],
+      },
+    ],
+  },
+];

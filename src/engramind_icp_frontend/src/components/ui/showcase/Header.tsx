@@ -34,7 +34,10 @@ export const ShowcaseHeader = (
           <Link
             to="/showcase"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase" ? "text-purple-600 font-bold" : ""
+              pathname?.includes("/showcase/roleplay") ||
+              pathname === "/showcase"
+                ? "text-purple-600 font-bold"
+                : ""
             }`}
           >
             Roleplay Scenarios
@@ -80,7 +83,7 @@ export const ShowcaseHeader = (
           >
             File Management
           </Link>
-          <Link
+          {/* <Link
             to="/showcase/how-it-works"
             className={`hover:text-purple-600 dark:hover:text-purple-400 ${
               pathname === "/showcase/how-it-works"
@@ -97,7 +100,7 @@ export const ShowcaseHeader = (
             }`}
           >
             FAQ
-          </Link>
+          </Link> */}
         </nav>
         <div className="flex gap-4 items-center relative">
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">

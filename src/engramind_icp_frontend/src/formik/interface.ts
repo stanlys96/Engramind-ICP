@@ -71,3 +71,18 @@ export interface CreateUpdateGlossaryValues {
   createOrUpdate: string;
   createdOn: string;
 }
+
+export interface CreateQuickScenarioValues {
+  scenario_title: string;
+  scenario_description: string;
+  ai_role: string;
+  my_role: string;
+  files: FileResponse[];
+}
+
+export interface QuickScenarioValues {
+  ai_role: string;
+  my_role: string;
+  scenario_description: string;
+  title: string;
+}
