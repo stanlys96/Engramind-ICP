@@ -3,7 +3,7 @@
 import ModalDone from "../../../components/ui/showcase/ModalDone";
 import ModalProgress from "../../../components/ui/showcase/ModalProgress";
 import RenderIf from "../../../utils/RenderIf";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
@@ -23,7 +23,7 @@ import {
   GlossaryDetail,
 } from "../../../components/ui";
 import useSWR from "swr";
-import { fetcherElwyn } from "../../../utils/api";
+import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { useFormik } from "formik";
 import {
   createAdvanceScenarioInitialValues,
@@ -33,6 +33,7 @@ import {
 import Cookies from "js-cookie";
 import { extractAndParseRubricJSON } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
 export default function ShowcaseAdvanceCreatePage() {
   const name = Cookies.get("principal");
@@ -89,7 +90,37 @@ export default function ShowcaseAdvanceCreatePage() {
   const createFormik = useFormik<CreateAdvanceScenarioValues>({
     initialValues: createAdvanceScenarioInitialValues,
     validationSchema: createAdvanceScenarioSchema,
-    onSubmit: async (values, { resetForm }) => {},
+    onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Creating a roleplay...", {
+        id: "create-roleplay",
+        duration: Infinity,
+      });
+      try {
+        setLoading(true);
+        const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
+        await axiosElwyn.post("/assessment/live/scenarios/create", {
+          scenario_title: values.scenario_title,
+          persona_id: values.persona,
+          rubric_id: values.rubrics,
+          scenario_description: values.scenario_description,
+          organization_id: name,
+          file_ids: fileIdsTemp,
+        });
+        toast.success("Roleplay created successfully!", {
+          id: toastId,
+          duration: 4000,
+        });
+        setLoading(false);
+        navigate("/showcase");
+      } catch (e) {
+        toast.error(e?.toString(), {
+          id: toastId,
+          duration: 4000,
+        });
+        setLoading(false);
+        console.log(e);
+      }
+    },
   });
 
   useEffect(() => {

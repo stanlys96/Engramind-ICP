@@ -216,12 +216,23 @@ export const ConversationModalForm = ({
                         </div>
                       </div>
                     </div>
-                    {conversationMessages?.map((conversationMessage: any) =>
-                      conversationMessage?.user === "person" ? (
-                        <UserMessage message={conversationMessage?.message} />
-                      ) : (
-                        <AIMessage message={conversationMessage?.message} />
-                      )
+                    {conversationMessages?.map(
+                      (conversationMessage: any, index: number) =>
+                        conversationMessage?.user === "person" ? (
+                          <UserMessage
+                            key={
+                              conversationMessage?.message + index.toString()
+                            }
+                            message={conversationMessage?.message}
+                          />
+                        ) : (
+                          <AIMessage
+                            key={
+                              conversationMessage?.message + index.toString()
+                            }
+                            message={conversationMessage?.message}
+                          />
+                        )
                     )}
                     {responseText && <AIMessage message={responseText} />}
                     {isLoading && <ChatLoading />}

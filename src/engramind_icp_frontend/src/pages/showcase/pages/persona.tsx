@@ -44,7 +44,6 @@ export default function PersonaPage() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
-  const [currentPersonas, setCurrentPersonas] = useState<PersonaData[]>();
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
@@ -52,7 +51,13 @@ export default function PersonaPage() {
     `/assessment/persona-characters`,
     fetcherElwyn
   );
-  const totalPersonaResult = totalPersonaData?.data?.data;
+  const totalPersonaResult: PersonaData[] = totalPersonaData?.data?.data
+    ?.filter((persona: PersonaData) => persona.organization_id === name)
+    ?.sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
 
   const handleEditPersona = () => {
     if (selectedPersona) {
@@ -152,19 +157,6 @@ export default function PersonaPage() {
     });
   }, []);
 
-  useEffect(() => {
-    if (totalPersonaResult?.length > 0) {
-      const theUserPersonas = totalPersonaResult
-        ?.filter((persona: PersonaData) => persona.organization_id === name)
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-      setCurrentPersonas(theUserPersonas);
-    }
-  }, [totalPersonaResult]);
-
   return (
     <ShowcaseLayout>
       <div>
@@ -191,7 +183,7 @@ export default function PersonaPage() {
         </div>
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {currentPersonas?.map((item: PersonaData) => (
+          {totalPersonaResult?.map((item: PersonaData) => (
             <ItemCard
               key={item.id}
               itemType={ItemType.Persona}

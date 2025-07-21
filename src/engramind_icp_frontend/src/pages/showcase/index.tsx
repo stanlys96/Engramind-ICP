@@ -37,12 +37,17 @@ export default function ScenariosPage() {
     fetcherElwyn
   );
 
-  const totalScenariosResult = totalScenariosData?.data?.data?.map(
-    (result: RoleplayResponseRaw) => ({
-      ...result,
-      description: JSON.parse(result?.description),
-    })
-  );
+  const totalScenariosResult: RoleplayResponse[] =
+    totalScenariosData?.data?.data
+      ?.map((result: RoleplayResponseRaw) => ({
+        ...result,
+        description: JSON.parse(result?.description),
+      }))
+      ?.sort((a: any, b: any) => {
+        const dateA = new Date(a.timestamp).getTime();
+        const dateB = new Date(b.timestamp).getTime();
+        return dateB - dateA;
+      });
 
   const handleClickNewRoleplay = () => {
     setIsOpen(true);

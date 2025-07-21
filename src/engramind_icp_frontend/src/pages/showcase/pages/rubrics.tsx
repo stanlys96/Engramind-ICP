@@ -40,7 +40,6 @@ export default function RubricsPage() {
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
     useState<boolean>(false);
-  const [currentRubrics, setCurrentRubrics] = useState<Assessment[]>();
   const [selectedRubrics, setSelectedRubrics] = useState<Assessment | null>(
     null
   );
@@ -52,7 +51,20 @@ export default function RubricsPage() {
     `/assessment/rubrics`,
     fetcherElwyn
   );
-  const totalRubricsResult = totalRubricsData?.data?.data;
+  const totalRubricsResult: Assessment[] = totalRubricsData?.data?.data
+    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
+    ?.map((rubricsData: AssessmentRaw) => {
+      return {
+        ...rubricsData,
+        rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
+      };
+    })
+    .sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
+
   const [updateRubricsFormValues, setUpdateRubricsFormValues] =
     useState<FlatFormValues>({});
 
@@ -128,25 +140,6 @@ export default function RubricsPage() {
     });
   }, []);
 
-  useEffect(() => {
-    if (totalRubricsResult?.length > 0) {
-      const theUserRubrics: Assessment[] = totalRubricsResult
-        ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
-        ?.map((rubricsData: AssessmentRaw) => {
-          return {
-            ...rubricsData,
-            rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
-          };
-        })
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-      setCurrentRubrics(theUserRubrics);
-    }
-  }, [totalRubricsResult]);
-
   return (
     <ShowcaseLayout>
       <div>
@@ -170,7 +163,7 @@ export default function RubricsPage() {
         </div>
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {currentRubrics?.map((item: Assessment) => (
+          {totalRubricsResult?.map((item: Assessment) => (
             <ItemCard
               key={item.id}
               itemType={ItemType.Rubrics}

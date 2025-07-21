@@ -25,7 +25,7 @@ export default function FileManagementPage() {
     fetcherElwyn
   );
 
-  const totalFilesResult = totalFilesData?.data?.files;
+  const totalFilesResult: FileResponse[] = totalFilesData?.data?.files;
 
   const handleDownloadFile = async (fileId: string) => {
     const toastId = toast.loading(`Downloading file`, {

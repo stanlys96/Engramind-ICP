@@ -23,7 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
     Cookies.remove("principal");
-    IC.logout();
+    IC?.logout();
     navigate("/");
   };
   const location = useLocation();

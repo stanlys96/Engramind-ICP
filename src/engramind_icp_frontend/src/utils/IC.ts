@@ -35,7 +35,7 @@ class IC {
   }
 
   public static async logout() {
-    return await this.authClient.logout();
+    return await this?.authClient?.logout();
   }
 
   public static async getBackend(

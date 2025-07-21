@@ -32,18 +32,24 @@ export default function GlossaryPage() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
-  const [currentGlossaries, setCurrentGlossaries] = useState<GlossaryData[]>();
   const [selectedGlossary, setSelectedGlossary] = useState<GlossaryData | null>(
     null
   );
   const [isOpenGlossaryDetail, setIsOpenGlossaryDetail] =
     useState<boolean>(false);
+
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
     `/assessment/scenario-glossary`,
     fetcherElwyn
   );
 
-  const totalGlossaryResult = totalGlossaryData?.data?.data;
+  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data?.data
+    ?.filter((glossary: GlossaryData) => glossary.organization_id === name)
+    ?.sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
 
   const handleSelectGlossary = (item: GlossaryData) => {
     setSelectedGlossary(item);
@@ -136,19 +142,6 @@ export default function GlossaryPage() {
     });
   }, []);
 
-  useEffect(() => {
-    if (totalGlossaryResult?.length > 0) {
-      const theUserGlossaries = totalGlossaryResult
-        ?.filter((glossary: GlossaryData) => glossary.organization_id === name)
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-      setCurrentGlossaries(theUserGlossaries);
-    }
-  }, [totalGlossaryResult]);
-
   return (
     <ShowcaseLayout>
       <div>
@@ -172,7 +165,7 @@ export default function GlossaryPage() {
         </div>
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {currentGlossaries?.map((item: GlossaryData) => (
+          {totalGlossaryResult?.map((item: GlossaryData) => (
             <ItemCard
               key={item.id}
               item={item}
