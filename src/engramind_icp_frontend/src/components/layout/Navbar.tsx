@@ -48,9 +48,10 @@ export default function Navbar({ showMenu }: NavbarProps) {
                 dispatch(settingNickname(finalNickname));
                 Cookies.set("nickname", finalNickname);
               }
-              navigate("/showcase");
             })
-            .catch((_) => navigate("/showcase"));
+            .finally(() => {
+              navigate("/showcase");
+            });
         },
         onError: () => {
           // setLoading(false);
