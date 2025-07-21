@@ -226,7 +226,7 @@ export const UpdateRubricsForm = ({
               {updateRubricsFormValues?.["scoring_guide"] &&
                 Object.entries(updateRubricsFormValues?.["scoring_guide"])?.map(
                   ([key]) => (
-                    <div>
+                    <div key={key}>
                       <label
                         htmlFor="birthdate"
                         className="block mb-1 text-gray-700 text-md dark:text-white"
@@ -256,7 +256,7 @@ export const UpdateRubricsForm = ({
                 Object.keys(
                   updateRubricsFormValues?.["performance_levels_summary"]
                 )?.map((key) => (
-                  <div>
+                  <div key={key}>
                     <label
                       htmlFor="birthdate"
                       className="block mb-1 text-gray-700 text-md dark:text-white"
