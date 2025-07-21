@@ -13,6 +13,7 @@ export const UpdatePersonaForm = ({
   updateFormik,
   setIsOpen,
 }: UpdatePersonaForm) => {
+  const disableButton = loading || !updateFormik.isValid;
   return (
     <form onSubmit={updateFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
@@ -780,9 +781,9 @@ export const UpdatePersonaForm = ({
           </button>
           <button
             type="submit"
-            disabled={loading || !updateFormik.isValid}
+            disabled={disableButton}
             className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-              loading || !updateFormik.isValid
+              disableButton
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:bg-purple-700"
             }`}

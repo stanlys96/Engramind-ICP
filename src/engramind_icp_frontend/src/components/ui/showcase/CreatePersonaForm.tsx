@@ -35,6 +35,7 @@ export const CreatePersonaForm = ({
   );
 
   const totalFilesResult = totalFilesData?.data?.files;
+  const disableSubmitButton = !createFormik.isValid || loading || uploading;
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
@@ -168,9 +169,9 @@ export const CreatePersonaForm = ({
         </button>
         <button
           type="submit"
-          disabled={!createFormik.isValid || loading || uploading}
+          disabled={disableSubmitButton}
           className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-            !createFormik.isValid || loading || uploading
+            disableSubmitButton
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-purple-700"
           }`}

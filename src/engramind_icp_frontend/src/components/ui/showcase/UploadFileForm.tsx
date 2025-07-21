@@ -2,12 +2,11 @@ import { AnimatedSpinner } from "../AnimatedSpinner";
 import { useEffect, useState } from "react";
 import { axiosElwyn } from "../../../utils/api";
 import { FileResponse } from "../../../interface";
-import { useToast } from "../../../toast/toast";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 interface UploadFileForm {
   loading: boolean;
@@ -22,10 +21,10 @@ export const UploadFileForm = ({
   setLoading,
   filesMutate,
 }: UploadFileForm) => {
+  const principal = Cookies.get("principal");
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [backend, setBackend] = useState<_SERVICE>();
-  const { principal } = useSelector((state: any) => state.user);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -38,7 +37,7 @@ export const UploadFileForm = ({
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("organization_id", principal);
+    formData.append("organization_id", principal ?? "");
     const toastId = toast.loading(`Uploading file...`, {
       id: "upload-file",
       duration: Infinity,

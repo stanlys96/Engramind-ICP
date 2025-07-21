@@ -6,12 +6,7 @@ import {
   MonitorSpeaker,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import {
-  API_BASE_URL,
-  API_KEY,
-  API_REQUEST_FROM,
-  OPEN_ROUTER_API_KEY,
-} from "../../../utils/api";
+import { OPEN_ROUTER_API_KEY } from "../../../utils/api";
 import { RoleplayResponse } from "../../../interface";
 import ChatLoading from "./ChatLoading";
 import { UserMessage } from "./UserMessage";
@@ -36,6 +31,7 @@ export const ConversationModalForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [conversationMessages, setConversationMessages] = useState<any>([]);
+  const disableSubmitButton = isLoading || !message;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleStream = async () => {
@@ -275,7 +271,7 @@ export const ConversationModalForm = ({
                                 <LucideMic color="black" size={15} />
                               </button>
                               <button
-                                disabled={isLoading || !message}
+                                disabled={disableSubmitButton}
                                 onClick={() => handleStream()}
                                 type="button"
                                 className="focus-visible:ring-ring rounded-full cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 p-2 rounded-full flex-shrink-0"

@@ -15,6 +15,7 @@ export const CreateOrUpdateGlossaryForm = ({
   setIsOpen,
 }: CreateOrUpdateGlossaryForm) => {
   const nameCopyRef = useRef(createFormik?.values?.name);
+  const disableSubmitButton = !createFormik.isValid || loading;
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2
@@ -85,9 +86,9 @@ export const CreateOrUpdateGlossaryForm = ({
         </button>
         <button
           type="submit"
-          disabled={!createFormik.isValid || loading}
+          disabled={disableSubmitButton}
           className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-            !createFormik.isValid || loading
+            disableSubmitButton
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-purple-700"
           }`}
