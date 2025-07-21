@@ -26,16 +26,16 @@ export const CreatePersonaForm = ({
   uploading,
   setUploading,
 }: CreatePersonaForm) => {
-  const name = Cookies.get("principal");
+  const principal = Cookies.get("principal");
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${name}`,
+    `/files/all/${principal}`,
     fetcherBackend
   );
 
   const totalFilesResult = totalFilesData?.data?.files;
-  const disableSubmitButton = !createFormik.isValid || loading || uploading;
+  const disableSubmitButton = !createFormik.isValid || loading;
   return (
     <form onSubmit={createFormik.handleSubmit}>
       <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[15px]">
