@@ -5,11 +5,15 @@ import { UserContext } from "../../context/UserContext";
 export default function ShowcaseClientLayout({
   children,
   name,
+  currentNickname,
 }: {
   children: React.ReactNode;
   name: string;
+  currentNickname: string;
 }) {
   return (
-    <UserContext.Provider value={{ name }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ name, currentNickname }}>
+      {children}
+    </UserContext.Provider>
   );
 }

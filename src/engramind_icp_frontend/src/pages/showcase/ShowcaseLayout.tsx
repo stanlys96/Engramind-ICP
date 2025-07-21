@@ -1,18 +1,58 @@
-import { AnimatedModal, ShowcaseHeader, SideDrawer } from "../../components/ui";
-import Cookies from "js-cookie";
+import {
+  AnimatedModal,
+  LogoutForm,
+  ShowcaseHeader,
+  SideDrawer,
+  UpdateNicknameForm,
+} from "../../components/ui";
 import ShowcaseClientLayout from "./client-layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../../theme/theme-toggle";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../utils/IC";
 import { useNavigate } from "react-router-dom";
+import { navbarLinkData } from "../../utils/helper";
+import { NavbarLinkData } from "../../interface";
+import { Principal } from "@dfinity/principal";
+import { toast } from "sonner";
+import { useDispatch, useSelector } from "react-redux";
+import { settingNickname } from "../../stores/user-slice";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const name = Cookies.get("principal") ?? "";
+  const dispatch = useDispatch();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showUpdateNickname, setShowUpdateNickname] = useState(false);
+  const { principal, nickname } = useSelector((state: any) => state.user);
+
+  const [loading, setLoading] = useState(false);
+  const [backend, setBackend] = useState<_SERVICE>();
   const navigate = useNavigate();
+
+  const handleUpdateNickname = async (value: string) => {
+    const toastId = toast.loading("Updating nickname...", {
+      id: "update-nickname",
+      duration: Infinity,
+    });
+    try {
+      setLoading(true);
+      await backend?.updateMyNickname(Principal.fromText(principal), value);
+      dispatch(settingNickname(value));
+      setLoading(false);
+      toast.success("Nickname updated successfully!", {
+        id: toastId,
+        duration: 4000,
+      });
+      setShowUpdateNickname(false);
+    } catch (e) {
+      toast.error(e?.toString(), {
+        id: toastId,
+        duration: 4000,
+      });
+      setLoading(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.clear();
@@ -22,20 +62,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
-    Cookies.remove("principal");
     IC?.logout();
     navigate("/");
   };
   const location = useLocation();
   const pathname = location.pathname;
 
+  useEffect(() => {
+    IC.getBackend((result: _SERVICE) => {
+      setBackend(result);
+    });
+  }, []);
+
   return (
-    <ShowcaseClientLayout name={name}>
+    <ShowcaseClientLayout currentNickname={nickname} name={principal}>
       <div className="relative bg-zinc-50 dark:bg-zinc-900 min-h-screen overflow-auto">
         <ShowcaseHeader
+          setShowUpdateNickname={setShowUpdateNickname}
           setShowConfirm={setShowConfirm}
           setIsOpenDrawer={setIsOpenDrawer}
-          name={name}
+          name={principal}
+          currentNickname={nickname}
         />
         <div className="max-w-7xl mx-auto px-4 py-10 text-neutral-900 dark:text-neutral-100">
           {children}
@@ -47,25 +94,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         isOpen={showConfirm}
         onClose={() => setShowConfirm(false)}
       >
-        <div>
-          <p className="text-lg mb-4 text-zinc-800 font-semibold dark:text-zinc-100 text-center">
-            Are you sure you want to logout?
-          </p>
-          <div className="flex justify-center gap-4">
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 cursor-pointer bg-red-600 text-white rounded hover:bg-red-700"
-            >
-              Yes
-            </button>
-            <button
-              onClick={() => setShowConfirm(false)}
-              className="px-4 py-2 cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+        <LogoutForm
+          handleLogout={handleLogout}
+          setShowConfirm={setShowConfirm}
+        />
+      </AnimatedModal>
+      <AnimatedModal
+        widthFitContainer
+        className="w-full md:w-[50%]"
+        isOpen={showUpdateNickname}
+        onClose={() => {
+          if (loading) return;
+          setShowUpdateNickname(false);
+        }}
+      >
+        <UpdateNicknameForm
+          loading={loading}
+          currentNickname={nickname}
+          handleUpdateNickname={handleUpdateNickname}
+          setShowUpdateNickname={setShowUpdateNickname}
+        />
       </AnimatedModal>
       <SideDrawer
         isOpen={isOpenDrawer}
@@ -74,57 +122,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         }}
       >
         <nav className="gap-6 text-md flex flex-col text-gray-700 dark:text-gray-300 leading-relaxed">
-          <Link
-            to="/showcase"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname?.includes("/showcase/roleplay") ||
-              pathname === "/showcase"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Roleplay Scenarios
-          </Link>
-          <Link
-            to="/showcase/persona"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/persona"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Persona
-          </Link>
-          <Link
-            to="/showcase/rubrics"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/rubrics"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Rubrics
-          </Link>
-          <Link
-            to="/showcase/glossary"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/glossary"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Glossary
-          </Link>
-          <Link
-            to="/showcase/file-management"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/file-management"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            File Management
-          </Link>
+          {navbarLinkData.map((linkData: NavbarLinkData, index: number) => (
+            <Link
+              key={linkData.id + index.toString()}
+              to={linkData.href}
+              className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+                (linkData?.includes &&
+                  pathname?.includes(linkData?.includes)) ||
+                pathname === linkData?.href
+                  ? "text-purple-600 font-bold"
+                  : ""
+              }`}
+            >
+              {linkData.title}
+            </Link>
+          ))}
         </nav>
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">
@@ -136,7 +148,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               height={300}
             />
             <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-              {name?.slice(0, 12) + "..."}
+              {nickname}
             </div>
           </div>
           <button

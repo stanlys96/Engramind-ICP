@@ -30,22 +30,17 @@ import {
   createAdvanceScenarioSchema,
   CreateAdvanceScenarioValues,
 } from "../../../formik";
-import Cookies from "js-cookie";
 import { extractAndParseRubricJSON } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 export default function ShowcaseAdvanceCreatePage() {
-  const name = Cookies.get("principal");
-
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, seterror] = useState(false);
-  const [currentPersonas, setCurrentPersonas] = useState<PersonaData[]>();
-  const [currentRubrics, setCurrentRubrics] = useState<Assessment[]>();
-  const [currentGlossaries, setCurrentGlossaries] = useState<GlossaryData[]>();
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
@@ -63,8 +58,10 @@ export default function ShowcaseAdvanceCreatePage() {
     useState<boolean>(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
 
+  const { principal } = useSelector((state: any) => state.user);
+
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${name}`,
+    `/conversational/files/organization?organization_id=${principal}`,
     fetcherElwyn
   );
   const { data: totalPersonaData } = useSWR(
@@ -80,13 +77,39 @@ export default function ShowcaseAdvanceCreatePage() {
     fetcherElwyn
   );
 
-  const totalFilesResult = totalFilesData?.data?.files;
-  const totalPersonaResult = totalPersonaData?.data?.data;
-  const totalRubricsResult = totalRubricsData?.data?.data;
-  const totalGlossaryResult = totalGlossaryData?.data?.data;
+  const totalFilesResult: FileResponse[] = totalFilesData?.data?.files;
+
+  const totalPersonaResult: PersonaData[] = totalPersonaData?.data?.data
+    ?.filter((persona: PersonaData) => persona.organization_id === principal)
+    ?.sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
+
+  const totalRubricsResult: Assessment[] = totalRubricsData?.data?.data
+    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === principal)
+    ?.map((rubricsData: AssessmentRaw) => {
+      return {
+        ...rubricsData,
+        rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
+      };
+    })
+    ?.sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
+
+  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data?.data
+    ?.filter((glossary: GlossaryData) => glossary.organization_id === principal)
+    ?.sort((a: any, b: any) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return dateB - dateA;
+    });
 
   const navigate = useNavigate();
-
   const createFormik = useFormik<CreateAdvanceScenarioValues>({
     initialValues: createAdvanceScenarioInitialValues,
     validationSchema: createAdvanceScenarioSchema,
@@ -103,7 +126,7 @@ export default function ShowcaseAdvanceCreatePage() {
           persona_id: values.persona,
           rubric_id: values.rubrics,
           scenario_description: values.scenario_description,
-          organization_id: name,
+          organization_id: principal,
           file_ids: fileIdsTemp,
         });
         toast.success("Roleplay created successfully!", {
@@ -122,52 +145,6 @@ export default function ShowcaseAdvanceCreatePage() {
       }
     },
   });
-
-  useEffect(() => {
-    if (totalPersonaResult?.length > 0) {
-      const theUserPersonas = totalPersonaResult
-        ?.filter((persona: PersonaData) => persona.organization_id === name)
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-      setCurrentPersonas(theUserPersonas);
-    }
-  }, [totalPersonaResult]);
-
-  useEffect(() => {
-    if (totalRubricsResult?.length > 0) {
-      const theUserRubrics: Assessment[] = totalRubricsResult
-        ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
-        ?.map((rubricsData: AssessmentRaw) => {
-          return {
-            ...rubricsData,
-            rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
-          };
-        })
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-
-      setCurrentRubrics(theUserRubrics);
-    }
-  }, [totalRubricsResult]);
-
-  useEffect(() => {
-    if (totalGlossaryResult?.length > 0) {
-      const theUserGlossaries = totalGlossaryResult
-        ?.filter((glossary: GlossaryData) => glossary.organization_id === name)
-        .sort((a: any, b: any) => {
-          const dateA = new Date(a.timestamp).getTime();
-          const dateB = new Date(b.timestamp).getTime();
-          return dateB - dateA;
-        });
-      setCurrentGlossaries(theUserGlossaries);
-    }
-  }, [totalGlossaryResult]);
 
   useEffect(() => {
     (async () => {
@@ -229,7 +206,7 @@ export default function ShowcaseAdvanceCreatePage() {
                       : selectedPersona?.name
                   }`}
                   labelPlaceholder={selectedPersona === null}
-                  options={(currentPersonas ?? []).map(
+                  options={(totalPersonaResult ?? []).map(
                     (persona: PersonaData) => ({
                       name: persona.name,
                       id: persona.id,
@@ -238,7 +215,7 @@ export default function ShowcaseAdvanceCreatePage() {
                   onSelect={(selectedPersona) => {
                     createFormik.setFieldValue("persona", selectedPersona.id);
                     setSelectedPersona(
-                      (currentPersonas ?? []).find(
+                      (totalPersonaResult ?? []).find(
                         (e: any) => e?.id === selectedPersona.id
                       ) ?? null
                     );
@@ -259,7 +236,7 @@ export default function ShowcaseAdvanceCreatePage() {
                       : selectedRubrics?.name
                   }`}
                   labelPlaceholder={selectedRubrics === null}
-                  options={(currentRubrics ?? []).map(
+                  options={(totalRubricsResult ?? []).map(
                     (rubrics: Assessment) => ({
                       name: rubrics?.name,
                       id: rubrics?.id,
@@ -268,7 +245,7 @@ export default function ShowcaseAdvanceCreatePage() {
                   onSelect={(selectedRubrics) => {
                     createFormik.setFieldValue("rubrics", selectedRubrics.id);
                     setSelectedRubrics(
-                      (currentRubrics ?? []).find(
+                      (totalRubricsResult ?? []).find(
                         (e: any) => e?.id === selectedRubrics?.id
                       ) ?? null
                     );
@@ -290,7 +267,7 @@ export default function ShowcaseAdvanceCreatePage() {
                       : selectedGlossary?.name
                   }`}
                   labelPlaceholder={selectedGlossary === null}
-                  options={(currentGlossaries ?? []).map(
+                  options={(totalGlossaryResult ?? []).map(
                     (glossary: GlossaryData) => ({
                       name: glossary?.name,
                       id: glossary?.id,
@@ -298,7 +275,7 @@ export default function ShowcaseAdvanceCreatePage() {
                   )}
                   onSelect={(selectedGlossary) => {
                     setSelectedGlossary(
-                      (currentGlossaries ?? []).find(
+                      (totalGlossaryResult ?? []).find(
                         (e: any) => e?.id === selectedGlossary?.id
                       ) ?? null
                     );

@@ -6,6 +6,8 @@ import { Toaster } from "sonner";
 
 import { useTheme } from "./theme";
 import { ToastProvider } from "./toast/toast";
+import { Provider } from "react-redux";
+import { store } from "../src/stores";
 
 const { setInitialTheme, toggleTheme } = useTheme();
 
@@ -15,9 +17,11 @@ document.getElementById("theme-toggle")?.addEventListener("click", toggleTheme);
 
 ReactDOM.createRoot(document.getElementById("root") as any).render(
   <React.StrictMode>
-    <ToastProvider>
-      <App />
-      <Toaster position="top-center" />
-    </ToastProvider>
+    <Provider store={store}>
+      <ToastProvider>
+        <App />
+        <Toaster position="top-center" />
+      </ToastProvider>
+    </Provider>
   </React.StrictMode>
 );

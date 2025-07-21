@@ -23,14 +23,12 @@ import {
   CreateQuickScenarioValues,
   QuickScenarioValues,
 } from "../../../formik";
-import Cookies from "js-cookie";
 import { scenarioPresets } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 export default function ShowcaseQuickCreatePage() {
-  const name = Cookies.get("principal");
-
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
@@ -40,9 +38,9 @@ export default function ShowcaseQuickCreatePage() {
   const [chosenScenarioPreset, setChosenScenarioPreset] = useState<
     string | null
   >(null);
-
+  const { principal } = useSelector((state: any) => state.user);
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${name}`,
+    `/conversational/files/organization?organization_id=${principal}`,
     fetcherElwyn
   );
 
@@ -66,7 +64,7 @@ export default function ShowcaseQuickCreatePage() {
           ai_role: values.ai_role,
           my_role: values.my_role,
           scenario_description: values.scenario_description,
-          organization_id: name,
+          organization_id: principal,
           file_ids: fileIdsTemp,
         });
         toast.success("Roleplay created successfully!", {

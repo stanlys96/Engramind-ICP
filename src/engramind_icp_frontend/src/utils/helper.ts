@@ -1,4 +1,4 @@
-import { Assessment, PersonaData } from "../interface";
+import { Assessment, NavbarLinkData, PersonaData } from "../interface";
 
 export enum Category {
   Quick,
@@ -231,5 +231,34 @@ export const scenarioPresets = [
         file_ids: [],
       },
     ],
+  },
+];
+
+export const navbarLinkData: NavbarLinkData[] = [
+  {
+    id: 1,
+    href: "/showcase",
+    includes: "/showcase/roleplay",
+    title: "Roleplay Scenarios",
+  },
+  {
+    id: 2,
+    href: "/showcase/persona",
+    title: "Persona",
+  },
+  {
+    id: 3,
+    href: "/showcase/rubrics",
+    title: "Rubrics",
+  },
+  {
+    id: 4,
+    href: "/showcase/glossary",
+    title: "Glossary",
+  },
+  {
+    id: 5,
+    href: "/showcase/file-management",
+    title: "File Management",
   },
 ];

@@ -81,7 +81,7 @@ export const AnimatedDropdown: React.FC<DropdownProps> = ({
       <AnimatePresence>
         {isOpen && !isNested && (
           <motion.ul
-            className="absolute shadow-sm bg-[#FFFFFF] w-full mt-2 w-48 cursor-pointer bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700 border-zinc-200 bg-white rounded-lg shadow-lg overflow-hidden z-10"
+            className="absolute max-h-[350px] overflow-scroll shadow-sm bg-[#FFFFFF] w-full mt-2 w-48 cursor-pointer bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-700 border-zinc-200 bg-white rounded-lg shadow-lg overflow-hidden z-10"
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

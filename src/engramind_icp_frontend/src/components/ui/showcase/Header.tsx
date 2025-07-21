@@ -1,20 +1,26 @@
 "use client";
 import { BellDot, MenuIcon } from "lucide-react";
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "../../../theme/theme-toggle";
-import Cookies from "js-cookie";
-import IC from "../../../utils/IC";
-import { AnimatedModal } from "../AnimatedModal";
+import { navbarLinkData } from "../../../utils/helper";
+import { NavbarLinkData } from "../../../interface";
 
 interface HeaderProps {
   name: string;
   setIsOpenDrawer: (value: boolean) => void;
   setShowConfirm: (value: boolean) => void;
+  setShowUpdateNickname: (value: boolean) => void;
+  currentNickname: string;
 }
 
 export const ShowcaseHeader = (
-  { name, setIsOpenDrawer, setShowConfirm }: HeaderProps // Default value for name
+  {
+    name,
+    setIsOpenDrawer,
+    setShowConfirm,
+    setShowUpdateNickname,
+    currentNickname,
+  }: HeaderProps // Default value for name
 ) => {
   const location = useLocation();
   const pathname = location.pathname;
@@ -23,88 +29,39 @@ export const ShowcaseHeader = (
   return (
     <header className="w-full border-b border-zinc-200 bg-white/50 backdrop-blur-sm dark:bg-zinc-800 dark:border-neutral-800">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        {/* <div className="text-lg font-bold text-purple-600 dark:text-purple-400 md:block hidden">
-          Personas
-        </div> */}
         <MenuIcon
           onClick={() => setIsOpenDrawer(true)}
           className="md:hidden text-black dark:text-white block cursor-pointer"
         />
         <nav className="hidden md:flex gap-6 text-md text-gray-700 dark:text-gray-300 leading-relaxed">
-          <Link
-            to="/showcase"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname?.includes("/showcase/roleplay") ||
-              pathname === "/showcase"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Roleplay Scenarios
-          </Link>
-          <Link
-            to="/showcase/persona"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/persona"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Persona
-          </Link>
-          <Link
-            to="/showcase/rubrics"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/rubrics"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Rubrics
-          </Link>
-          <Link
-            to="/showcase/glossary"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/glossary"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            Glossary
-          </Link>
-
-          <Link
-            to="/showcase/file-management"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/file-management"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            File Management
-          </Link>
-          {/* <Link
-            to="/showcase/how-it-works"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/how-it-works"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            How It Works
-          </Link>
-          <Link
-            to="/showcase/faq"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/faq" ? "text-purple-600 font-bold" : ""
-            }`}
-          >
-            FAQ
-          </Link> */}
+          {navbarLinkData.map((linkData: NavbarLinkData, index: number) => (
+            <Link
+              key={linkData.id + index.toString()}
+              to={linkData.href}
+              className={`hover:text-purple-600 dark:hover:text-purple-400 ${
+                (linkData?.includes &&
+                  pathname?.includes(linkData?.includes)) ||
+                pathname === linkData?.href
+                  ? "text-purple-600 font-bold"
+                  : ""
+              }`}
+            >
+              {linkData.title}
+            </Link>
+          ))}
         </nav>
         <div className="flex gap-4 items-center relative">
           <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-            Hi, {name?.slice(0, 12) + "..."}
+            Hi,{" "}
+            <button
+              onClick={() => setShowUpdateNickname(true)}
+              type="button"
+              className="cursor-pointer"
+            >
+              {currentNickname?.length > 20
+                ? currentNickname?.slice(0, 12) + "..."
+                : currentNickname}
+            </button>
           </div>
           <BellDot className="text-purple-600 dark:text-purple-400 md:block hidden" />
           <img

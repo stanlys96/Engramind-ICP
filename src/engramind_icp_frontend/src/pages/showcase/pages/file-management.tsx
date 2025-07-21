@@ -8,20 +8,21 @@ import {
 } from "../../../components/ui";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { UploadIcon } from "@radix-ui/react-icons";
-import Cookies from "js-cookie";
 import useSWR from "swr";
 import { FileResponse } from "../../../interface";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function FileManagementPage() {
-  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { principal } = useSelector((state: any) => state.user);
+
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${name}`,
+    `/conversational/files/organization?organization_id=${principal}`,
     fetcherElwyn
   );
 

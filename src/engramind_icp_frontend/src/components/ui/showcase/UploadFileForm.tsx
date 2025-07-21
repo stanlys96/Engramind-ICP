@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { axiosElwyn } from "../../../utils/api";
 import { FileResponse } from "../../../interface";
 import { useToast } from "../../../toast/toast";
-import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 interface UploadFileForm {
   loading: boolean;
@@ -25,13 +25,11 @@ export const UploadFileForm = ({
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [backend, setBackend] = useState<_SERVICE>();
-  const { addToast } = useToast();
-  const name = Cookies.get("principal");
+  const { principal } = useSelector((state: any) => state.user);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
-
       setFileName(e.target.files[0]?.name);
     }
   };
@@ -40,7 +38,7 @@ export const UploadFileForm = ({
     if (!file) return;
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("organization_id", name ?? "");
+    formData.append("organization_id", principal);
     const toastId = toast.loading(`Uploading file...`, {
       id: "upload-file",
       duration: Infinity,
@@ -53,7 +51,7 @@ export const UploadFileForm = ({
       );
       const result = response.data as FileResponse;
       await backend?.addContentToUser(
-        Principal.fromText(name ?? ""),
+        Principal.fromText(principal ?? ""),
         { File: null },
         result?.file_id
       );

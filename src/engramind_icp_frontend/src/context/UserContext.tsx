@@ -4,10 +4,12 @@ import { _SERVICE } from "../../../declarations/engramind_icp_backend/engramind_
 
 type UserContextType = {
   name: string;
+  currentNickname: string;
 };
 
 export const UserContext = createContext<UserContextType>({
   name: "Guest",
+  currentNickname: "",
 });
 
 export const useUser = () => useContext(UserContext);

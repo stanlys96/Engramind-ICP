@@ -20,10 +20,8 @@ import {
   Assessment,
   AssessmentRaw,
   FileResponse,
-  FinalRubric,
   RubricsResponse,
 } from "../../../interface";
-import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
@@ -31,11 +29,11 @@ import useSWR from "swr";
 import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
 import { extractAndParseRubricJSON, ItemType } from "../../../utils/helper";
+import { useSelector } from "react-redux";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
-  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
@@ -47,12 +45,13 @@ export default function RubricsPage() {
   const [uploading, setUploading] = useState(false);
   const [rubricId, setRubricId] = useState("");
   const [backend, setBackend] = useState<_SERVICE>();
+  const { principal, nickname } = useSelector((state: any) => state.user);
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
     `/assessment/rubrics`,
     fetcherElwyn
   );
   const totalRubricsResult: Assessment[] = totalRubricsData?.data?.data
-    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === name)
+    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === principal)
     ?.map((rubricsData: AssessmentRaw) => {
       return {
         ...rubricsData,
@@ -93,13 +92,13 @@ export default function RubricsPage() {
           {
             name: values.name,
             rubrics_description: values.description,
-            organization_id: name,
+            organization_id: principal,
             file_ids: fileIdsTemp,
           }
         );
         const result = response.data as RubricsResponse;
         await backend?.addContentToUser(
-          Principal.fromText(name ?? ""),
+          Principal.fromText(principal ?? ""),
           { Rubrics: null },
           result?.data?.assessment?.rubric_id
         );
@@ -147,7 +146,7 @@ export default function RubricsPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name?.slice(0, 12) + "..."}
+              Welcome, {nickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create your own scoring criteria.

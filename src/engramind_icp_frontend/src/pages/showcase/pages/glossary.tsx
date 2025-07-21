@@ -15,7 +15,6 @@ import {
   CreateUpdateGlossaryValues,
 } from "../../../formik";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
-import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
@@ -24,11 +23,11 @@ import useSWR from "swr";
 import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
 import { ItemType } from "../../../utils/helper";
+import { useSelector } from "react-redux";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function GlossaryPage() {
-  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
@@ -38,13 +37,15 @@ export default function GlossaryPage() {
   const [isOpenGlossaryDetail, setIsOpenGlossaryDetail] =
     useState<boolean>(false);
 
+  const { principal, nickname } = useSelector((state: any) => state.user);
+
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
     `/assessment/scenario-glossary`,
     fetcherElwyn
   );
 
   const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data?.data
-    ?.filter((glossary: GlossaryData) => glossary.organization_id === name)
+    ?.filter((glossary: GlossaryData) => glossary.organization_id === principal)
     ?.sort((a: any, b: any) => {
       const dateA = new Date(a.timestamp).getTime();
       const dateB = new Date(b.timestamp).getTime();
@@ -93,12 +94,12 @@ export default function GlossaryPage() {
             {
               name: values.name,
               glossary: values.content,
-              organization_id: name,
+              organization_id: principal,
             }
           );
           const result = response.data as GlossaryResponse;
           await backend?.addContentToUser(
-            Principal.fromText(name ?? ""),
+            Principal.fromText(principal ?? ""),
             { Glossary: null },
             result.data.id
           );
@@ -149,7 +150,7 @@ export default function GlossaryPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name?.slice(0, 12) + "..."}
+              Welcome, {nickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your glossaries

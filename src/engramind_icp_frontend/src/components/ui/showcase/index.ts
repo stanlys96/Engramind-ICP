@@ -19,3 +19,5 @@ export * from "./FileCard";
 export * from "./PersonaDetails";
 export * from "./RubricsDetail";
 export * from "./GlossaryDetail";
+export * from "./LogoutForm";
+export * from "./UpdateNicknameForm";

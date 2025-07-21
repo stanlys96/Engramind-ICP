@@ -9,7 +9,6 @@ import {
   ScenarioCard,
 } from "../../components/ui";
 import { axiosElwyn, fetcherElwyn } from "../../utils/api";
-import Cookies from "js-cookie";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
 import { Category } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
@@ -17,23 +16,23 @@ import useSWR from "swr";
 import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
 import { ConversationModalForm } from "../../components/ui/showcase/ConversationForm";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
-  const name = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
   const [conversationOpen, setConversationOpen] = useState(false);
   const [currentConversation, setCurrentConversation] =
     useState<RoleplayResponse | null>(null);
   const [conversationId, setConversationId] = useState<string>("");
-
+  const { principal, nickname } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
 
-  const { data: totalScenariosData, mutate: totalScenariosMutate } = useSWR(
-    `/assessment/scenarios/organization/all?organization_id=${name}`,
+  const { data: totalScenariosData } = useSWR(
+    `/assessment/scenarios/organization/all?organization_id=${principal}`,
     fetcherElwyn
   );
 
@@ -93,7 +92,7 @@ export default function ScenariosPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name?.slice(0, 12) + "..."}
+              Welcome, {nickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your roleplay scenarios

@@ -6,7 +6,8 @@ import ThemeToggle from "../../theme/theme-toggle";
 import IC from "../../utils/IC";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useDispatch } from "react-redux";
+import { settingNickname, settingPrincipal } from "../../stores/user-slice";
 
 type NavbarProps = {
   showMenu: boolean;
@@ -14,6 +15,7 @@ type NavbarProps = {
 
 export default function Navbar({ showMenu }: NavbarProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,8 +32,22 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getPrincipal()
             ?.toText();
           await backend?.addNewUser(authClient?.getIdentity()?.getPrincipal());
-          Cookies.set("principal", principalText);
-          navigate("/showcase");
+          dispatch(settingPrincipal(principalText));
+          backend
+            ?.getUserNickname(authClient?.getIdentity()?.getPrincipal())
+            .then((userNicknameResult) => {
+              if (userNicknameResult?.[0]) {
+                const finalNickname =
+                  userNicknameResult?.[0]?.length > 20
+                    ? userNicknameResult?.[0]?.slice(0, 9) +
+                      "..." +
+                      userNicknameResult?.[0]?.slice(-3)
+                    : userNicknameResult?.[0];
+                dispatch(settingNickname(finalNickname));
+              }
+              navigate("/showcase");
+            })
+            .catch((_) => navigate("/showcase"));
         },
         onError: () => {
           // setLoading(false);

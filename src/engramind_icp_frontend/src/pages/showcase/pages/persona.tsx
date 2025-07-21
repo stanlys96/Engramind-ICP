@@ -26,7 +26,6 @@ import {
   handleUpdateFormikBody,
   populateUpdateFormik,
 } from "../../../utils/showcase";
-import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
@@ -34,10 +33,9 @@ import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
 import { FileResponse } from "../../../interface";
 import { ItemType } from "../../../utils/helper";
+import { useSelector } from "react-redux";
 
 export default function PersonaPage() {
-  const name = Cookies.get("principal");
-
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [isOpenPersonaDetails, setIsOpenPersonaDetails] = useState(false);
@@ -47,12 +45,13 @@ export default function PersonaPage() {
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
+  const { principal, nickname } = useSelector((state: any) => state.user);
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
     `/assessment/persona-characters`,
     fetcherElwyn
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data?.data
-    ?.filter((persona: PersonaData) => persona.organization_id === name)
+    ?.filter((persona: PersonaData) => persona.organization_id === principal)
     ?.sort((a: any, b: any) => {
       const dateA = new Date(a.timestamp).getTime();
       const dateB = new Date(b.timestamp).getTime();
@@ -115,13 +114,13 @@ export default function PersonaPage() {
           {
             name: values.name,
             persona_prompt: values.personaPrompt,
-            organization_id: name,
+            organization_id: principal,
             file_ids: fileIdsTemp,
           }
         );
         const personaResponse = response.data as PersonaResponse;
         await backend?.addContentToUser(
-          Principal.fromText(name ?? ""),
+          Principal.fromText(principal ?? ""),
           { Persona: null },
           personaResponse?.data?.id
         );
@@ -164,7 +163,7 @@ export default function PersonaPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {name?.slice(0, 12) + "..."}
+              Welcome, {nickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Curated profiles. Proven expertise. Find and connect with your AI
