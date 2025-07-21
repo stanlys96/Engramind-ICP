@@ -18,7 +18,7 @@ interface Props {
   isOpen: boolean;
   currentConversation: RoleplayResponse | null;
   conversationId: string;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 export const ConversationModalForm = ({
@@ -33,6 +33,13 @@ export const ConversationModalForm = ({
   const [conversationMessages, setConversationMessages] = useState<any>([]);
   const disableSubmitButton = isLoading || !message;
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const resetAll = () => {
+    setMessage("");
+    setConversationMessages([]);
+    setResponseText("");
+    setIsLoading(false);
+  };
 
   const handleStream = async () => {
     try {
@@ -143,7 +150,12 @@ export const ConversationModalForm = ({
   }, [conversationMessages, isLoading, responseText]);
 
   useEffect(() => {
-    const handleEsc = (e: any) => e.key === "Escape" && onClose && onClose();
+    const handleEsc = (e: any) => {
+      if (e.key === "Escape") {
+        resetAll();
+        onClose();
+      }
+    };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [onClose]);
@@ -156,7 +168,10 @@ export const ConversationModalForm = ({
           animate="visible"
           exit="hidden"
           variants={backdrop}
-          onClick={onClose}
+          onClick={() => {
+            resetAll();
+            onClose();
+          }}
         >
           <motion.div
             className="bg-transparent absolute top-1/2 left-1/2 w-full lg:w-[80%]"
@@ -169,7 +184,10 @@ export const ConversationModalForm = ({
             <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  resetAll();
+                  onClose();
+                }}
                 className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
               >
                 ✕
