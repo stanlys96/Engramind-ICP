@@ -35,17 +35,17 @@ export const ScenarioCard = ({
         className="w-full h-64 object-cover rounded-t-xl"
       />
       <div className="p-4">
-        <div className="relative flex flex-col ">
-          <h3 className="text-base font-semibold dark:text-white text-zinc-800">
+        <div className="relative flex flex-col gap-y-1">
+          <h3 className="text-md font-semibold dark:text-white text-zinc-800">
             {item.name}
           </h3>
-          <p className="text-base text-[#627084]">
+          <p className="text-md dark:text-[#73808C] text-[#627084]">
             {item.description.charactersName}
           </p>
-          <p className="text-sm text-[#627084]">
+          <p className="text-sm text-[#4B5563] dark:text-[#D1D5DB]">
             Gender: {item.description.charactersGender}
           </p>
-          <p className="text-base text-[#627084]">
+          <p className="text-sm text-[#4B5563] dark:text-[#D1D5DB]">
             Visibility:{" "}
             <span className="font-bold">
               {!item.visibility ? "Private" : "Public"}
