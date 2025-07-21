@@ -41,22 +41,11 @@ export default function Navbar({ showMenu }: NavbarProps) {
           await backend?.addNewUser(principal);
           Cookies.set("principal", principalText);
           dispatch(settingPrincipal(principalText));
-          backend
-            ?.getUserNickname(principal)
-            .then((userNicknameResult) => {
-              if (userNicknameResult?.[0]) {
-                const finalNickname = userNicknameResult?.[0];
-                dispatch(settingNickname(finalNickname));
-                Cookies.set("nickname", finalNickname);
-              }
-            })
-            .finally(() => {
-              toast.success(`Successfully logged in!`, {
-                id: toastId,
-                duration: 4000,
-              });
-              navigate("/showcase");
-            });
+          toast.success(`Successfully logged in!`, {
+            id: toastId,
+            duration: 4000,
+          });
+          navigate("/showcase");
         },
         onError: (error) => {
           toast.error(error?.toString(), {

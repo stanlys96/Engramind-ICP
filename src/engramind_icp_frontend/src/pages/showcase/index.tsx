@@ -17,14 +17,19 @@ import useSWR from "swr";
 import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
 import { ConversationModalForm } from "../../components/ui/showcase/ConversationForm";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
+import { settingNickname } from "../../stores/user-slice";
+import IC from "../../utils/IC";
+import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
+import { Principal } from "@dfinity/principal";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
   const principal = Cookies.get("principal");
   const userNickname = Cookies.get("nickname");
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
@@ -107,6 +112,20 @@ export default function ScenariosPage() {
       setCurrentNickname(nickname);
     }
   }, [nickname]);
+
+  useEffect(() => {
+    IC.getBackend((result: _SERVICE) => {
+      result
+        ?.getUserNickname(Principal.fromText(principal ?? ""))
+        .then((userNicknameResult) => {
+          if (userNicknameResult?.[0]) {
+            const finalNickname = userNicknameResult?.[0];
+            dispatch(settingNickname(finalNickname));
+            Cookies.set("nickname", finalNickname);
+          }
+        });
+    });
+  }, []);
 
   return (
     <ShowcaseLayout>
