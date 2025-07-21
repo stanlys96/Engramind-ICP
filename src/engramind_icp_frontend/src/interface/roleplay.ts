@@ -56,3 +56,27 @@ export interface Description {
   charactersSkillsAndAbilities: string;
   scenarioBackground: string;
 }
+
+export interface RoleplayJobResponse {
+  statusCode: number;
+  jobId: string;
+  jobStatus: string;
+  progress: number;
+  result: RoleplayJobResult;
+  failedReason: any;
+}
+
+export interface RoleplayJobResult {
+  jobStatus: string;
+  message: string;
+  processedId: string;
+  code: number;
+  is_success: boolean;
+  data: RoleplayJobData;
+}
+
+export interface RoleplayJobData {
+  assessment_id: string;
+  roleplay_agent_id: string;
+  scenario_id: string;
+}

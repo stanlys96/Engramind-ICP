@@ -1,12 +1,13 @@
 import { AnimatedSpinner } from "../AnimatedSpinner";
 import { useEffect, useState } from "react";
-import { axiosElwyn } from "../../../utils/api";
-import { FileResponse } from "../../../interface";
+import { axiosBackend } from "../../../utils/api";
+import { FileJobResponse, FileResponse, JobResponse } from "../../../interface";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { JobStatus } from "../../../utils/helper";
 
 interface UploadFileForm {
   loading: boolean;
@@ -38,34 +39,43 @@ export const UploadFileForm = ({
     const formData = new FormData();
     formData.append("file", file);
     formData.append("organization_id", principal ?? "");
-    const toastId = toast.loading(`Uploading file...`, {
-      id: "upload-file",
-      duration: Infinity,
-    });
     try {
       setLoading(true);
-      const response = await axiosElwyn.post(
-        "/assessment/upload-file",
-        formData
-      );
-      const result = response.data as FileResponse;
-      await backend?.addContentToUser(
-        Principal.fromText(principal ?? ""),
-        { File: null },
-        result?.file_id
-      );
-      if (filesMutate) {
-        filesMutate();
-      }
-      toast.success(`File uploaded successfully!`, {
-        id: toastId,
-        duration: 4000,
-      });
-      setIsOpen(false);
-      setLoading(false);
+      const response = await axiosBackend.post("/files/create", formData);
+      const jobResponse = response.data as JobResponse;
+      const createFileInterval = setInterval(async () => {
+        const fileStatus = await axiosBackend.get(
+          `/files/job-status-create/${jobResponse.jobId}`
+        );
+        const fileResult = fileStatus.data as FileJobResponse;
+        if (fileResult.jobStatus === JobStatus.Completed) {
+          toast.success("File uploaded successfully!", {
+            id: "upload-file-success",
+            duration: 4000,
+          });
+          await backend?.addContentToUser(
+            Principal.fromText(principal ?? ""),
+            { File: null },
+            fileResult?.result?.file_id
+          );
+          if (filesMutate) {
+            filesMutate();
+          }
+          setIsOpen(false);
+          setLoading(false);
+          clearInterval(createFileInterval);
+        } else if (fileResult.jobStatus === JobStatus.Failed) {
+          setLoading(false);
+          toast.error("File failed to be uploaded. Please try again.", {
+            id: "upload-file-error",
+            duration: 4000,
+          });
+          clearInterval(createFileInterval);
+        }
+      }, 2000);
     } catch (e) {
       toast.error(e?.toString(), {
-        id: toastId,
+        id: "upload-file-error",
         duration: 4000,
       });
       setLoading(false);
@@ -105,7 +115,6 @@ export const UploadFileForm = ({
       <div className="flex justify-end mt-5 gap-x-3">
         <button
           type="button"
-          disabled={loading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
         >

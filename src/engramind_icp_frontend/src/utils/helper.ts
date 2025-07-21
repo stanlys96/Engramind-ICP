@@ -1,5 +1,10 @@
 import { Assessment, NavbarLinkData, PersonaData } from "../interface";
 
+export enum JobStatus {
+  Completed = "completed",
+  Failed = "failed",
+}
+
 export enum Category {
   Quick,
   Advanced,

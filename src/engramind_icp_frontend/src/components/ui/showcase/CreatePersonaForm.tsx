@@ -7,7 +7,7 @@ import { AnimatedModal } from "../AnimatedModal";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import useSWR from "swr";
-import { fetcherElwyn } from "../../../utils/api";
+import { fetcherBackend } from "../../../utils/api";
 import { FileResponse } from "../../../interface";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
@@ -31,7 +31,7 @@ export const CreatePersonaForm = ({
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
     `/conversational/files/organization?organization_id=${name}`,
-    fetcherElwyn
+    fetcherBackend
   );
 
   const totalFilesResult = totalFilesData?.data?.files;
@@ -161,7 +161,6 @@ export const CreatePersonaForm = ({
       <div className="flex justify-end mt-5 gap-x-3">
         <button
           type="button"
-          disabled={loading || uploading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
         >
@@ -184,7 +183,6 @@ export const CreatePersonaForm = ({
         widthFitContainer
         isOpen={animatedModalOpen}
         onClose={() => {
-          if (uploading) return;
           setAnimatedModalOpen(false);
         }}
       >

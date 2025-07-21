@@ -7,7 +7,7 @@ import { UploadFileForm } from "./UploadFileForm";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import useSWR from "swr";
-import { fetcherElwyn } from "../../../utils/api";
+import { fetcherBackend } from "../../../utils/api";
 import { FileResponse } from "../../../interface";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
@@ -30,11 +30,11 @@ export const CreateRubricForm = ({
   const principal = Cookies.get("principal");
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${principal}`,
-    fetcherElwyn
+    `/files/all/${principal}`,
+    fetcherBackend
   );
 
-  const totalFilesResult = totalFilesData?.data?.files;
+  const totalFilesResult: FileResponse[] = totalFilesData?.data?.files;
   const disableSubmitButton = !createFormik.isValid || loading;
   return (
     <form onSubmit={createFormik.handleSubmit}>
@@ -161,7 +161,6 @@ export const CreateRubricForm = ({
       <div className="flex justify-end mt-5 gap-x-3">
         <button
           type="button"
-          disabled={loading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
         >
@@ -184,7 +183,6 @@ export const CreateRubricForm = ({
         widthFitContainer
         isOpen={animatedModalOpen}
         onClose={() => {
-          if (uploading) return;
           setAnimatedModalOpen(false);
         }}
       >

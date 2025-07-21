@@ -1,7 +1,18 @@
 export interface GlossaryResponse {
+  statusCode: number;
+  jobId: string;
+  jobStatus: string;
+  progress: number;
+  result: GlossaryResult;
+  failedReason: any;
+}
+
+export interface GlossaryResult {
+  jobStatus: string;
+  message: string;
+  processedId: string;
   code: number;
   is_success: boolean;
-  message: string;
   data: GlossaryData;
 }
 

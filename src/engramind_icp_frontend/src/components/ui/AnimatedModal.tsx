@@ -38,7 +38,7 @@ export const AnimatedModal = ({
         >
           <motion.div
             className={`${className} absolute border dark:border-zinc-700 border-zinc-200 top-1/2 left-1/2 bg-[#FEFEFE] dark:bg-[#101213] rounded-2xl shadow-xl p-6 ${
-              widthFitContainer ? "" : "w-full lg:w-[80%]"
+              widthFitContainer ? "w-full md:w-fit" : "w-full lg:w-[80%]"
             }`}
             variants={modal}
             initial="hidden"

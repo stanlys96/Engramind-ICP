@@ -2,7 +2,7 @@
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { useCallback, useEffect, useState } from "react";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { useFormik } from "formik";
 import useSWR from "swr";
 import { PersonaData, PersonaResponse } from "../../../interface/persona";
@@ -31,8 +31,8 @@ import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
 import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
-import { FileResponse } from "../../../interface";
-import { formatNickname, ItemType } from "../../../utils/helper";
+import { FileResponse, JobResponse } from "../../../interface";
+import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -53,16 +53,10 @@ export default function PersonaPage() {
     nickname || userNickname
   );
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
-    `/assessment/persona-characters`,
-    fetcherElwyn
+    `persona/all/${principal}`,
+    fetcherBackend
   );
-  const totalPersonaResult: PersonaData[] = totalPersonaData?.data?.data
-    ?.filter((persona: PersonaData) => persona.organization_id === principal)
-    ?.sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
+  const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
 
   const handleEditPersona = () => {
     if (selectedPersona) {
@@ -76,27 +70,34 @@ export default function PersonaPage() {
     initialValues: updatePersonaInitialValues,
     validationSchema: updatePersonaSchema,
     onSubmit: async (values, { resetForm }) => {
-      const toastId = toast.loading("Updating persona...", {
-        id: "update-persona",
-        duration: Infinity,
-      });
       try {
         setLoading(true);
-        await axiosElwyn.put(
-          `/assessment/persona-characters/${values.id}`,
-          handleUpdateFormikBody(values)
-        );
-        toast.success("Persona updated successfully!", {
-          id: toastId,
-          duration: 4000,
-        });
-        personaMutate();
-        setLoading(false);
-        setIsOpenEditPersona(false);
-        resetForm();
+        const response = await axiosBackend.post("/persona/update", values);
+        const jobResponse = response.data as JobResponse;
+        const updatePersonaInterval = setInterval(async () => {
+          const personaStatus = await axiosBackend.get(
+            `/persona/job-status-update/${jobResponse.jobId}`
+          );
+          const personaResult = personaStatus.data as PersonaResponse;
+          if (personaResult.jobStatus === JobStatus.Completed) {
+            toast.success("Persona updated successfully!", {
+              duration: 4000,
+            });
+            personaMutate();
+            setLoading(false);
+            setIsOpen(false);
+            resetForm();
+            clearInterval(updatePersonaInterval);
+          } else if (personaResult.jobStatus === JobStatus.Failed) {
+            setLoading(false);
+            toast.error("Persona failed to be updated. Please try again.", {
+              duration: 4000,
+            });
+            clearInterval(updatePersonaInterval);
+          }
+        }, 5000);
       } catch (e) {
         toast.error(e?.toString(), {
-          id: toastId,
           duration: 4000,
         });
         setLoading(false);
@@ -108,41 +109,49 @@ export default function PersonaPage() {
     initialValues: createPersonaInitialValues,
     validationSchema: createPersonaSchema,
     onSubmit: async (values, { resetForm }) => {
-      const toastId = toast.loading("Creating persona...", {
-        id: "create-persona",
-        duration: Infinity,
-      });
       try {
         setLoading(true);
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
-        const response = await axiosElwyn.post(
-          "/assessment/live/persona-characters/create",
-          {
-            name: values.name,
-            persona_prompt: values.personaPrompt,
-            organization_id: principal,
-            file_ids: fileIdsTemp,
-          }
-        );
-        const personaResponse = response.data as PersonaResponse;
-        await backend?.addContentToUser(
-          Principal.fromText(principal ?? ""),
-          { Persona: null },
-          personaResponse?.data?.id
-        );
-        personaMutate();
-        populateUpdateFormik(updateFormik, personaResponse?.data);
-        setLoading(false);
-        setIsOpen(false);
-        setIsOpenEditPersona(true);
-        resetForm();
-        toast.success("Persona created successfully!", {
-          id: toastId,
-          duration: 4000,
+        const response = await axiosBackend.post("/persona/create", {
+          name: values.name,
+          persona_prompt: values.personaPrompt,
+          organization_id: principal,
+          file_ids: fileIdsTemp,
         });
+        const jobResponse = response.data as JobResponse;
+        const createPersonaInterval = setInterval(async () => {
+          const personaStatus = await axiosBackend.get(
+            `/persona/job-status-create/${jobResponse.jobId}`
+          );
+          const personaResult = personaStatus.data as PersonaResponse;
+          if (personaResult.jobStatus === JobStatus.Completed) {
+            await backend?.addContentToUser(
+              Principal.fromText(principal ?? ""),
+              { Persona: null },
+              personaResult?.result?.data?.id
+            );
+            toast.success("Persona created successfully!", {
+              id: "persona-success",
+              duration: 4000,
+            });
+            personaMutate();
+            populateUpdateFormik(updateFormik, personaResult?.result?.data);
+            setLoading(false);
+            setIsOpen(false);
+            setIsOpenEditPersona(true);
+            resetForm();
+            clearInterval(createPersonaInterval);
+          } else if (personaResult.jobStatus === JobStatus.Failed) {
+            setLoading(false);
+            toast.error("Persona failed to be created. Please try again.", {
+              id: "persona-error",
+              duration: 4000,
+            });
+            clearInterval(createPersonaInterval);
+          }
+        }, 5000);
       } catch (e) {
         toast.error(e?.toString(), {
-          id: toastId,
           duration: 4000,
         });
         setLoading(false);
@@ -207,7 +216,6 @@ export default function PersonaPage() {
         <AnimatedModal
           isOpen={isOpen}
           onClose={() => {
-            if (loading || uploading) return;
             setIsOpen(false);
           }}
         >

@@ -78,7 +78,6 @@ export const CreateOrUpdateGlossaryForm = ({
       <div className="flex justify-end mt-5 gap-x-3">
         <button
           type="button"
-          disabled={loading}
           onClick={() => setIsOpen(false)}
           className="px-4 py-2 h-fit cursor-pointer bg-gray-300 dark:bg-zinc-700 text-gray-900 dark:text-white rounded hover:bg-gray-400 dark:hover:bg-zinc-600"
         >

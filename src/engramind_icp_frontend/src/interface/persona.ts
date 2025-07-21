@@ -1,7 +1,18 @@
 export interface PersonaResponse {
+  statusCode: number;
+  jobId: string;
+  jobStatus: string;
+  progress: number;
+  result: PersonaResult;
+  failedReason: any;
+}
+
+export interface PersonaResult {
+  jobStatus: string;
+  message: string;
+  processedId: string;
   code: number;
   is_success: boolean;
-  message: string;
   data: PersonaData;
 }
 

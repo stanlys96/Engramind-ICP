@@ -9,13 +9,13 @@ import {
   ScenarioCard,
   ScenarioRoleplayDetail,
 } from "../../components/ui";
-import { axiosElwyn, fetcherElwyn } from "../../utils/api";
+import { axiosBackend, axiosElwyn, fetcherBackend } from "../../utils/api";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
 import { Category, formatNickname } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
-import { ConversationModalForm } from "../../components/ui/showcase/ConversationForm";
+import { RoleplayResponse } from "../../interface";
+import { ConversationModalForm } from "../../components/ui/showcase/ConversationModalForm";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
@@ -49,21 +49,11 @@ export default function ScenariosPage() {
   const navigate = useNavigate();
 
   const { data: totalScenariosData } = useSWR(
-    `/assessment/scenarios/organization/all?organization_id=${principal}`,
-    fetcherElwyn
+    `/quick-roleplay/all/${principal}`,
+    fetcherBackend
   );
 
-  const totalScenariosResult: RoleplayResponse[] =
-    totalScenariosData?.data?.data
-      ?.map((result: RoleplayResponseRaw) => ({
-        ...result,
-        description: JSON.parse(result?.description),
-      }))
-      ?.sort((a: any, b: any) => {
-        const dateA = new Date(a.timestamp).getTime();
-        const dateB = new Date(b.timestamp).getTime();
-        return dateB - dateA;
-      });
+  const totalScenariosResult: RoleplayResponse[] = totalScenariosData?.data;
 
   const handleClickNewRoleplay = () => {
     setIsOpen(true);

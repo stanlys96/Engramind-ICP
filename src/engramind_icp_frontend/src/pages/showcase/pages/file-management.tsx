@@ -6,12 +6,17 @@ import {
   FileCard,
   UploadFileForm,
 } from "../../../components/ui";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { UploadIcon } from "@radix-ui/react-icons";
 import useSWR from "swr";
-import { FileResponse } from "../../../interface";
+import {
+  DeleteFileJobResponse,
+  FileResponse,
+  JobResponse,
+} from "../../../interface";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { JobStatus } from "../../../utils/helper";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -21,8 +26,8 @@ export default function FileManagementPage() {
   const [loading, setLoading] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${principal}`,
-    fetcherElwyn
+    `/files/all/${principal}`,
+    fetcherBackend
   );
 
   const totalFilesResult: FileResponse[] = totalFilesData?.data?.files;
@@ -34,7 +39,7 @@ export default function FileManagementPage() {
     });
     try {
       setLoading(true);
-      const response = await axiosElwyn.get(
+      const response = await axiosBackend.get(
         `/conversational/files/download/${fileId}`,
         {
           headers: {
@@ -70,23 +75,36 @@ export default function FileManagementPage() {
   };
 
   const handleDeleteFile = async (fileId: string) => {
-    const toastId = toast.loading(`Deleting file`, {
-      id: "delete-file",
-      duration: Infinity,
-    });
     try {
       setLoading(true);
-      await axiosElwyn.delete(`/conversational/files/${fileId}`);
-      filesMutate();
-      setLoading(false);
-      setIsOpen(false);
-      toast.success(`Files deleted successfully!`, {
-        id: toastId,
-        duration: 4000,
-      });
+      const response = await axiosBackend.delete(`/files/file/${fileId}`);
+      const jobResponse = response.data as JobResponse;
+      const deleteFileInterval = setInterval(async () => {
+        const deleteFileStatus = await axiosBackend.get(
+          `/files/job-status-delete/${jobResponse.jobId}`
+        );
+        const deleteFileResult = deleteFileStatus.data as DeleteFileJobResponse;
+        if (deleteFileResult.jobStatus === JobStatus.Completed) {
+          toast.success("File deleted successfully!", {
+            id: "file-deleted-success",
+            duration: 4000,
+          });
+          setLoading(false);
+          filesMutate();
+          setIsOpen(false);
+          clearInterval(deleteFileInterval);
+        } else if (deleteFileResult.jobStatus === JobStatus.Failed) {
+          setLoading(false);
+          toast.error("File failed to be deleted. Please try again.", {
+            id: "file-deleted-error",
+            duration: 4000,
+          });
+          clearInterval(deleteFileInterval);
+        }
+      }, 1500);
     } catch (e) {
       toast.error(e?.toString(), {
-        id: toastId,
+        id: "delete-file-error",
         duration: 4000,
       });
       console.log(e, "<<<< EEE");
@@ -130,7 +148,6 @@ export default function FileManagementPage() {
           widthFitContainer
           isOpen={isOpen}
           onClose={() => {
-            if (loading) return;
             setIsOpen(false);
           }}
         >

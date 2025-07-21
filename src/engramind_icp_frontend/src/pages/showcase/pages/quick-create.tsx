@@ -4,15 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
-import { FileResponse } from "../../../interface";
+import {
+  FileResponse,
+  JobResponse,
+  RoleplayJobResponse,
+} from "../../../interface";
 import {
   AnimatedDropdown,
   AnimatedModal,
   AnimatedSpinner,
   UploadFileForm,
+  ModalProgress,
 } from "../../../components/ui";
 import useSWR from "swr";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { useFormik } from "formik";
 import {
   createQuickScenarioInitialValues,
@@ -20,7 +25,7 @@ import {
   CreateQuickScenarioValues,
   QuickScenarioValues,
 } from "../../../formik";
-import { scenarioPresets } from "../../../utils/helper";
+import { JobStatus, scenarioPresets } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
@@ -30,12 +35,13 @@ export default function ShowcaseQuickCreatePage() {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
+  const [showLoadingProgress, setShowLoadingProgress] = useState(false);
   const [chosenScenarioPreset, setChosenScenarioPreset] = useState<
     string | null
   >(null);
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${principal}`,
-    fetcherElwyn
+    `/files/all/${principal}`,
+    fetcherBackend
   );
 
   const totalFilesResult = totalFilesData?.data?.files;
@@ -46,14 +52,10 @@ export default function ShowcaseQuickCreatePage() {
     initialValues: createQuickScenarioInitialValues,
     validationSchema: createQuickScenarioSchema,
     onSubmit: async (values) => {
-      const toastId = toast.loading("Creating a roleplay...", {
-        id: "create-roleplay",
-        duration: Infinity,
-      });
       try {
         setLoading(true);
         const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
-        await axiosElwyn.post("/assessment/live/scenarios/quick-create", {
+        const response = await axiosBackend.post("/quick-roleplay/create", {
           scenario_title: values.scenario_title,
           ai_role: values.ai_role,
           my_role: values.my_role,
@@ -61,15 +63,32 @@ export default function ShowcaseQuickCreatePage() {
           organization_id: principal,
           file_ids: fileIdsTemp,
         });
-        toast.success("Roleplay created successfully!", {
-          id: toastId,
-          duration: 4000,
-        });
+        setShowLoadingProgress(true);
         setLoading(false);
-        navigate("/showcase");
+        const jobResponse = response.data as JobResponse;
+        const createQuickRoleplayInterval = setInterval(async () => {
+          const roleplayStatus = await axiosBackend.get(
+            `/quick-roleplay/job-status-create/${jobResponse.jobId}`
+          );
+          const roleplayResult = roleplayStatus.data as RoleplayJobResponse;
+          if (roleplayResult.jobStatus === JobStatus.Completed) {
+            toast.success("Roleplay created successfully!", {
+              id: "roleplay-created",
+              duration: 4000,
+            });
+            setLoading(false);
+            clearInterval(createQuickRoleplayInterval);
+          } else if (roleplayResult.jobStatus === JobStatus.Failed) {
+            setLoading(false);
+            toast.error("Roleplay failed to be created. Please try again.", {
+              id: "roleplay-created-error",
+              duration: 4000,
+            });
+            clearInterval(createQuickRoleplayInterval);
+          }
+        }, 5000);
       } catch (e) {
         toast.error(e?.toString(), {
-          id: toastId,
           duration: 4000,
         });
         setLoading(false);
@@ -348,6 +367,13 @@ export default function ShowcaseQuickCreatePage() {
             loading={uploading}
             filesMutate={filesMutate}
           />
+        </AnimatedModal>
+        <AnimatedModal
+          widthFitContainer
+          isOpen={showLoadingProgress}
+          onClose={() => setShowLoadingProgress(false)}
+        >
+          <ModalProgress setShowLoadingModal={setShowLoadingProgress} />
         </AnimatedModal>
       </div>
     </ShowcaseLayout>

@@ -14,12 +14,12 @@ import {
   createRubricsSchema,
   CreateRubricValues,
 } from "../../../formik";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
 import {
   Assessment,
-  AssessmentRaw,
   FileResponse,
+  JobResponse,
   RubricsResponse,
 } from "../../../interface";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
@@ -28,11 +28,7 @@ import { Principal } from "@dfinity/principal";
 import useSWR from "swr";
 import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
-import {
-  extractAndParseRubricJSON,
-  formatNickname,
-  ItemType,
-} from "../../../utils/helper";
+import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -57,22 +53,10 @@ export default function RubricsPage() {
     nickname || userNickname
   );
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
-    `/assessment/rubrics`,
-    fetcherElwyn
+    `/rubrics/all/${principal}`,
+    fetcherBackend
   );
-  const totalRubricsResult: Assessment[] = totalRubricsData?.data?.data
-    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === principal)
-    ?.map((rubricsData: AssessmentRaw) => {
-      return {
-        ...rubricsData,
-        rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
-      };
-    })
-    .sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
+  const totalRubricsResult: Assessment[] = totalRubricsData?.data;
 
   const [updateRubricsFormValues, setUpdateRubricsFormValues] =
     useState<FlatFormValues>({});
@@ -90,51 +74,57 @@ export default function RubricsPage() {
     initialValues: createRubricInitialValues,
     validationSchema: createRubricsSchema,
     onSubmit: async (values, { resetForm }) => {
-      const toastId = toast.loading("Adding rubrics...", {
-        id: "adding-rubrics",
-        duration: Infinity,
-      });
       try {
         setLoading(true);
         const fileIdsTemp = values?.files?.map((x: FileResponse) => x.file_id);
-        const response = await axiosElwyn.post(
-          "/assessment/live/rubrics/create",
-          {
-            name: values.name,
-            rubrics_description: values.description,
-            organization_id: principal,
-            file_ids: fileIdsTemp,
-          }
-        );
-        const result = response.data as RubricsResponse;
-        await backend?.addContentToUser(
-          Principal.fromText(principal ?? ""),
-          { Rubrics: null },
-          result?.data?.assessment?.rubric_id
-        );
-        rubricsMutate();
-        toast.success("Rubrics added successfully!", {
-          id: toastId,
-          duration: 4000,
+        const response = await axiosBackend.post("/rubrics/create", {
+          name: values.name,
+          description: values.description,
+          organization_id: principal,
+          file_ids: fileIdsTemp,
         });
-        const raw = result?.data?.final_rubric;
-        const finalRubricParsed = extractAndParseRubricJSON(raw);
-        const finalResult = {
-          ...finalRubricParsed,
-          name: result?.data?.assessment?.name?.replace(
-            "Assessment for Rubric: ",
-            ""
-          ),
-        };
-        setRubricId(result?.data?.assessment?.id);
-        setUpdateRubricsFormValues(finalResult);
-        setLoading(false);
-        setIsOpen(false);
-        setIsOpenEditRubrics(true);
-        resetForm();
+        const jobResponse = response.data as JobResponse;
+        const createRubricsInterval = setInterval(async () => {
+          const rubricsStatus = await axiosBackend.get(
+            `/rubrics/job-status-create/${jobResponse.jobId}`
+          );
+          const rubricsResult = rubricsStatus.data as RubricsResponse;
+          if (rubricsResult.jobStatus === JobStatus.Completed) {
+            await backend?.addContentToUser(
+              Principal.fromText(principal ?? ""),
+              { Rubrics: null },
+              rubricsResult?.result?.assessment?.rubric_id
+            );
+            toast.success("Rubrics created successfully!", {
+              id: "rubrics-success",
+              duration: 4000,
+            });
+            const finalResult = {
+              ...rubricsResult?.result?.assessment?.rubrics,
+              name: rubricsResult?.result?.assessment?.name?.replace(
+                "Assessment for Rubric: ",
+                ""
+              ),
+            };
+            rubricsMutate();
+            setRubricId(rubricsResult?.result?.assessment?.id);
+            setUpdateRubricsFormValues(finalResult);
+            setLoading(false);
+            setIsOpen(false);
+            setIsOpenEditRubrics(true);
+            resetForm();
+            clearInterval(createRubricsInterval);
+          } else if (rubricsResult.jobStatus === JobStatus.Failed) {
+            setLoading(false);
+            toast.error("Rubrics failed to be created. Please try again.", {
+              id: "rubrics-error",
+              duration: 4000,
+            });
+            clearInterval(createRubricsInterval);
+          }
+        }, 5000);
       } catch (e) {
         toast.error(e?.toString(), {
-          id: toastId,
           duration: 4000,
         });
         console.log(e, "<<<< EEE");
@@ -190,7 +180,6 @@ export default function RubricsPage() {
         <AnimatedModal
           isOpen={isOpen}
           onClose={() => {
-            if (loading) return;
             setIsOpen(false);
           }}
         >
@@ -205,7 +194,6 @@ export default function RubricsPage() {
         <AnimatedModal
           isOpen={isOpenEditRubrics}
           onClose={() => {
-            if (loading) return;
             setIsOpenEditRubrics(false);
           }}
         >

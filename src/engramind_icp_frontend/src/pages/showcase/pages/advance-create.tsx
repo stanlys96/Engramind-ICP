@@ -6,10 +6,11 @@ import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
 import {
   Assessment,
-  AssessmentRaw,
   FileResponse,
   GlossaryData,
+  JobResponse,
   PersonaData,
+  RoleplayJobResponse,
 } from "../../../interface";
 import {
   AnimatedDropdown,
@@ -18,19 +19,20 @@ import {
   PersonaDetails,
   RubricsDetail,
   GlossaryDetail,
+  ModalProgress,
 } from "../../../components/ui";
 import useSWR from "swr";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { useFormik } from "formik";
 import {
   createAdvanceScenarioInitialValues,
   createAdvanceScenarioSchema,
   CreateAdvanceScenarioValues,
 } from "../../../formik";
-import { extractAndParseRubricJSON } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { JobStatus } from "../../../utils/helper";
 
 export default function ShowcaseAdvanceCreatePage() {
   const principal = Cookies.get("principal");
@@ -52,69 +54,39 @@ export default function ShowcaseAdvanceCreatePage() {
   const [isOpenGlossaryDetails, setIsOpenGlossaryDetails] =
     useState<boolean>(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
+  const [showLoadingProgress, setShowLoadingProgress] = useState(false);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
-    `/conversational/files/organization?organization_id=${principal}`,
-    fetcherElwyn
+    `/files/all/${principal}`,
+    fetcherBackend
   );
   const { data: totalPersonaData } = useSWR(
-    `/assessment/persona-characters`,
-    fetcherElwyn
+    `persona/all/${principal}`,
+    fetcherBackend
   );
   const { data: totalRubricsData } = useSWR(
-    `/assessment/rubrics`,
-    fetcherElwyn
+    `/rubrics/all/${principal}`,
+    fetcherBackend
   );
   const { data: totalGlossaryData } = useSWR(
-    `/assessment/scenario-glossary`,
-    fetcherElwyn
+    `/glossary/all/${principal}`,
+    fetcherBackend
   );
 
   const totalFilesResult: FileResponse[] = totalFilesData?.data?.files;
-
-  const totalPersonaResult: PersonaData[] = totalPersonaData?.data?.data
-    ?.filter((persona: PersonaData) => persona.organization_id === principal)
-    ?.sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
-
-  const totalRubricsResult: Assessment[] = totalRubricsData?.data?.data
-    ?.filter((rubrics: AssessmentRaw) => rubrics.organization_id === principal)
-    ?.map((rubricsData: AssessmentRaw) => {
-      return {
-        ...rubricsData,
-        rubrics: extractAndParseRubricJSON(rubricsData?.rubrics),
-      };
-    })
-    ?.sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
-
-  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data?.data
-    ?.filter((glossary: GlossaryData) => glossary.organization_id === principal)
-    ?.sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
+  const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
+  const totalRubricsResult: Assessment[] = totalRubricsData?.data;
+  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data;
 
   const navigate = useNavigate();
   const createFormik = useFormik<CreateAdvanceScenarioValues>({
     initialValues: createAdvanceScenarioInitialValues,
     validationSchema: createAdvanceScenarioSchema,
     onSubmit: async (values) => {
-      const toastId = toast.loading("Creating a roleplay...", {
-        id: "create-roleplay",
-        duration: Infinity,
-      });
       try {
         setLoading(true);
         const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
-        await axiosElwyn.post("/assessment/live/scenarios/create", {
+        const response = await axiosBackend.post("/advance-roleplay/create", {
           scenario_title: values.scenario_title,
           persona_id: values.persona,
           rubric_id: values.rubrics,
@@ -122,15 +94,33 @@ export default function ShowcaseAdvanceCreatePage() {
           organization_id: principal,
           file_ids: fileIdsTemp,
         });
-        toast.success("Roleplay created successfully!", {
-          id: toastId,
-          duration: 4000,
-        });
+        setShowLoadingProgress(true);
         setLoading(false);
-        navigate("/showcase");
+        const jobResponse = response.data as JobResponse;
+        const createQuickRoleplayInterval = setInterval(async () => {
+          const roleplayStatus = await axiosBackend.get(
+            `/advance-roleplay/job-status-create/${jobResponse.jobId}`
+          );
+          const roleplayResult = roleplayStatus.data as RoleplayJobResponse;
+          if (roleplayResult.jobStatus === JobStatus.Completed) {
+            toast.success("Roleplay created successfully!", {
+              id: "create-advance-roleplay-success",
+              duration: 4000,
+            });
+            setLoading(false);
+            clearInterval(createQuickRoleplayInterval);
+          } else if (roleplayResult.jobStatus === JobStatus.Failed) {
+            setLoading(false);
+            toast.error("Roleplay failed to be created. Please try again.", {
+              id: "create-advance-roleplay-error",
+              duration: 4000,
+            });
+            clearInterval(createQuickRoleplayInterval);
+          }
+        }, 5000);
       } catch (e) {
         toast.error(e?.toString(), {
-          id: toastId,
+          id: "create-advance-roleplay-error",
           duration: 4000,
         });
         setLoading(false);
@@ -423,7 +413,6 @@ export default function ShowcaseAdvanceCreatePage() {
           widthFitContainer
           isOpen={animatedModalOpen}
           onClose={() => {
-            if (uploading) return;
             setAnimatedModalOpen(false);
           }}
         >
@@ -433,6 +422,13 @@ export default function ShowcaseAdvanceCreatePage() {
             loading={uploading}
             filesMutate={filesMutate}
           />
+        </AnimatedModal>
+        <AnimatedModal
+          widthFitContainer
+          isOpen={showLoadingProgress}
+          onClose={() => setShowLoadingProgress(false)}
+        >
+          <ModalProgress setShowLoadingModal={setShowLoadingProgress} />
         </AnimatedModal>
       </div>
     </ShowcaseLayout>

@@ -1,13 +1,18 @@
 export interface RubricsResponse {
-  code: number;
-  is_success: boolean;
-  message: string;
-  data: RubricsData;
+  statusCode: number;
+  jobId: string;
+  jobStatus: string;
+  progress: number;
+  result: RubricsResult;
+  failedReason: any;
 }
 
-export interface RubricsData {
+export interface RubricsResult {
+  jobStatus: string;
+  message: string;
+  processedId: string;
   assessment: Assessment;
-  final_rubric: string;
+  name: string;
 }
 
 export interface Assessment {
@@ -18,24 +23,10 @@ export interface Assessment {
   scenario_id: any;
   timestamp: string;
   user_id: number;
-  material_id: string;
-  rubrics: FinalRubric;
-  visibility: boolean;
+  rubrics: FinalRubrics;
 }
 
-export interface AssessmentRaw {
-  id: string;
-  name: string;
-  organization_id: any;
-  rubric_id: string;
-  scenario_id: any;
-  timestamp: string;
-  user_id: number;
-  material_id: string;
-  rubrics: string;
-}
-
-export interface FinalRubric {
+export interface FinalRubrics {
   rubric_title: string;
   description: string;
   criteria: Criterum[];
@@ -51,16 +42,10 @@ export interface Criterum {
 }
 
 export interface PerformanceLevels {
-  Roleplay?: string;
-  Image?: string;
-  Video?: string;
-  Audio?: string;
-  Provided?: string;
-  "Not Provided"?: string;
-  Checklist?: string;
-  Qualitative?: string;
   Excellent: string;
+  Good: string;
   Fair: string;
+  Poor: string;
   "No Attempt": string;
 }
 
@@ -71,15 +56,9 @@ export interface ScoringGuide {
 }
 
 export interface PerformanceLevelsSummary {
-  Roleplay: string;
-  Image: string;
-  Video: string;
-  Audio: string;
-  Provided: string;
-  "Not Provided": string;
-  Checklist: string;
-  Qualitative: string;
   Excellent: string;
+  Good: string;
   Fair: string;
+  Poor: string;
   "No Attempt": string;
 }

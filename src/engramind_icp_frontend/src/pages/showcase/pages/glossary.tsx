@@ -14,7 +14,7 @@ import {
   createUpdateGlossarySchema,
   CreateUpdateGlossaryValues,
 } from "../../../formik";
-import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
+import { axiosBackend, fetcherBackend } from "../../../utils/api";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
@@ -22,7 +22,7 @@ import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
 import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
-import { formatNickname, ItemType } from "../../../utils/helper";
+import { formatNickname, ItemType, JobStatus } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -46,17 +46,11 @@ export default function GlossaryPage() {
   );
 
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
-    `/assessment/scenario-glossary`,
-    fetcherElwyn
+    `/glossary/all/${principal}`,
+    fetcherBackend
   );
 
-  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data?.data
-    ?.filter((glossary: GlossaryData) => glossary.organization_id === principal)
-    ?.sort((a: any, b: any) => {
-      const dateA = new Date(a.timestamp).getTime();
-      const dateB = new Date(b.timestamp).getTime();
-      return dateB - dateA;
-    });
+  const totalGlossaryResult: GlossaryData[] = totalGlossaryData?.data;
 
   const handleSelectGlossary = (item: GlossaryData) => {
     setSelectedGlossary(item);
@@ -79,66 +73,128 @@ export default function GlossaryPage() {
     createFormik?.setFieldValue("createdOn", selectedGlossary?.timestamp);
   };
 
+  async function pollJobStatus<T>(
+    jobId: string,
+    statusEndpoint: string,
+    onSuccess: (resultData: T) => Promise<void> | void,
+    onFailure: (errorMessage: string) => void,
+    pollingIntervalMs: number = 1000,
+    maxPollAttempts: number = 60 // Max 60 attempts for 1 minute (1s interval)
+  ): Promise<void> {
+    let intervalId: any = null;
+    let attempts = 0;
+
+    return new Promise((resolve, reject) => {
+      intervalId = setInterval(async () => {
+        attempts++;
+        if (attempts > maxPollAttempts) {
+          clearInterval(intervalId!);
+          onFailure("Polling timed out. Please check back later.");
+          reject(new Error("Polling timed out"));
+          return;
+        }
+
+        try {
+          const statusResponse = await axiosBackend.get(
+            `${statusEndpoint}/${jobId}`
+          );
+          const jobResult = statusResponse.data as GlossaryResponse;
+
+          if (jobResult.jobStatus === JobStatus.Completed) {
+            clearInterval(intervalId!);
+            await onSuccess(jobResult.result?.data as T);
+            resolve();
+          } else if (jobResult.jobStatus === JobStatus.Failed) {
+            clearInterval(intervalId!);
+            onFailure(
+              jobResult.failedReason || "Job failed. Please try again."
+            );
+            reject(new Error(jobResult.failedReason || "Job failed"));
+          }
+        } catch (error) {
+          clearInterval(intervalId!);
+          onFailure("Failed to check job status due to a network error.");
+          reject(error);
+        }
+      }, pollingIntervalMs);
+    });
+  }
+
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
     validationSchema: createUpdateGlossarySchema,
     onSubmit: async (values, { resetForm }) => {
-      const toastId = toast.loading(
-        `${
-          values.createOrUpdate === "create" ? "Creating" : "Updating"
-        } glossary...`,
-        {
-          id: "update-rubrics",
-          duration: Infinity,
-        }
-      );
+      setLoading(true);
       try {
-        setLoading(true);
-        if (values.createOrUpdate === "create") {
-          const response = await axiosElwyn.post(
-            "/assessment/scenario-glossary",
-            {
-              name: values.name,
-              glossary: values.content,
-              organization_id: principal,
-            }
-          );
-          const result = response.data as GlossaryResponse;
-          await backend?.addContentToUser(
-            Principal.fromText(principal ?? ""),
-            { Glossary: null },
-            result.data.id
-          );
-        } else {
-          await axiosElwyn.put(
-            `/assessment/scenario-glossary/${selectedGlossary?.id}`,
-            {
-              name: values.name,
-              glossary: values.content,
-            }
-          );
-        }
+        let jobResponse: any;
+        let endpoint: string;
+        let successMessage: string;
+        let failureMessage: string;
+        let pollEndpoint: string;
+        let successCallback: (resultData: {
+          id: string;
+        }) => Promise<void> | void;
 
-        glossaryMutate();
+        if (values.createOrUpdate === "create") {
+          endpoint = "/glossary/create";
+          pollEndpoint = "/glossary/job-status-create";
+          successMessage = "Glossary created successfully!";
+          failureMessage = "Glossary failed to be created. Please try again.";
+          successCallback = async (resultData: { id: string }) => {
+            await backend?.addContentToUser(
+              Principal.fromText(principal ?? ""),
+              { Glossary: null },
+              resultData.id
+            );
+          };
+        } else {
+          endpoint = "/glossary/update";
+          pollEndpoint = "/glossary/job-status-update";
+          successMessage = "Glossary updated successfully!";
+          failureMessage = "Glossary failed to be updated. Please try again.";
+          successCallback = async () => {};
+        }
+        jobResponse = await axiosBackend.post(endpoint, {
+          name: values.name,
+          glossary: values.content,
+          ...(values.createOrUpdate === "create" && {
+            organization_id: principal,
+          }),
+          ...(values.createOrUpdate === "update" && {
+            id: selectedGlossary?.id,
+          }),
+        });
+
+        const { jobId } = jobResponse.data;
+
+        await pollJobStatus<{ id: string }>(
+          jobId,
+          pollEndpoint,
+          async (resultData) => {
+            await successCallback(resultData);
+            glossaryMutate();
+            toast.success(successMessage, {
+              id: `${values.createOrUpdate}-glossary-success`,
+              duration: 4000,
+            });
+          },
+          (errorMessage) => {
+            toast.error(errorMessage, {
+              id: `${values.createOrUpdate}-glossary-error`,
+              duration: 4000,
+            });
+          }
+        );
+      } catch (error) {
+        console.error("Operation failed:", error);
+        toast.error(error?.toString(), {
+          id: `${values.createOrUpdate}-glossary-error`,
+          duration: 4000,
+        });
+      } finally {
         setLoading(false);
         setIsOpen(false);
         resetForm();
-        toast.success(
-          `Glossary ${
-            values.createOrUpdate === "create" ? "created" : "updated"
-          } successfully!`,
-          {
-            id: toastId,
-            duration: 4000,
-          }
-        );
-      } catch (e) {
-        toast.error(e?.toString(), {
-          id: toastId,
-          duration: 4000,
-        });
-        console.log(e, "<<<< EEE");
-        setLoading(false);
       }
     },
   });
@@ -190,7 +246,6 @@ export default function GlossaryPage() {
         <AnimatedModal
           isOpen={isOpen}
           onClose={() => {
-            if (loading) return;
             setIsOpen(false);
           }}
         >
