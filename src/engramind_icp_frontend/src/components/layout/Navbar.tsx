@@ -28,15 +28,16 @@ export default function Navbar({ showMenu }: NavbarProps) {
       authClient.login({
         ...IC.defaultAuthOption,
         onSuccess: async () => {
+          const principal = authClient?.getIdentity()?.getPrincipal();
           const principalText = authClient
             ?.getIdentity()
             ?.getPrincipal()
             ?.toText();
-          await backend?.addNewUser(authClient?.getIdentity()?.getPrincipal());
+          await backend?.addNewUser(principal);
           Cookies.set("principal", principalText);
           dispatch(settingPrincipal(principalText));
           backend
-            ?.getUserNickname(authClient?.getIdentity()?.getPrincipal())
+            ?.getUserNickname(principal)
             .then((userNicknameResult) => {
               if (userNicknameResult?.[0]) {
                 const finalNickname =
