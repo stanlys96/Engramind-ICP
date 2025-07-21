@@ -1,8 +1,5 @@
 "use client";
 
-import ModalDone from "../../../components/ui/showcase/ModalDone";
-import ModalProgress from "../../../components/ui/showcase/ModalProgress";
-import RenderIf from "../../../utils/RenderIf";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
@@ -39,9 +36,6 @@ export default function ShowcaseAdvanceCreatePage() {
   const principal = Cookies.get("principal");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [showLoadingModal, setShowLoadingModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [error, seterror] = useState(false);
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
@@ -403,38 +397,6 @@ export default function ShowcaseAdvanceCreatePage() {
             </div>
           </form>
         </div>
-        {/* End Form Section */}
-
-        {/* Modal Loading Section */}
-        <RenderIf condition={showLoadingModal}>
-          <ModalProgress setShowLoadingModal={setShowLoadingModal} />
-        </RenderIf>
-
-        {/* Modal Success */}
-        <RenderIf condition={showSuccessModal}>
-          <ModalDone setShowSuccessModal={setShowSuccessModal} />
-        </RenderIf>
-
-        {/* Modal Error  */}
-        <RenderIf condition={error}>
-          <div className="fixed inset-0 flex items-center justify-center bg-black/50  z-50">
-            <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg shadow-lg p-6 max-w-sm w-full">
-              <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">
-                Error
-              </h3>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                Failed to create persona. Please try again.
-              </p>
-              <button
-                type="button"
-                onClick={() => seterror(false)}
-                className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </RenderIf>
         <AnimatedModal
           className="h-[85vh] overflow-scroll"
           isOpen={isOpenPersonaDetails}

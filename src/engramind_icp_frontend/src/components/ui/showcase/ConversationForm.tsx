@@ -5,7 +5,12 @@ import {
   MonitorSpeaker,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { OPEN_ROUTER_API_KEY } from "../../../utils/api";
+import {
+  API_BASE_URL,
+  API_KEY,
+  API_REQUEST_FROM,
+  OPEN_ROUTER_API_KEY,
+} from "../../../utils/api";
 import { RoleplayResponse } from "../../../interface";
 import ChatLoading from "./ChatLoading";
 import { UserMessage } from "./UserMessage";
@@ -26,11 +31,13 @@ export const ConversationModalForm = ({
   conversationId,
   onClose,
 }: Props) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [responseText, setResponseText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [conversationMessages, setConversationMessages] = useState<any>([]);
-  const disableSubmitButton = isLoading || !message;
+  const [disableSubmitText, setDisableSubmitText] = useState(false);
+  const disableSubmitButton = isLoading || !message || disableSubmitText;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const resetAll = () => {
@@ -49,95 +56,100 @@ export const ConversationModalForm = ({
       setMessage("");
 
       setIsLoading(true);
+      setDisableSubmitText(true);
       setResponseText("");
+      textareaRef?.current?.focus();
       let result = "";
       // --- REAL IMPLEMENTATION OF ELWYN CONVERSATIONS ---
-      // const res = await fetch(`${API_BASE_URL}/conversational/roleplay-chat`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     "X-AI_TOKEN": API_KEY,
-      //     "X-REQUEST_FROM": API_REQUEST_FROM,
-      //   },
-      //   body: JSON.stringify({
-      //     scenario_conv_list_id: conversationId,
-      //     message: message,
-      //   }),
-      // });
-
-      // const reader = res.body?.getReader();
-      // const decoder = new TextDecoder("utf-8");
-
-      // while (true) {
-      //   const { done, value } = await reader!.read();
-      //   if (done) break;
-      //   result += decoder.decode(value, { stream: true });
-      //   setResponseText(result);
-      // }
-
-      // result += decoder.decode();
-      // setResponseText("");
-      // setConversationMessages((prevState: any) => [
-      //   ...prevState,
-      //   { user: "bot", message: result },
-      // ]);
-
-      // --- MOCK IMPLEMENTATION WITH OPEN ROUTER API ---
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      const res = await fetch(`${API_BASE_URL}/conversational/roleplay-chat`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${OPEN_ROUTER_API_KEY}`,
           "Content-Type": "application/json",
+          "X-AI_TOKEN": API_KEY,
+          "X-REQUEST_FROM": API_REQUEST_FROM,
         },
         body: JSON.stringify({
-          model: "openai/gpt-3.5-turbo",
-          stream: true,
-          messages: [{ role: "user", content: message }],
+          scenario_conv_list_id: conversationId,
+          message: message,
         }),
       });
       setIsLoading(false);
       const reader = res.body?.getReader();
-      if (!reader) {
-        throw new Error("Response body is not readable");
+      const decoder = new TextDecoder("utf-8");
+
+      while (true) {
+        const { done, value } = await reader!.read();
+        if (done) break;
+        result += decoder.decode(value, { stream: true });
+        setResponseText(result);
       }
-      const decoder = new TextDecoder();
-      let buffer = "";
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          while (true) {
-            const lineEnd = buffer.indexOf("\n");
-            if (lineEnd === -1) break;
-            const line = buffer.slice(0, lineEnd).trim();
-            buffer = buffer.slice(lineEnd + 1);
-            if (line.startsWith("data: ")) {
-              const data = line.slice(6);
-              if (data === "[DONE]") break;
-              try {
-                const parsed = JSON.parse(data);
-                const content = parsed.choices[0].delta.content;
-                if (content) {
-                  result += content;
-                  setResponseText(result);
-                }
-              } catch (e) {
-                // Ignore invalid JSON
-              }
-            }
-          }
-        }
-      } finally {
-        setResponseText("");
-        setIsLoading(false);
-        setConversationMessages((prevState: any) => [
-          ...prevState,
-          { user: "bot", message: result },
-        ]);
-        reader.cancel();
-      }
+
+      result += decoder.decode();
+      setDisableSubmitText(false);
+      setResponseText("");
+      setConversationMessages((prevState: any) => [
+        ...prevState,
+        { user: "bot", message: result },
+      ]);
+
+      // --- MOCK IMPLEMENTATION WITH OPEN ROUTER API ---
+      // const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: `Bearer ${OPEN_ROUTER_API_KEY}`,
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     model: "openai/gpt-3.5-turbo",
+      //     stream: true,
+      //     messages: [{ role: "user", content: message }],
+      //   }),
+      // });
+      // setIsLoading(false);
+      // const reader = res.body?.getReader();
+      // if (!reader) {
+      //   throw new Error("Response body is not readable");
+      // }
+      // const decoder = new TextDecoder();
+      // let buffer = "";
+      // try {
+      //   while (true) {
+      //     const { done, value } = await reader.read();
+      //     if (done) break;
+      //     buffer += decoder.decode(value, { stream: true });
+      //     while (true) {
+      //       const lineEnd = buffer.indexOf("\n");
+      //       if (lineEnd === -1) break;
+      //       const line = buffer.slice(0, lineEnd).trim();
+      //       buffer = buffer.slice(lineEnd + 1);
+      //       if (line.startsWith("data: ")) {
+      //         const data = line.slice(6);
+      //         if (data === "[DONE]") break;
+      //         try {
+      //           const parsed = JSON.parse(data);
+      //           const content = parsed.choices[0].delta.content;
+      //           if (content) {
+      //             result += content;
+      //             setResponseText(result);
+      //           }
+      //         } catch (e) {
+      //           // Ignore invalid JSON
+      //         }
+      //       }
+      //     }
+      //   }
+      // } finally {
+      //   setResponseText("");
+      //   setIsLoading(false);
+      //   setDisableSubmitText(false);
+      //   setConversationMessages((prevState: any) => [
+      //     ...prevState,
+      //     { user: "bot", message: result },
+      //   ]);
+      //   reader.cancel();
+      // }
     } catch (e) {
+      setDisableSubmitText(false);
       setIsLoading(false);
     }
   };
@@ -240,6 +252,7 @@ export const ConversationModalForm = ({
                           <div className="flex flex-grow items-center space-x-2 mb-2">
                             <div className="relative flex-grow">
                               <textarea
+                                ref={textareaRef}
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 style={{
