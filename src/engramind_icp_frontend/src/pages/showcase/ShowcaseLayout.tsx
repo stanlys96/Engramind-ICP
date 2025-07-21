@@ -125,29 +125,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             File Management
           </Link>
-          {/* <Link
-            to="/showcase/how-it-works"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/how-it-works"
-                ? "text-purple-600 font-bold"
-                : ""
-            }`}
-          >
-            How It Works
-          </Link>
-          <Link
-            to="/showcase/faq"
-            className={`hover:text-purple-600 dark:hover:text-purple-400 ${
-              pathname === "/showcase/faq" ? "text-purple-600 font-bold" : ""
-            }`}
-          >
-            FAQ
-          </Link> */}
         </nav>
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">
             <img
-              // onClick={() => navigate("/dashboard")}
               src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Profile"
               className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
@@ -159,7 +140,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
           <button
-            // onClick={() => setShowConfirm(true)}
+            onClick={() => setShowConfirm(true)}
             className="text-sm text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
           >
             Logout

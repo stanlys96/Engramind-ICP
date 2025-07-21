@@ -14,39 +14,34 @@ import {
   GlossaryData,
   PersonaData,
 } from "../../../interface";
-import { AnimatedDropdown, AnimatedModal } from "../../../components/ui";
+import {
+  AnimatedDropdown,
+  AnimatedModal,
+  UploadFileForm,
+  PersonaDetails,
+  RubricsDetail,
+  GlossaryDetail,
+} from "../../../components/ui";
 import useSWR from "swr";
 import { fetcherElwyn } from "../../../utils/api";
 import { useFormik } from "formik";
 import {
-  CreateFormValues,
-  createPersonaInitialValues,
-  createQuickScenarioInitialValues,
-  CreateQuickScenarioValues,
-  QuickScenarioValues,
+  createAdvanceScenarioInitialValues,
+  createAdvanceScenarioSchema,
+  CreateAdvanceScenarioValues,
 } from "../../../formik";
 import Cookies from "js-cookie";
-import {
-  extractAndParseRubricJSON,
-  scenarioPresets,
-} from "../../../utils/helper";
-import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
-import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
-import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
+import { extractAndParseRubricJSON } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
 export default function ShowcaseAdvanceCreatePage() {
   const name = Cookies.get("principal");
-  const location = useLocation();
 
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, seterror] = useState(false);
-  const [scenarioTitle, setScenarioTitle] = useState("");
-  const [myRole, setMyRole] = useState("");
-  const [aiRole, setAiRole] = useState("");
-  const [scenarioDescription, setScenarioDescription] = useState("");
   const [currentPersonas, setCurrentPersonas] = useState<PersonaData[]>();
   const [currentRubrics, setCurrentRubrics] = useState<Assessment[]>();
   const [currentGlossaries, setCurrentGlossaries] = useState<GlossaryData[]>();
@@ -66,23 +61,20 @@ export default function ShowcaseAdvanceCreatePage() {
   const [isOpenGlossaryDetails, setIsOpenGlossaryDetails] =
     useState<boolean>(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
-  const [chosenScenarioPreset, setChosenScenarioPreset] = useState<
-    string | null
-  >(null);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
     `/conversational/files/organization?organization_id=${name}`,
     fetcherElwyn
   );
-  const { data: totalPersonaData, mutate: personaMutate } = useSWR(
+  const { data: totalPersonaData } = useSWR(
     `/assessment/persona-characters`,
     fetcherElwyn
   );
-  const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
+  const { data: totalRubricsData } = useSWR(
     `/assessment/rubrics`,
     fetcherElwyn
   );
-  const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
+  const { data: totalGlossaryData } = useSWR(
     `/assessment/scenario-glossary`,
     fetcherElwyn
   );
@@ -94,8 +86,9 @@ export default function ShowcaseAdvanceCreatePage() {
 
   const navigate = useNavigate();
 
-  const createFormik = useFormik<CreateQuickScenarioValues>({
-    initialValues: createQuickScenarioInitialValues,
+  const createFormik = useFormik<CreateAdvanceScenarioValues>({
+    initialValues: createAdvanceScenarioInitialValues,
+    validationSchema: createAdvanceScenarioSchema,
     onSubmit: async (values, { resetForm }) => {},
   });
 
@@ -144,6 +137,12 @@ export default function ShowcaseAdvanceCreatePage() {
       setCurrentGlossaries(theUserGlossaries);
     }
   }, [totalGlossaryResult]);
+
+  useEffect(() => {
+    (async () => {
+      await createFormik.validateForm();
+    })();
+  }, []);
 
   return (
     <ShowcaseLayout>
@@ -206,6 +205,7 @@ export default function ShowcaseAdvanceCreatePage() {
                     })
                   )}
                   onSelect={(selectedPersona) => {
+                    createFormik.setFieldValue("persona", selectedPersona.id);
                     setSelectedPersona(
                       (currentPersonas ?? []).find(
                         (e: any) => e?.id === selectedPersona.id
@@ -235,6 +235,7 @@ export default function ShowcaseAdvanceCreatePage() {
                     })
                   )}
                   onSelect={(selectedRubrics) => {
+                    createFormik.setFieldValue("rubrics", selectedRubrics.id);
                     setSelectedRubrics(
                       (currentRubrics ?? []).find(
                         (e: any) => e?.id === selectedRubrics?.id
@@ -383,19 +384,9 @@ export default function ShowcaseAdvanceCreatePage() {
             <div className="flex w-full justify-end">
               <button
                 type="submit"
-                disabled={
-                  !scenarioTitle ||
-                  !myRole ||
-                  !aiRole ||
-                  !scenarioDescription ||
-                  loading
-                }
+                disabled={!createFormik.isValid || loading}
                 className={`bg-purple-600 text-white px-4 py-2 rounded cursor-pointer ${
-                  !scenarioTitle ||
-                  !myRole ||
-                  !aiRole ||
-                  !scenarioDescription ||
-                  loading
+                  !createFormik.isValid || loading
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-purple-700"
                 }`}
@@ -458,6 +449,21 @@ export default function ShowcaseAdvanceCreatePage() {
           onClose={() => setIsOpenGlossaryDetails(false)}
         >
           <GlossaryDetail glossary={selectedGlossary} />
+        </AnimatedModal>
+        <AnimatedModal
+          widthFitContainer
+          isOpen={animatedModalOpen}
+          onClose={() => {
+            if (uploading) return;
+            setAnimatedModalOpen(false);
+          }}
+        >
+          <UploadFileForm
+            setLoading={setUploading}
+            setIsOpen={setAnimatedModalOpen}
+            loading={uploading}
+            filesMutate={filesMutate}
+          />
         </AnimatedModal>
       </div>
     </ShowcaseLayout>

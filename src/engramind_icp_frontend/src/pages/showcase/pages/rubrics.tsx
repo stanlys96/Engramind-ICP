@@ -143,7 +143,6 @@ export default function RubricsPage() {
           const dateB = new Date(b.timestamp).getTime();
           return dateB - dateA;
         });
-
       setCurrentRubrics(theUserRubrics);
     }
   }, [totalRubricsResult]);

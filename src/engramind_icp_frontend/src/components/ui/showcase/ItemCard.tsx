@@ -23,7 +23,7 @@ export const ItemCard = ({ item, handleSelect, itemType }: Props) => {
       onClick={() => handleSelect(item)}
       className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
     >
-      <div className="p-4  ">
+      <div className="p-4">
         <>
           <div className="p-3 border dark:border-zinc-700 border-zinc-200 rounded-2xl shadow-xl w-fit mb-2">
             {getIcon()}

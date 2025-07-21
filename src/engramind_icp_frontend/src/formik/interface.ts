@@ -80,6 +80,14 @@ export interface CreateQuickScenarioValues {
   files: FileResponse[];
 }
 
+export interface CreateAdvanceScenarioValues {
+  scenario_title: string;
+  scenario_description: string;
+  persona: string;
+  rubrics: string;
+  files: FileResponse[];
+}
+
 export interface QuickScenarioValues {
   ai_role: string;
   my_role: string;

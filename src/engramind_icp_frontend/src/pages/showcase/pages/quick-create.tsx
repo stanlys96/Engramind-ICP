@@ -8,7 +8,12 @@ import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
 import { FileResponse } from "../../../interface";
-import { AnimatedDropdown, AnimatedSpinner } from "../../../components/ui";
+import {
+  AnimatedDropdown,
+  AnimatedModal,
+  AnimatedSpinner,
+  UploadFileForm,
+} from "../../../components/ui";
 import useSWR from "swr";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { useFormik } from "formik";
@@ -27,6 +32,7 @@ export default function ShowcaseQuickCreatePage() {
   const name = Cookies.get("principal");
 
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, seterror] = useState(false);
@@ -313,11 +319,9 @@ export default function ShowcaseQuickCreatePage() {
             <div className="flex w-full justify-end">
               <button
                 type="submit"
-                disabled={
-                  !(createFormik.isValid && createFormik.dirty) || loading
-                }
+                disabled={!createFormik.isValid || loading}
                 className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-                  !(createFormik.isValid && createFormik.dirty) || loading
+                  !createFormik.isValid || loading
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:bg-purple-700"
                 }`}
@@ -329,6 +333,22 @@ export default function ShowcaseQuickCreatePage() {
           </form>
         </div>
         {/* End Form Section */}
+
+        <AnimatedModal
+          widthFitContainer
+          isOpen={animatedModalOpen}
+          onClose={() => {
+            if (uploading) return;
+            setAnimatedModalOpen(false);
+          }}
+        >
+          <UploadFileForm
+            setLoading={setUploading}
+            setIsOpen={setAnimatedModalOpen}
+            loading={uploading}
+            filesMutate={filesMutate}
+          />
+        </AnimatedModal>
 
         {/* Modal Loading Section */}
         <RenderIf condition={showLoadingModal}>

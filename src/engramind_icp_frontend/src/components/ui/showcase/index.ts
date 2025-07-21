@@ -16,3 +16,6 @@ export * from "./ItemCard";
 export * from "./ScenarioCard";
 export * from "./ConversationForm";
 export * from "./FileCard";
+export * from "./PersonaDetails";
+export * from "./RubricsDetail";
+export * from "./GlossaryDetail";
