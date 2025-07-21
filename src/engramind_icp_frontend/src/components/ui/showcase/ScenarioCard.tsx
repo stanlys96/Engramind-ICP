@@ -53,17 +53,20 @@ export const ScenarioCard = ({
               {!item.visibility ? "Private" : "Public"}
             </span>
           </p>
-          <div className="flex w-full justify-end">
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="flex w-full justify-end"
+          >
             <Popover
               content={
-                <button
-                  className="cursor-pointer"
-                  onClick={async () => {
-                    handleCreateConversation(item);
-                  }}
-                >
-                  Vibes Check
-                </button>
+                <div>
+                  <button
+                    className="cursor-pointer"
+                    onClick={async () => handleCreateConversation(item)}
+                  >
+                    Vibes Check
+                  </button>
+                </div>
               }
               trigger="click"
               open={openPopoverIndex === index}
