@@ -5,7 +5,6 @@ import {
   SideDrawer,
   UpdateNicknameForm,
 } from "../../components/ui";
-import ShowcaseClientLayout from "./client-layout";
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ThemeToggle from "../../theme/theme-toggle";
@@ -17,14 +16,21 @@ import { NavbarLinkData } from "../../interface";
 import { Principal } from "@dfinity/principal";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
-import { settingNickname } from "../../stores/user-slice";
+import { resetState, settingNickname } from "../../stores/user-slice";
+import Cookies from "js-cookie";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const principal = Cookies.get("principal");
+  const userNickname = Cookies.get("nickname");
   const dispatch = useDispatch();
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [showUpdateNickname, setShowUpdateNickname] = useState(false);
-  const { principal, nickname } = useSelector((state: any) => state.user);
+  const { nickname } = useSelector((state: any) => state.user);
+
+  const [currentNickname, setCurrentNickname] = useState(
+    nickname || userNickname
+  );
 
   const [loading, setLoading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
@@ -37,8 +43,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     });
     try {
       setLoading(true);
-      await backend?.updateMyNickname(Principal.fromText(principal), value);
+      await backend?.updateMyNickname(
+        Principal.fromText(principal ?? ""),
+        value
+      );
       dispatch(settingNickname(value));
+      Cookies.set("nickname", value);
       setLoading(false);
       toast.success("Nickname updated successfully!", {
         id: toastId,
@@ -62,6 +72,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         .replace(/^ +/, "")
         .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
     });
+    Cookies.set("principal", "");
+    Cookies.set("nickname", "");
+    dispatch(resetState());
     IC?.logout();
     navigate("/");
   };
@@ -74,15 +87,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
+  useEffect(() => {
+    if (nickname) {
+      setCurrentNickname(nickname);
+    }
+  }, [nickname]);
+
   return (
-    <ShowcaseClientLayout currentNickname={nickname} name={principal}>
+    <div>
       <div className="relative bg-zinc-50 dark:bg-zinc-900 min-h-screen overflow-auto">
         <ShowcaseHeader
           setShowUpdateNickname={setShowUpdateNickname}
           setShowConfirm={setShowConfirm}
           setIsOpenDrawer={setIsOpenDrawer}
-          name={principal}
-          currentNickname={nickname}
+          name={principal ?? ""}
+          currentNickname={currentNickname}
         />
         <div className="max-w-7xl mx-auto px-4 py-10 text-neutral-900 dark:text-neutral-100">
           {children}
@@ -110,7 +129,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       >
         <UpdateNicknameForm
           loading={loading}
-          currentNickname={nickname}
+          currentNickname={currentNickname}
           handleUpdateNickname={handleUpdateNickname}
           setShowUpdateNickname={setShowUpdateNickname}
         />
@@ -141,14 +160,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">
             <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="/assets/male_persona.avif"
               alt="Profile"
               className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
               width={400}
               height={300}
             />
             <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-              {nickname}
+              {currentNickname}
             </div>
           </div>
           <button
@@ -160,6 +179,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <ThemeToggle customClassName="" />
         </div>
       </SideDrawer>
-    </ShowcaseClientLayout>
+    </div>
   );
 }

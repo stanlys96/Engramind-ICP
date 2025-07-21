@@ -8,6 +8,7 @@ import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engrami
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { settingNickname, settingPrincipal } from "../../stores/user-slice";
+import Cookies from "js-cookie";
 
 type NavbarProps = {
   showMenu: boolean;
@@ -32,6 +33,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getPrincipal()
             ?.toText();
           await backend?.addNewUser(authClient?.getIdentity()?.getPrincipal());
+          Cookies.set("principal", principalText);
           dispatch(settingPrincipal(principalText));
           backend
             ?.getUserNickname(authClient?.getIdentity()?.getPrincipal())
@@ -44,6 +46,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
                       userNicknameResult?.[0]?.slice(-3)
                     : userNicknameResult?.[0];
                 dispatch(settingNickname(finalNickname));
+                Cookies.set("nickname", finalNickname);
               }
               navigate("/showcase");
             })

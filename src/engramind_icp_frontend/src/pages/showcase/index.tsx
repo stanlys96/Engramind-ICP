@@ -1,7 +1,7 @@
 "use client";
 import { PlusIcon } from "lucide-react";
 import ShowcaseLayout from "./ShowcaseLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SearchBar,
   AnimatedModal,
@@ -17,10 +17,13 @@ import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
 import { ConversationModalForm } from "../../components/ui/showcase/ConversationForm";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function ScenariosPage() {
+  const principal = Cookies.get("principal");
+  const userNickname = Cookies.get("nickname");
   const [isOpen, setIsOpen] = useState(false);
   const [loading] = useState(false);
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
@@ -28,7 +31,12 @@ export default function ScenariosPage() {
   const [currentConversation, setCurrentConversation] =
     useState<RoleplayResponse | null>(null);
   const [conversationId, setConversationId] = useState<string>("");
-  const { principal, nickname } = useSelector((state: any) => state.user);
+
+  const { nickname } = useSelector((state: any) => state.user);
+
+  const [currentNickname, setCurrentNickname] = useState(
+    nickname || userNickname
+  );
   const navigate = useNavigate();
 
   const { data: totalScenariosData } = useSWR(
@@ -85,6 +93,12 @@ export default function ScenariosPage() {
     }
   };
 
+  useEffect(() => {
+    if (nickname) {
+      setCurrentNickname(nickname);
+    }
+  }, [nickname]);
+
   return (
     <ShowcaseLayout>
       <div>
@@ -92,7 +106,7 @@ export default function ScenariosPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {nickname}
+              Welcome, {currentNickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your roleplay scenarios

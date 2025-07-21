@@ -33,9 +33,10 @@ import {
 import { extractAndParseRubricJSON } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export default function ShowcaseAdvanceCreatePage() {
+  const principal = Cookies.get("principal");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
@@ -57,8 +58,6 @@ export default function ShowcaseAdvanceCreatePage() {
   const [isOpenGlossaryDetails, setIsOpenGlossaryDetails] =
     useState<boolean>(false);
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
-
-  const { principal } = useSelector((state: any) => state.user);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
     `/conversational/files/organization?organization_id=${principal}`,
@@ -113,7 +112,7 @@ export default function ShowcaseAdvanceCreatePage() {
   const createFormik = useFormik<CreateAdvanceScenarioValues>({
     initialValues: createAdvanceScenarioInitialValues,
     validationSchema: createAdvanceScenarioSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       const toastId = toast.loading("Creating a roleplay...", {
         id: "create-roleplay",
         duration: Infinity,

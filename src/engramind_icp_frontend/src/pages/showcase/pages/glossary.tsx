@@ -24,10 +24,13 @@ import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
 import { ItemType } from "../../../utils/helper";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function GlossaryPage() {
+  const principal = Cookies.get("principal");
+  const userNickname = Cookies.get("nickname");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [backend, setBackend] = useState<_SERVICE>();
@@ -37,7 +40,10 @@ export default function GlossaryPage() {
   const [isOpenGlossaryDetail, setIsOpenGlossaryDetail] =
     useState<boolean>(false);
 
-  const { principal, nickname } = useSelector((state: any) => state.user);
+  const { nickname } = useSelector((state: any) => state.user);
+  const [currentNickname, setCurrentNickname] = useState(
+    nickname || userNickname
+  );
 
   const { data: totalGlossaryData, mutate: glossaryMutate } = useSWR(
     `/assessment/scenario-glossary`,
@@ -143,6 +149,12 @@ export default function GlossaryPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (nickname) {
+      setCurrentNickname(nickname);
+    }
+  }, [nickname]);
+
   return (
     <ShowcaseLayout>
       <div>
@@ -150,7 +162,7 @@ export default function GlossaryPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {nickname}
+              Welcome, {currentNickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your glossaries

@@ -29,7 +29,7 @@ export default function RoleplayDetail() {
           },
         });
         const data = await res.json();
-        console.log(data, "<<< data");
+
         setScenario(data);
         if (data?.description) {
           setscenarioDescription(JSON.parse(data.description));

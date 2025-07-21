@@ -15,9 +15,13 @@ export const userSlice = createSlice({
     settingNickname: (state, action) => {
       state.nickname = action.payload;
     },
+    resetState: (state) => {
+      state.principal = "";
+      state.nickname = "";
+    },
   },
 });
 
 const { actions, reducer } = userSlice;
-export const { settingPrincipal, settingNickname } = actions;
+export const { settingPrincipal, settingNickname, resetState } = actions;
 export default reducer;

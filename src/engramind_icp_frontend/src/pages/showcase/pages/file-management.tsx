@@ -11,15 +11,14 @@ import { UploadIcon } from "@radix-ui/react-icons";
 import useSWR from "swr";
 import { FileResponse } from "../../../interface";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function FileManagementPage() {
+  const principal = Cookies.get("principal");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { principal } = useSelector((state: any) => state.user);
 
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
     `/conversational/files/organization?organization_id=${principal}`,

@@ -30,10 +30,13 @@ import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
 import { extractAndParseRubricJSON, ItemType } from "../../../utils/helper";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export type FlatFormValues = Record<string, any>;
 
 export default function RubricsPage() {
+  const principal = Cookies.get("principal");
+  const userNickname = Cookies.get("nickname");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditRubrics, setIsOpenEditRubrics] = useState(false);
   const [isOpenRubricsDetail, setIsOpenRubricsDetail] =
@@ -45,7 +48,10 @@ export default function RubricsPage() {
   const [uploading, setUploading] = useState(false);
   const [rubricId, setRubricId] = useState("");
   const [backend, setBackend] = useState<_SERVICE>();
-  const { principal, nickname } = useSelector((state: any) => state.user);
+  const { nickname } = useSelector((state: any) => state.user);
+  const [currentNickname, setCurrentNickname] = useState(
+    nickname || userNickname
+  );
   const { data: totalRubricsData, mutate: rubricsMutate } = useSWR(
     `/assessment/rubrics`,
     fetcherElwyn
@@ -139,6 +145,12 @@ export default function RubricsPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (nickname) {
+      setCurrentNickname(nickname);
+    }
+  }, [nickname]);
+
   return (
     <ShowcaseLayout>
       <div>
@@ -146,7 +158,7 @@ export default function RubricsPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {nickname}
+              Welcome, {currentNickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create your own scoring criteria.

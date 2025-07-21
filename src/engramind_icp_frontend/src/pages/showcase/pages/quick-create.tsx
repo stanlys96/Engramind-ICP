@@ -26,9 +26,10 @@ import {
 import { scenarioPresets } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export default function ShowcaseQuickCreatePage() {
+  const principal = Cookies.get("principal");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [showLoadingModal, setShowLoadingModal] = useState(false);
@@ -38,7 +39,6 @@ export default function ShowcaseQuickCreatePage() {
   const [chosenScenarioPreset, setChosenScenarioPreset] = useState<
     string | null
   >(null);
-  const { principal } = useSelector((state: any) => state.user);
   const { data: totalFilesData, mutate: filesMutate } = useSWR(
     `/conversational/files/organization?organization_id=${principal}`,
     fetcherElwyn
@@ -51,7 +51,7 @@ export default function ShowcaseQuickCreatePage() {
   const createFormik = useFormik<CreateQuickScenarioValues>({
     initialValues: createQuickScenarioInitialValues,
     validationSchema: createQuickScenarioSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       const toastId = toast.loading("Creating a roleplay...", {
         id: "create-roleplay",
         duration: Infinity,

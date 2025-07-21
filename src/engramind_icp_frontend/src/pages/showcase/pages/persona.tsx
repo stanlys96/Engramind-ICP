@@ -34,8 +34,11 @@ import { toast } from "sonner";
 import { FileResponse } from "../../../interface";
 import { ItemType } from "../../../utils/helper";
 import { useSelector } from "react-redux";
+import Cookies from "js-cookie";
 
 export default function PersonaPage() {
+  const principal = Cookies.get("principal");
+  const userNickname = Cookies.get("nickname");
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEditPersona, setIsOpenEditPersona] = useState(false);
   const [isOpenPersonaDetails, setIsOpenPersonaDetails] = useState(false);
@@ -45,7 +48,10 @@ export default function PersonaPage() {
   const [selectedPersona, setSelectedPersona] = useState<PersonaData | null>(
     null
   );
-  const { principal, nickname } = useSelector((state: any) => state.user);
+  const { nickname } = useSelector((state: any) => state.user);
+  const [currentNickname, setCurrentNickname] = useState(
+    nickname || userNickname
+  );
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
     `/assessment/persona-characters`,
     fetcherElwyn
@@ -156,6 +162,12 @@ export default function PersonaPage() {
     });
   }, []);
 
+  useEffect(() => {
+    if (nickname) {
+      setCurrentNickname(nickname);
+    }
+  }, [nickname]);
+
   return (
     <ShowcaseLayout>
       <div>
@@ -163,7 +175,7 @@ export default function PersonaPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {nickname}
+              Welcome, {currentNickname}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Curated profiles. Proven expertise. Find and connect with your AI
