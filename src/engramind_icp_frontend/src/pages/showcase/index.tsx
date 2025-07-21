@@ -69,10 +69,7 @@ export default function ScenariosPage() {
           scenario_id: item.id,
         }
       );
-      toast.success("Conversation created successfully!", {
-        id: toastId,
-        duration: 4000,
-      });
+      toast.dismiss(toastId);
       setConversationId(response.data.data.id);
       setConversationOpen(true);
       setCurrentConversation(item);
