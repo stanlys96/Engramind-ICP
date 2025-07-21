@@ -12,6 +12,7 @@ import {
   SearchBar,
   AnimatedModal,
   Relic,
+  ItemCard,
 } from "../../../components/ui";
 import {
   CreateFormValues,
@@ -30,6 +31,7 @@ import { Principal } from "@dfinity/principal";
 import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
 import { FileResponse } from "../../../interface";
+import { ItemType } from "../../../utils/helper";
 
 export default function PersonaPage() {
   const name = Cookies.get("principal");
@@ -49,6 +51,15 @@ export default function PersonaPage() {
     fetcherElwyn
   );
   const totalPersonaResult = totalPersonaData?.data?.data;
+
+  const handleEditPersona = () => {
+    if (selectedPersona) {
+      populateUpdateFormik(updateFormik, selectedPersona);
+    }
+    setIsOpenPersonaDetails(false);
+    setIsOpenEditPersona(true);
+  };
+
   const updateFormik = useFormik<EditFormValues>({
     initialValues: updatePersonaInitialValues,
     onSubmit: async (values, { resetForm }) => {
@@ -177,29 +188,11 @@ export default function PersonaPage() {
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentPersonas?.map((item: PersonaData) => (
-            <div
-              key={item.id}
-              onClick={() => handleSelectedPersona(item)}
-              className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
-            >
-              <img
-                src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                alt="character"
-                className="w-full h-64 object-cover rounded-t-xl"
-                width={400}
-                height={300}
-              />
-              <div className="p-4  ">
-                <>
-                  <h3 className="text-base font-semibold dark:text-white text-zinc-800">
-                    {item.name}
-                  </h3>
-                  <p className="bg-purple-500 mt-2 text-white text-xs font-medium px-2 py-1 rounded-full w-fit">
-                    {item.timestamp?.slice(0, 10)}
-                  </p>
-                </>
-              </div>
-            </div>
+            <ItemCard
+              itemType={ItemType.Persona}
+              item={item}
+              handleSelect={handleSelectedPersona}
+            />
           ))}
         </div>
         <Relic />
@@ -235,13 +228,7 @@ export default function PersonaPage() {
           onClose={() => setIsOpenPersonaDetails(false)}
         >
           <PersonaDetails
-            onEditPress={() => {
-              if (selectedPersona) {
-                populateUpdateFormik(updateFormik, selectedPersona);
-              }
-              setIsOpenPersonaDetails(false);
-              setIsOpenEditPersona(true);
-            }}
+            onEditPress={handleEditPersona}
             persona={selectedPersona}
           />
         </AnimatedModal>

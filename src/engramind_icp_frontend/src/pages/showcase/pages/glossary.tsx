@@ -6,6 +6,7 @@ import {
   SearchBar,
   AnimatedModal,
   CreateOrUpdateGlossaryForm,
+  ItemCard,
 } from "../../../components/ui";
 import { useFormik } from "formik";
 import {
@@ -21,6 +22,7 @@ import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
 import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
+import { ItemType } from "../../../utils/helper";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -41,6 +43,27 @@ export default function GlossaryPage() {
   );
 
   const totalGlossaryResult = totalGlossaryData?.data?.data;
+
+  const handleSelectGlossary = (item: GlossaryData) => {
+    setSelectedGlossary(item);
+    setIsOpenGlossaryDetail(true);
+  };
+
+  const handleClickNewGlossary = () => {
+    setIsOpen(true);
+    createFormik?.setFieldValue("createOrUpdate", "create");
+    createFormik?.setFieldValue("name", "");
+    createFormik?.setFieldValue("content", "");
+  };
+
+  const handleEditGlossary = () => {
+    setIsOpenGlossaryDetail(false);
+    setIsOpen(true);
+    createFormik?.setFieldValue("createOrUpdate", "update");
+    createFormik?.setFieldValue("name", selectedGlossary?.name);
+    createFormik?.setFieldValue("content", selectedGlossary?.glossary);
+    createFormik?.setFieldValue("createdOn", selectedGlossary?.timestamp);
+  };
 
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
@@ -138,13 +161,7 @@ export default function GlossaryPage() {
             </p>
           </div>
           <a
-            onClick={() => {
-              setIsOpen(true);
-              createFormik?.setFieldValue("createOrUpdate", "create");
-              createFormik?.setFieldValue("name", "");
-              createFormik?.setFieldValue("content", "");
-            }}
-            // to={"/showcase/create"}
+            onClick={handleClickNewGlossary}
             className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
           >
             <PlusIcon className="h-4 w-4" />
@@ -154,32 +171,11 @@ export default function GlossaryPage() {
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentGlossaries?.map((item: GlossaryData) => (
-            <div
-              onClick={() => {
-                setSelectedGlossary(item);
-                setIsOpenGlossaryDetail(true);
-              }}
-              key={item.id}
-              className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
-            >
-              <img
-                src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                alt="character"
-                className="w-full h-64 object-cover rounded-t-xl"
-                width={400}
-                height={300}
-              />
-              <div className="p-4  ">
-                <>
-                  <h3 className="text-base font-semibold dark:text-white text-zinc-800">
-                    {item.name}
-                  </h3>
-                  <p className="bg-purple-500 mt-2 text-white text-xs font-medium px-2 py-1 rounded-full w-fit">
-                    {item.timestamp?.slice(0, 10)}
-                  </p>
-                </>
-              </div>
-            </div>
+            <ItemCard
+              item={item}
+              handleSelect={handleSelectGlossary}
+              itemType={ItemType.Glossary}
+            />
           ))}
         </div>
         <AnimatedModal
@@ -202,20 +198,7 @@ export default function GlossaryPage() {
           onClose={() => setIsOpenGlossaryDetail(false)}
         >
           <GlossaryDetail
-            onEditPress={() => {
-              setIsOpenGlossaryDetail(false);
-              setIsOpen(true);
-              createFormik?.setFieldValue("createOrUpdate", "update");
-              createFormik?.setFieldValue("name", selectedGlossary?.name);
-              createFormik?.setFieldValue(
-                "content",
-                selectedGlossary?.glossary
-              );
-              createFormik?.setFieldValue(
-                "createdOn",
-                selectedGlossary?.timestamp
-              );
-            }}
+            onEditPress={handleEditGlossary}
             glossary={selectedGlossary}
           />
         </AnimatedModal>

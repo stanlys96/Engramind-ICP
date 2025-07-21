@@ -6,6 +6,7 @@ import {
   SearchBar,
   AnimatedModal,
   UpdateRubricsForm,
+  ItemCard,
 } from "../../../components/ui";
 import { useFormik } from "formik";
 import { createRubricInitialValues, CreateRubricValues } from "../../../formik";
@@ -25,7 +26,7 @@ import { Principal } from "@dfinity/principal";
 import useSWR from "swr";
 import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
-import { extractAndParseRubricJSON } from "../../../utils/helper";
+import { extractAndParseRubricJSON, ItemType } from "../../../utils/helper";
 
 export type FlatFormValues = Record<string, any>;
 
@@ -50,6 +51,15 @@ export default function RubricsPage() {
   const totalRubricsResult = totalRubricsData?.data?.data;
   const [updateRubricsFormValues, setUpdateRubricsFormValues] =
     useState<FlatFormValues>({});
+
+  const handleSelectRubrics = (item: Assessment) => {
+    setSelectedRubrics(item);
+    setIsOpenRubricsDetail(true);
+  };
+
+  const handleClickNewRubrics = () => {
+    setIsOpen(true);
+  };
 
   const createFormik = useFormik<CreateRubricValues>({
     initialValues: createRubricInitialValues,
@@ -147,10 +157,7 @@ export default function RubricsPage() {
             </p>
           </div>
           <a
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            // to={"/showcase/create"}
+            onClick={handleClickNewRubrics}
             className="flex items-center gap-x-2 bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 transition duration-200 cursor-pointer md:mb-0 mb-[20px]"
           >
             <PlusIcon className="h-4 w-4" />
@@ -160,32 +167,11 @@ export default function RubricsPage() {
         <SearchBar />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentRubrics?.map((item: Assessment) => (
-            <div
-              onClick={() => {
-                setSelectedRubrics(item);
-                setIsOpenRubricsDetail(true);
-              }}
-              key={item.id}
-              className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
-            >
-              <img
-                src={`https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                alt="character"
-                className="w-full h-64 object-cover rounded-t-xl"
-                width={400}
-                height={300}
-              />
-              <div className="p-4">
-                <>
-                  <h3 className="text-base font-semibold dark:text-white text-zinc-800">
-                    {item.name}
-                  </h3>
-                  <p className="bg-purple-500 mt-2 text-white text-xs font-medium px-2 py-1 rounded-full w-fit">
-                    {item.timestamp?.slice(0, 10)}
-                  </p>
-                </>
-              </div>
-            </div>
+            <ItemCard
+              itemType={ItemType.Rubrics}
+              handleSelect={handleSelectRubrics}
+              item={item}
+            />
           ))}
         </div>
         <AnimatedModal

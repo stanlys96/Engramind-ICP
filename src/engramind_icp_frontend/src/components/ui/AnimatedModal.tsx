@@ -1,38 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
-
-const backdrop = {
-  visible: { opacity: 1 },
-  hidden: { opacity: 0 },
-};
-
-const modal: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.9,
-    y: "-50%",
-    x: "-50%",
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: "-50%",
-    x: "-50%",
-    transition: {
-      duration: 0.3,
-      type: "spring",
-      damping: 20,
-      stiffness: 300,
-    },
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.9,
-    y: "-50%",
-    x: "-50%",
-    transition: { duration: 0.2 },
-  },
-};
+import { backdrop, modal } from "../../utils/uiHelper";
 
 interface AnimatedModalProps {
   isOpen: boolean;
@@ -41,7 +9,6 @@ interface AnimatedModalProps {
   widthFitContainer?: boolean;
   showCrossIcon?: boolean;
   className?: string;
-  isConversation?: boolean;
 }
 
 export const AnimatedModal = ({
@@ -51,7 +18,6 @@ export const AnimatedModal = ({
   widthFitContainer = false,
   showCrossIcon = true,
   className,
-  isConversation,
 }: AnimatedModalProps) => {
   useEffect(() => {
     const handleEsc = (e: any) => e.key === "Escape" && onClose();
@@ -71,13 +37,9 @@ export const AnimatedModal = ({
           onClick={onClose}
         >
           <motion.div
-            className={
-              isConversation
-                ? "bg-transparent absolute top-1/2 left-1/2 w-full lg:w-[80%]"
-                : `${className} absolute border dark:border-zinc-700 border-zinc-200 top-1/2 left-1/2 bg-[#FEFEFE] dark:bg-[#101213] rounded-2xl shadow-xl p-6 ${
-                    widthFitContainer ? "" : "w-full lg:w-[80%]"
-                  }`
-            }
+            className={`${className} absolute border dark:border-zinc-700 border-zinc-200 top-1/2 left-1/2 bg-[#FEFEFE] dark:bg-[#101213] rounded-2xl shadow-xl p-6 ${
+              widthFitContainer ? "" : "w-full lg:w-[80%]"
+            }`}
             variants={modal}
             initial="hidden"
             animate="visible"

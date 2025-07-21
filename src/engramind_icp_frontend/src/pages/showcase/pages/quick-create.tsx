@@ -3,7 +3,7 @@
 import ModalDone from "../../../components/ui/showcase/ModalDone";
 import ModalProgress from "../../../components/ui/showcase/ModalProgress";
 import RenderIf from "../../../utils/RenderIf";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ShowcaseLayout from "../ShowcaseLayout";
 import { ArrowLeft, Zap } from "lucide-react";
@@ -21,6 +21,7 @@ import {
 import Cookies from "js-cookie";
 import { scenarioPresets } from "../../../utils/helper";
 import { Cross2Icon } from "@radix-ui/react-icons";
+import { toast } from "sonner";
 
 export default function ShowcaseQuickCreatePage() {
   const name = Cookies.get("principal");
@@ -29,10 +30,6 @@ export default function ShowcaseQuickCreatePage() {
   const [showLoadingModal, setShowLoadingModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [error, seterror] = useState(false);
-  const [scenarioTitle, setScenarioTitle] = useState("");
-  const [myRole, setMyRole] = useState("");
-  const [aiRole, setAiRole] = useState("");
-  const [scenarioDescription, setScenarioDescription] = useState("");
   const [animatedModalOpen, setAnimatedModalOpen] = useState(false);
   const [chosenScenarioPreset, setChosenScenarioPreset] = useState<
     string | null
@@ -51,23 +48,32 @@ export default function ShowcaseQuickCreatePage() {
     initialValues: createQuickScenarioInitialValues,
     validationSchema: createQuickScenarioSchema,
     onSubmit: async (values, { resetForm }) => {
+      const toastId = toast.loading("Creating a roleplay...", {
+        id: "create-roleplay",
+        duration: Infinity,
+      });
       try {
         setLoading(true);
         const fileIdsTemp = values.files.map((x: FileResponse) => x.file_id);
-        const response = await axiosElwyn.post(
-          "/assessment/live/scenarios/quick-create",
-          {
-            scenario_title: values.scenario_title,
-            ai_role: values.ai_role,
-            my_role: values.my_role,
-            scenario_description: values.scenario_description,
-            organization_id: name,
-            file_ids: fileIdsTemp,
-          }
-        );
-        alert(response.data.message);
+        await axiosElwyn.post("/assessment/live/scenarios/quick-create", {
+          scenario_title: values.scenario_title,
+          ai_role: values.ai_role,
+          my_role: values.my_role,
+          scenario_description: values.scenario_description,
+          organization_id: name,
+          file_ids: fileIdsTemp,
+        });
+        toast.success("Roleplay created successfully!", {
+          id: toastId,
+          duration: 4000,
+        });
         setLoading(false);
+        navigate("/showcase");
       } catch (e) {
+        toast.error(e?.toString(), {
+          id: toastId,
+          duration: 4000,
+        });
         setLoading(false);
         console.log(e);
       }

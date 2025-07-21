@@ -5,6 +5,12 @@ export enum Category {
   Advanced,
 }
 
+export enum ItemType {
+  Persona,
+  Rubrics,
+  Glossary,
+}
+
 export function selectCommonIds(firstArray: any, secondArray: any): any {
   const secondArrayIds = new Set<string>(
     secondArray.map((item: any) => item.id)

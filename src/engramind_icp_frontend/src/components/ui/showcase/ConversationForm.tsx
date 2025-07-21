@@ -16,14 +16,18 @@ import { RoleplayResponse } from "../../../interface";
 import ChatLoading from "./ChatLoading";
 import { UserMessage } from "./UserMessage";
 import { AIMessage } from "./AIMessage";
+import { AnimatePresence, motion } from "framer-motion";
+import { backdrop, modal } from "../../../utils/uiHelper";
 
 interface Props {
+  isOpen: boolean;
   currentConversation: RoleplayResponse | null;
   conversationId: string;
   onClose?: () => void;
 }
 
-export const ConversationForm = ({
+export const ConversationModalForm = ({
+  isOpen,
   currentConversation,
   conversationId,
   onClose,
@@ -141,112 +145,144 @@ export const ConversationForm = ({
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversationMessages, isLoading, responseText]);
+
+  useEffect(() => {
+    const handleEsc = (e: any) => e.key === "Escape" && onClose && onClose();
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [onClose]);
   return (
-    <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
-      <button
-        type="button"
-        onClick={onClose}
-        className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
-      >
-        ✕
-      </button>
-      <div className="flex flex-col space-y-1.5 text-center sm:text-left px-6">
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[10px]">
-          Vibes Check: Handling Product Return Dispute
-        </h2>
-        <p className="text-[#627084]">
-          Interact with the character to get a feel for the scenario. This
-          conversation won't be saved or graded.
-        </p>
-      </div>
-      <div className="flex-1 overflow-y-auto">
-        <div className="flex flex-col h-full overflow-hidden">
-          <div className="flex-1 overflow-y-auto p-1 md:p-4">
-            <div className="mr-4 md:mr-10 my-4 flex gap-2">
-              <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
-                AI
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50"
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={backdrop}
+          onClick={onClose}
+        >
+          <motion.div
+            className="bg-transparent absolute top-1/2 left-1/2 w-full lg:w-[80%]"
+            variants={modal}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
+              <button
+                type="button"
+                onClick={onClose}
+                className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
+              >
+                ✕
+              </button>
+              <div className="flex flex-col space-y-1.5 text-center sm:text-left px-6">
+                <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[10px]">
+                  Vibes Check: Handling Product Return Dispute
+                </h2>
+                <p className="text-[#627084]">
+                  Interact with the character to get a feel for the scenario.
+                  This conversation won't be saved or graded.
+                </p>
               </div>
-              <div className="flex-col max-w-[calc(100%-3.5rem)]">
-                <small className="text-sm font-medium leading-none">
-                  Assistant
-                </small>
-                <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
-                  <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                    <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                      <ul>
-                        <li>
-                          <MonitorSpeaker size={20} />
-                        </li>
-                      </ul>
+              <div className="flex-1 overflow-y-auto">
+                <div className="flex flex-col h-full overflow-hidden">
+                  <div className="flex-1 overflow-y-auto p-1 md:p-4">
+                    <div className="mr-4 md:mr-10 my-4 flex gap-2">
+                      <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
+                        AI
+                      </div>
+                      <div className="flex-col max-w-[calc(100%-3.5rem)]">
+                        <small className="text-sm font-medium leading-none">
+                          Assistant
+                        </small>
+                        <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
+                          <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
+                            <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
+                              <ul>
+                                <li>
+                                  <MonitorSpeaker size={20} />
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-0.25">
+                          <button className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75">
+                            <LucideCopy size={15} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    {conversationMessages?.map((conversationMessage: any) =>
+                      conversationMessage?.user === "person" ? (
+                        <UserMessage message={conversationMessage?.message} />
+                      ) : (
+                        <AIMessage message={conversationMessage?.message} />
+                      )
+                    )}
+                    {responseText && <AIMessage message={responseText} />}
+                    {isLoading && <ChatLoading />}
+                    <div ref={messagesEndRef} />
+                  </div>
+                  <div className="p-2 md:p-4 border-t border-[#88888850] dark:border-zinc-700">
+                    <div className="flex-shrink-0 gap-2">
+                      <div className="flex flex-col flex-grow gap-1 mb-4">
+                        <div className="flex flex-row bg-slate-50 dark:bg-zinc-700 rounded-2xl p-2 border border-[#88888850] items-center">
+                          <div className="flex justify-end space-x-2">
+                            <button
+                              type="button"
+                              disabled={isLoading}
+                              className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-[#88888850] bg-white dark:bg-white hover:bg-accent hover:text-accent-foreground border shadow-sm w-10 h-10 rounded-full p-0"
+                            >
+                              <LucidePaperclip color="black" size={15} />
+                            </button>
+                          </div>
+                          <div className="flex flex-grow items-center space-x-2 mb-2">
+                            <div className="relative flex-grow">
+                              <textarea
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                style={{
+                                  minHeight: 24,
+                                  maxHeight: 200,
+                                  height: 28,
+                                }}
+                                className="text-base sm:text-sm w-full bg-transparent placeholder-gray-400 focus:outline-none resize-none overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent py-1 px-3"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end space-x-2">
+                            <div className="flex items-center gap-4">
+                              <button
+                                disabled={isLoading}
+                                type="button"
+                                className="focus-visible:ring-ring items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 w-9 flex shrink-0 rounded-full transition-all duration-200"
+                              >
+                                <LucideMic color="black" size={15} />
+                              </button>
+                              <button
+                                disabled={isLoading || !message}
+                                onClick={() => handleStream()}
+                                type="button"
+                                className="focus-visible:ring-ring rounded-full cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 p-2 rounded-full flex-shrink-0"
+                              >
+                                <LucideSendHorizontal color="black" size={15} />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center justify-between mt-0.25">
-                  <button className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75">
-                    <LucideCopy size={15} />
-                  </button>
                 </div>
               </div>
             </div>
-            {conversationMessages?.map((conversationMessage: any) =>
-              conversationMessage?.user === "person" ? (
-                <UserMessage message={conversationMessage?.message} />
-              ) : (
-                <AIMessage message={conversationMessage?.message} />
-              )
-            )}
-            {responseText && <AIMessage message={responseText} />}
-            {isLoading && <ChatLoading />}
-            <div ref={messagesEndRef} />
-          </div>
-          <div className="p-2 md:p-4 border-t border-[#88888850] dark:border-zinc-700">
-            <div className="flex-shrink-0 gap-2">
-              <div className="flex flex-col flex-grow gap-1 mb-4">
-                <div className="flex flex-row bg-slate-50 dark:bg-zinc-700 rounded-2xl p-2 border border-[#88888850] items-center">
-                  <div className="flex justify-end space-x-2">
-                    <button
-                      type="button"
-                      disabled={isLoading}
-                      className="focus-visible:ring-ring inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 border-[#88888850] bg-white dark:bg-white hover:bg-accent hover:text-accent-foreground border shadow-sm w-10 h-10 rounded-full p-0"
-                    >
-                      <LucidePaperclip color="black" size={15} />
-                    </button>
-                  </div>
-                  <div className="flex flex-grow items-center space-x-2 mb-2">
-                    <div className="relative flex-grow">
-                      <textarea
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        style={{ minHeight: 24, maxHeight: 200, height: 28 }}
-                        className="text-base sm:text-sm w-full bg-transparent placeholder-gray-400 focus:outline-none resize-none overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent py-1 px-3"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-end space-x-2">
-                    <div className="flex items-center gap-4">
-                      <button
-                        disabled={isLoading}
-                        type="button"
-                        className="focus-visible:ring-ring items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 w-9 flex shrink-0 rounded-full transition-all duration-200"
-                      >
-                        <LucideMic color="black" size={15} />
-                      </button>
-                      <button
-                        disabled={isLoading || !message}
-                        onClick={() => handleStream()}
-                        type="button"
-                        className="focus-visible:ring-ring rounded-full cursor-pointer inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 bg-white text-primary-foreground hover:bg-primary/90 shadow h-9 p-2 rounded-full flex-shrink-0"
-                      >
-                        <LucideSendHorizontal color="black" size={15} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
