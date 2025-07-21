@@ -174,6 +174,7 @@ export default function GlossaryPage() {
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentGlossaries?.map((item: GlossaryData) => (
             <ItemCard
+              key={item.id}
               item={item}
               handleSelect={handleSelectGlossary}
               itemType={ItemType.Glossary}

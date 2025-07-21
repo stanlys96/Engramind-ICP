@@ -193,6 +193,7 @@ export default function PersonaPage() {
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentPersonas?.map((item: PersonaData) => (
             <ItemCard
+              key={item.id}
               itemType={ItemType.Persona}
               item={item}
               handleSelect={handleSelectedPersona}

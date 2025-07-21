@@ -173,6 +173,7 @@ export default function RubricsPage() {
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {currentRubrics?.map((item: Assessment) => (
             <ItemCard
+              key={item.id}
               itemType={ItemType.Rubrics}
               handleSelect={handleSelectRubrics}
               item={item}

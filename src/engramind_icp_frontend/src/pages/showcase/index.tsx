@@ -108,6 +108,7 @@ export default function ScenariosPage() {
           {totalScenariosResult?.map(
             (item: RoleplayResponse, index: number) => (
               <ScenarioCard
+                key={item.id}
                 item={item}
                 index={index}
                 setOpenPopoverIndex={setOpenPopoverIndex}

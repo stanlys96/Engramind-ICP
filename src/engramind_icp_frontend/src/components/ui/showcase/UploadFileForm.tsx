@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { _SERVICE } from "../../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../../utils/IC";
 import { Principal } from "@dfinity/principal";
+import { toast } from "sonner";
 
 interface UploadFileForm {
   loading: boolean;
@@ -40,6 +41,10 @@ export const UploadFileForm = ({
     const formData = new FormData();
     formData.append("file", file);
     formData.append("organization_id", name ?? "");
+    const toastId = toast.loading(`Uploading file...`, {
+      id: "upload-file",
+      duration: Infinity,
+    });
     try {
       setLoading(true);
       const response = await axiosElwyn.post(
@@ -55,10 +60,17 @@ export const UploadFileForm = ({
       if (filesMutate) {
         filesMutate();
       }
-      addToast({ message: "Successfully uploaded your file!" });
+      toast.success(`File uploaded successfully!`, {
+        id: toastId,
+        duration: 4000,
+      });
       setIsOpen(false);
       setLoading(false);
     } catch (e) {
+      toast.error(e?.toString(), {
+        id: toastId,
+        duration: 4000,
+      });
       setLoading(false);
     }
   };
