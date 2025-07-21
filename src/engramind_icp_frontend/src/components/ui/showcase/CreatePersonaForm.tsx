@@ -151,7 +151,7 @@ export const CreatePersonaForm = ({
         onBlur={createFormik.handleBlur}
         placeholder="Make a personalized description of the persona"
         className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
-          loading || uploading
+          loading
             ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
             : "dark:bg-zinc-800 bg-zinc-50"
         }`}
