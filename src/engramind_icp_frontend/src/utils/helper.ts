@@ -262,3 +262,9 @@ export const navbarLinkData: NavbarLinkData[] = [
     title: "File Management",
   },
 ];
+
+export const formatNickname = (userNickname: string) => {
+  return userNickname.length > 20
+    ? userNickname.slice(0, 9) + "..." + userNickname.slice(-3)
+    : userNickname;
+};

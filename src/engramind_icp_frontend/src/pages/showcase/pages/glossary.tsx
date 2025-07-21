@@ -22,7 +22,7 @@ import { GlossaryData, GlossaryResponse } from "../../../interface";
 import useSWR from "swr";
 import { toast } from "sonner";
 import { GlossaryDetail } from "../../../components/ui/showcase/GlossaryDetail";
-import { ItemType } from "../../../utils/helper";
+import { formatNickname, ItemType } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -162,7 +162,7 @@ export default function GlossaryPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {currentNickname}
+              Welcome, {formatNickname(currentNickname)}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your glossaries

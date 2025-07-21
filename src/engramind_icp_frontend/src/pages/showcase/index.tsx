@@ -10,7 +10,7 @@ import {
 } from "../../components/ui";
 import { axiosElwyn, fetcherElwyn } from "../../utils/api";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
-import { Category } from "../../utils/helper";
+import { Category, formatNickname } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { RoleplayResponse, RoleplayResponseRaw } from "../../interface";
@@ -106,7 +106,7 @@ export default function ScenariosPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {currentNickname}
+              Welcome, {formatNickname(currentNickname)}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create and manage your roleplay scenarios

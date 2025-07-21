@@ -35,7 +35,7 @@ export const UpdateNicknameForm = ({
           name="name"
           type="text"
           placeholder="Enter nickname"
-          className={`w-full border shadow-sm focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
+          className={`w-full border shadow-sm text-black dark:text-white focus-visible:outline-none dark:border-zinc-700 border-zinc-200 rounded p-2 text-sm ${
             loading
               ? "dark:bg-zinc-700 bg-zinc-100 cursor-not-allowed"
               : "dark:bg-zinc-800 bg-zinc-50"

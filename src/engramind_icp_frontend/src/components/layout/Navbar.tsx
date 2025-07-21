@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { settingNickname, settingPrincipal } from "../../stores/user-slice";
 import Cookies from "js-cookie";
+import { toast } from "sonner";
 
 type NavbarProps = {
   showMenu: boolean;
@@ -24,6 +25,10 @@ export default function Navbar({ showMenu }: NavbarProps) {
   const [backend, setBackend] = useState<_SERVICE>();
 
   const handleConnectWallet = async () => {
+    const toastId = toast.loading(`Logging in...`, {
+      id: "login",
+      duration: Infinity,
+    });
     IC.getAuth(async (authClient) => {
       authClient.login({
         ...IC.defaultAuthOption,
@@ -40,22 +45,24 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getUserNickname(principal)
             .then((userNicknameResult) => {
               if (userNicknameResult?.[0]) {
-                const finalNickname =
-                  userNicknameResult?.[0]?.length > 20
-                    ? userNicknameResult?.[0]?.slice(0, 9) +
-                      "..." +
-                      userNicknameResult?.[0]?.slice(-3)
-                    : userNicknameResult?.[0];
+                const finalNickname = userNicknameResult?.[0];
                 dispatch(settingNickname(finalNickname));
                 Cookies.set("nickname", finalNickname);
               }
             })
             .finally(() => {
+              toast.success(`Successfully logged in!`, {
+                id: toastId,
+                duration: 4000,
+              });
               navigate("/showcase");
             });
         },
-        onError: () => {
-          // setLoading(false);
+        onError: (error) => {
+          toast.error(error?.toString(), {
+            id: toastId,
+            duration: 4000,
+          });
         },
       });
     });

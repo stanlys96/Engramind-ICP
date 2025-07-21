@@ -2,7 +2,7 @@
 import { BellDot, MenuIcon } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "../../../theme/theme-toggle";
-import { navbarLinkData } from "../../../utils/helper";
+import { formatNickname, navbarLinkData } from "../../../utils/helper";
 import { NavbarLinkData } from "../../../interface";
 
 interface HeaderProps {
@@ -58,9 +58,7 @@ export const ShowcaseHeader = (
               type="button"
               className="cursor-pointer"
             >
-              {currentNickname?.length > 20
-                ? currentNickname?.slice(0, 12) + "..."
-                : currentNickname}
+              {formatNickname(currentNickname)}
             </button>
           </div>
           <BellDot className="cursor-pointer text-purple-600 dark:text-purple-400 md:block hidden" />

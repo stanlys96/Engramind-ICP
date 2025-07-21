@@ -32,7 +32,7 @@ import { Principal } from "@dfinity/principal";
 import { PersonaDetails } from "../../../components/ui/showcase/PersonaDetails";
 import { toast } from "sonner";
 import { FileResponse } from "../../../interface";
-import { ItemType } from "../../../utils/helper";
+import { formatNickname, ItemType } from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -175,7 +175,7 @@ export default function PersonaPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {currentNickname}
+              Welcome, {formatNickname(currentNickname)}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Curated profiles. Proven expertise. Find and connect with your AI

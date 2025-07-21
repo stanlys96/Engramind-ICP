@@ -11,7 +11,7 @@ import ThemeToggle from "../../theme/theme-toggle";
 import { _SERVICE } from "../../../../declarations/engramind_icp_backend/engramind_icp_backend.did";
 import IC from "../../utils/IC";
 import { useNavigate } from "react-router-dom";
-import { navbarLinkData } from "../../utils/helper";
+import { formatNickname, navbarLinkData } from "../../utils/helper";
 import { NavbarLinkData } from "../../interface";
 import { Principal } from "@dfinity/principal";
 import { toast } from "sonner";
@@ -167,7 +167,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               height={300}
             />
             <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
-              {currentNickname}
+              {formatNickname(currentNickname)}
             </div>
           </div>
           <button

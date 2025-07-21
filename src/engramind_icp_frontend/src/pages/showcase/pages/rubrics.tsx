@@ -28,7 +28,11 @@ import { Principal } from "@dfinity/principal";
 import useSWR from "swr";
 import { RubricsDetail } from "../../../components/ui/showcase/RubricsDetail";
 import { toast } from "sonner";
-import { extractAndParseRubricJSON, ItemType } from "../../../utils/helper";
+import {
+  extractAndParseRubricJSON,
+  formatNickname,
+  ItemType,
+} from "../../../utils/helper";
 import { useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
@@ -158,7 +162,7 @@ export default function RubricsPage() {
           {/* Heading */}
           <div>
             <h1 className="text-3xl font-bold mb-2 capitalize">
-              Welcome, {currentNickname}
+              Welcome, {formatNickname(currentNickname)}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               Create your own scoring criteria.
