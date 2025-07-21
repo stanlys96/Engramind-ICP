@@ -1,5 +1,4 @@
 import {
-  LucideCopy,
   LucideMic,
   LucidePaperclip,
   LucideSendHorizontal,
@@ -107,9 +106,7 @@ export const ConversationModalForm = ({
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          // Append new chunk to buffer
           buffer += decoder.decode(value, { stream: true });
-          // Process complete lines from buffer
           while (true) {
             const lineEnd = buffer.indexOf("\n");
             if (lineEnd === -1) break;
@@ -194,7 +191,7 @@ export const ConversationModalForm = ({
               </button>
               <div className="flex flex-col space-y-1.5 text-center sm:text-left px-6">
                 <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[10px]">
-                  Vibes Check: Handling Product Return Dispute
+                  Vibes Check: {currentConversation?.name}
                 </h2>
                 <p className="text-[#627084]">
                   Interact with the character to get a feel for the scenario.
@@ -204,32 +201,7 @@ export const ConversationModalForm = ({
               <div className="flex-1 overflow-y-auto">
                 <div className="flex flex-col h-full overflow-hidden">
                   <div className="flex-1 overflow-y-auto p-1 md:p-4">
-                    <div className="mr-4 md:mr-10 my-4 flex gap-2">
-                      <div className="w-10 h-10 rounded-full bg-zinc-300 dark:bg-zinc-600 flex items-center justify-center text-white">
-                        AI
-                      </div>
-                      <div className="flex-col max-w-[calc(100%-3.5rem)]">
-                        <small className="text-sm font-medium leading-none">
-                          Assistant
-                        </small>
-                        <div className="rounded-xl border border-[#88888850] bg-card text-card-foreground shadow pt-5 rounded-tl mt-1">
-                          <div className="p-6 pt-0 text-sm -m-2 [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                            <div className="text-black dark:text-slate-200 prose dark:prose-invert text-sm [&>p]:mb-4 [&>p:last-child]:mb-0 markdown-content">
-                              <ul>
-                                <li>
-                                  <MonitorSpeaker size={20} />
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between mt-0.25">
-                          <button className="focus-visible:ring-ring cursor-pointer inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 w-9 scale-75">
-                            <LucideCopy size={15} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+                    <AIMessage element={<MonitorSpeaker />} />
                     {conversationMessages?.map(
                       (conversationMessage: any, index: number) =>
                         conversationMessage?.user === "person" ? (

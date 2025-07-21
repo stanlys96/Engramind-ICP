@@ -33,8 +33,6 @@ export const ScenarioCard = ({
         }
         alt="character"
         className="w-full h-64 object-cover rounded-t-xl"
-        width={400}
-        height={300}
       />
       <div className="p-4">
         <div className="relative flex flex-col ">
