@@ -11,6 +11,7 @@ import {
 import { useFormik } from "formik";
 import {
   createUpdateGlossaryInitialValues,
+  createUpdateGlossarySchema,
   CreateUpdateGlossaryValues,
 } from "../../../formik";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
@@ -67,6 +68,7 @@ export default function GlossaryPage() {
 
   const createFormik = useFormik<CreateUpdateGlossaryValues>({
     initialValues: createUpdateGlossaryInitialValues,
+    validationSchema: createUpdateGlossarySchema,
     onSubmit: async (values, { resetForm }) => {
       const toastId = toast.loading(
         `${

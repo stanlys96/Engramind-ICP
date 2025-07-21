@@ -41,23 +41,40 @@ export const updatePersonaInitialValues = {
   challengesAndGrowthAreas: "",
 };
 
-export const createRubricInitialValues = {
-  name: "",
-  description: "",
-  files: [],
-};
+export const createPersonaSchema = Yup.object({
+  name: Yup.string().required(),
+  personaPrompt: Yup.string().required(),
+});
 
-export const createQuickScenarioInitialValues = {
-  scenario_title: "",
-  scenario_description: "",
-  ai_role: "",
-  my_role: "",
-  files: [],
-};
-
-export const createQuickScenarioSchema = Yup.object({
-  scenario_title: Yup.string().required(),
-  scenario_description: Yup.string().required(),
-  ai_role: Yup.string().required(),
-  my_role: Yup.string().required(),
+export const updatePersonaSchema = Yup.object({
+  persona_name: Yup.string().required(),
+  age: Yup.string().required(),
+  gender: Yup.string().required(),
+  occupation: Yup.string().required(),
+  language: Yup.string().required(),
+  hometown: Yup.string().required(),
+  birthdate: Yup.string().required(),
+  nationality: Yup.string().required(),
+  background: Yup.string().required(),
+  scenarioSnippet: Yup.string().required(),
+  mbtiType: Yup.string().required(),
+  enneagramType: Yup.string().required(),
+  openness: Yup.string().required(),
+  conscientiousness: Yup.string().required(),
+  extraversion: Yup.string().required(),
+  agreeableness: Yup.string().required(),
+  neuroticism: Yup.string().required(),
+  skillsAndAbilities: Yup.string().required(),
+  motivationsAndGoals: Yup.string().required(),
+  build: Yup.string().required(),
+  height: Yup.string().required(),
+  eyeColor: Yup.string().required(),
+  skinTone: Yup.string().required(),
+  hairColor: Yup.string().required(),
+  hairStyle: Yup.string().required(),
+  typicalAttire: Yup.string().required(),
+  distinguishingFeatures: Yup.string().required(),
+  industryRelevance: Yup.string().required(),
+  relevanceToScenario: Yup.string().required(),
+  challengesAndGrowthAreas: Yup.string().required(),
 });

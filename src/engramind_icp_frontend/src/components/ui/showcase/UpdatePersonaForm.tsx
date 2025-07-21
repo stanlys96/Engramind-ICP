@@ -780,9 +780,11 @@ export const UpdatePersonaForm = ({
           </button>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !updateFormik.isValid}
             className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-700"
+              loading || !updateFormik.isValid
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-purple-700"
             }`}
           >
             <AnimatedSpinner show={loading} />

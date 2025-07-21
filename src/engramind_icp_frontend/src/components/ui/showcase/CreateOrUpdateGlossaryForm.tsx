@@ -85,11 +85,9 @@ export const CreateOrUpdateGlossaryForm = ({
         </button>
         <button
           type="submit"
-          disabled={
-            !createFormik.values.name || !createFormik.values.content || loading
-          }
+          disabled={!createFormik.isValid || loading}
           className={`bg-purple-600 flex gap-x-2 items-center text-white px-4 py-2 rounded cursor-pointer ${
-            !createFormik.values.name || !createFormik.values.content || loading
+            !createFormik.isValid || loading
               ? "opacity-50 cursor-not-allowed"
               : "hover:bg-purple-700"
           }`}

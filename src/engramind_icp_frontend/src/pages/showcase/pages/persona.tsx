@@ -18,7 +18,9 @@ import {
   CreateFormValues,
   EditFormValues,
   createPersonaInitialValues,
+  createPersonaSchema,
   updatePersonaInitialValues,
+  updatePersonaSchema,
 } from "../../../formik";
 import {
   handleUpdateFormikBody,
@@ -62,6 +64,7 @@ export default function PersonaPage() {
 
   const updateFormik = useFormik<EditFormValues>({
     initialValues: updatePersonaInitialValues,
+    validationSchema: updatePersonaSchema,
     onSubmit: async (values, { resetForm }) => {
       const toastId = toast.loading("Updating persona...", {
         id: "update-persona",
@@ -93,6 +96,7 @@ export default function PersonaPage() {
 
   const createFormik = useFormik<CreateFormValues>({
     initialValues: createPersonaInitialValues,
+    validationSchema: createPersonaSchema,
     onSubmit: async (values, { resetForm }) => {
       const toastId = toast.loading("Creating persona...", {
         id: "create-persona",

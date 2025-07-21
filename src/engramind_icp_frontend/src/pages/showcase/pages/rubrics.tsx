@@ -9,7 +9,11 @@ import {
   ItemCard,
 } from "../../../components/ui";
 import { useFormik } from "formik";
-import { createRubricInitialValues, CreateRubricValues } from "../../../formik";
+import {
+  createRubricInitialValues,
+  createRubricsSchema,
+  CreateRubricValues,
+} from "../../../formik";
 import { axiosElwyn, fetcherElwyn } from "../../../utils/api";
 import { CreateRubricForm } from "../../../components/ui/showcase/CreateRubricForm";
 import {
@@ -63,6 +67,7 @@ export default function RubricsPage() {
 
   const createFormik = useFormik<CreateRubricValues>({
     initialValues: createRubricInitialValues,
+    validationSchema: createRubricsSchema,
     onSubmit: async (values, { resetForm }) => {
       const toastId = toast.loading("Adding rubrics...", {
         id: "adding-rubrics",
