@@ -26,8 +26,11 @@ export const RubricsDetail = ({ rubrics, onEditPress }: Props) => {
       </p>
       <p className="text-sm italic">{rubrics?.rubrics?.description}</p>
       <div className="mt-5 flex flex-col gap-y-6">
-        {rubrics?.rubrics?.criteria?.map((value: Criterum) => (
-          <div className="border border-[#88888850] rounded-lg overflow-hidden">
+        {rubrics?.rubrics?.criteria?.map((value: Criterum, index: number) => (
+          <div
+            key={value.criterion_name + index.toString()}
+            className="border border-[#88888850] rounded-lg overflow-hidden"
+          >
             <div className="bg-gray-100 dark:bg-zinc-900 p-3 flex justify-between items-center">
               <h4 className="font-semibold">{value?.criterion_name}</h4>
               <span className="text-sm px-2 py-1 rounded">
@@ -46,7 +49,10 @@ export const RubricsDetail = ({ rubrics, onEditPress }: Props) => {
                   {value?.performance_levels &&
                     Object.entries(value?.performance_levels).map(
                       ([key, val], pIndex) => (
-                        <tr className="border-t border-[#F1F2F4] dark:border-[#88888850]">
+                        <tr
+                          key={key + pIndex.toString()}
+                          className="border-t border-[#F1F2F4] dark:border-[#88888850]"
+                        >
                           <td className="p-2 capitalize font-medium w-1/4">
                             {key}
                           </td>
@@ -65,7 +71,10 @@ export const RubricsDetail = ({ rubrics, onEditPress }: Props) => {
         {rubrics?.rubrics?.scoring_guide &&
           Object.entries(rubrics?.rubrics?.scoring_guide).map(
             ([key, val], pIndex) => (
-              <div className="p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+              <div
+                key={key + pIndex.toString()}
+                className="p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg"
+              >
                 <p className="font-medium mb-1 font-semibold">
                   {capitalCase(key)}
                 </p>
@@ -83,7 +92,10 @@ export const RubricsDetail = ({ rubrics, onEditPress }: Props) => {
         {rubrics?.rubrics?.performance_levels_summary &&
           Object.entries(rubrics?.rubrics?.performance_levels_summary).map(
             ([key, val], pIndex) => (
-              <div className="p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg">
+              <div
+                key={key + pIndex.toString()}
+                className="p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg"
+              >
                 <p className="font-medium mb-1 font-semibold">{key}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">
                   {val}
