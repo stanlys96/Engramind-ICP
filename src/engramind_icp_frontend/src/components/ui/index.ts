@@ -5,3 +5,4 @@ export * from "./HelperComponents";
 export * from "./Modal";
 export * from "./SideDrawer";
 export * from "./showcase";
+export * from "./AnimatedCollapse";

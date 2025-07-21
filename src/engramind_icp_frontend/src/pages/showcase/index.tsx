@@ -7,6 +7,7 @@ import {
   AnimatedModal,
   CategoryFilter,
   ScenarioCard,
+  ScenarioRoleplayDetail,
 } from "../../components/ui";
 import { axiosElwyn, fetcherElwyn } from "../../utils/api";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
@@ -28,6 +29,9 @@ export default function ScenariosPage() {
   const [loading] = useState(false);
   const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null);
   const [conversationOpen, setConversationOpen] = useState(false);
+  const [showRoleplayModal, setShowRoleplayModal] = useState(false);
+  const [currentRoleplayDetail, setCurrentRoleplayDetail] =
+    useState<RoleplayResponse | null>(null);
   const [currentConversation, setCurrentConversation] =
     useState<RoleplayResponse | null>(null);
   const [conversationId, setConversationId] = useState<string>("");
@@ -66,6 +70,11 @@ export default function ScenariosPage() {
     } else if (mode === Category.Advanced) {
       navigate("/showcase/roleplay/advance-create");
     }
+  };
+
+  const handleClickRoleplay = (item: RoleplayResponse) => {
+    setCurrentRoleplayDetail(item);
+    setShowRoleplayModal(true);
   };
 
   const handleCreateConversation = async (item: RoleplayResponse) => {
@@ -132,6 +141,9 @@ export default function ScenariosPage() {
                 setOpenPopoverIndex={setOpenPopoverIndex}
                 openPopoverIndex={openPopoverIndex}
                 handleCreateConversation={handleCreateConversation}
+                onRoleplaySelected={(item: RoleplayResponse) =>
+                  handleClickRoleplay(item)
+                }
               />
             )
           )}
@@ -158,6 +170,12 @@ export default function ScenariosPage() {
           conversationId={conversationId}
           currentConversation={currentConversation}
         />
+        <AnimatedModal
+          isOpen={showRoleplayModal}
+          onClose={() => setShowRoleplayModal(false)}
+        >
+          <ScenarioRoleplayDetail item={currentRoleplayDetail} />
+        </AnimatedModal>
       </div>
     </ShowcaseLayout>
   );

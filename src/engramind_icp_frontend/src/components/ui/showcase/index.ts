@@ -21,3 +21,4 @@ export * from "./RubricsDetail";
 export * from "./GlossaryDetail";
 export * from "./LogoutForm";
 export * from "./UpdateNicknameForm";
+export * from "./ScenarioRoleplayDetail";

@@ -8,6 +8,7 @@ interface Props {
   openPopoverIndex: any;
   index: number;
   handleCreateConversation: (item: RoleplayResponse) => void;
+  onRoleplaySelected: (item: RoleplayResponse) => void;
 }
 
 export const ScenarioCard = ({
@@ -16,11 +17,12 @@ export const ScenarioCard = ({
   openPopoverIndex,
   index,
   handleCreateConversation,
+  onRoleplaySelected,
 }: Props) => {
   return (
     <div
       key={item.id}
-      // onClick={() => handleSelectedPersona(item)}
+      onClick={() => onRoleplaySelected(item)}
       className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
     >
       <img

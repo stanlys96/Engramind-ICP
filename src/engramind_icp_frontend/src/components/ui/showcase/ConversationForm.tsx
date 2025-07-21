@@ -181,14 +181,14 @@ export const ConversationModalForm = ({
             exit="exit"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="fixed left-[50%] top-[50%] z-50 w-full translate-x-[-50%] translate-y-[-50%] gap-4 border border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
+            <div className="mx-auto gap-4 border relative border-[#88888850] bg-[#FEFEFE] dark:bg-[#101213] pt-5 shadow-lg sm:rounded-lg md:w-full max-w-3xl h-[90vh] flex flex-col p-0">
               <button
                 type="button"
                 onClick={() => {
                   resetAll();
                   onClose();
                 }}
-                className="absolute cursor-pointer top-3 right-3 text-gray-500 dark:hover:text-white hover:text-black"
+                className="absolute cursor-pointer top-4 right-4 text-gray-500 dark:hover:text-white hover:text-black"
               >
                 ✕
               </button>
