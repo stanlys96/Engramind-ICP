@@ -26,8 +26,8 @@ export const ScenarioCard = ({
       <img
         src={
           item.description.charactersGender === "Male"
-            ? `https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`
-            : "https://media.istockphoto.com/id/2177231592/photo/smiling-asian-woman-posing-with-crossed-arms-looking-at-camera-on-blue-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=eBCGJOnTaXbLSis9B_P1JMA7DSKOVDWkICtpaF3wimk="
+            ? `/assets/male_persona.avif`
+            : "/assets/female_persona.webp"
         }
         alt="character"
         className="w-full h-64 object-cover rounded-t-xl"
