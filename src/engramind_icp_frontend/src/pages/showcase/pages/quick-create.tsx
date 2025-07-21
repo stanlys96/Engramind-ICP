@@ -85,11 +85,31 @@ export default function ShowcaseQuickCreatePage() {
       }
     },
   });
+
+  const handleSelectPreset = async (e: QuickScenarioValues) => {
+    setChosenScenarioPreset(e.title);
+    await createFormik.setFieldValue("my_role", e.my_role);
+    await createFormik.setFieldValue("ai_role", e.ai_role);
+    await createFormik.setFieldValue(
+      "scenario_description",
+      e.scenario_description
+    );
+    await createFormik.setFieldValue("scenario_title", e.title);
+    await createFormik.validateForm();
+  };
+
+  const handleResetPreset = async () => {
+    createFormik.resetForm();
+    setChosenScenarioPreset("");
+    await createFormik.validateForm();
+  };
+
   useEffect(() => {
     (async () => {
       await createFormik.validateForm();
     })();
   }, []);
+
   return (
     <ShowcaseLayout>
       <div className="max-w-3xl mx-auto px-6 pb-6 space-y-6 text-gray-900 dark:text-white">
@@ -147,22 +167,10 @@ export default function ShowcaseQuickCreatePage() {
                 }
                 isNested
                 options={scenarioPresets}
-                onReset={async () => {
-                  createFormik.resetForm();
-                  setChosenScenarioPreset("");
-                  await createFormik.validateForm();
-                }}
-                onSelect={async (e: QuickScenarioValues) => {
-                  setChosenScenarioPreset(e.title);
-                  await createFormik.setFieldValue("my_role", e.my_role);
-                  await createFormik.setFieldValue("ai_role", e.ai_role);
-                  await createFormik.setFieldValue(
-                    "scenario_description",
-                    e.scenario_description
-                  );
-                  await createFormik.setFieldValue("scenario_title", e.title);
-                  await createFormik.validateForm();
-                }}
+                onReset={handleResetPreset}
+                onSelect={async (e: QuickScenarioValues) =>
+                  handleSelectPreset(e)
+                }
                 customClassName="w-[100%]"
               />
             </div>
