@@ -148,7 +148,7 @@ export default function ScenariosPage() {
             <span>New Roleplay</span>
           </a>
         </div>
-        <SearchBar showRoleOption />
+        <SearchBar title="Roleplay" showRoleOption />
         <CategoryFilter />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 h-full">
           {totalScenariosResult?.map(

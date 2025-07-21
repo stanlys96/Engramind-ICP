@@ -192,7 +192,7 @@ export default function PersonaPage() {
             <span>New Persona</span>
           </a>
         </div>
-        <SearchBar />
+        <SearchBar title="Persona" />
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {totalPersonaResult?.map((item: PersonaData) => (
             <ItemCard
