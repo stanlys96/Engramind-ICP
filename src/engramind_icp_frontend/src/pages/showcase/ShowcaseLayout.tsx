@@ -159,6 +159,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col gap-4 items-start mt-[20px] relative">
           <div className="flex gap-x-2 justify-center items-center">
             <img
+              onClick={() => setShowUpdateNickname(true)}
               src="/assets/male_persona.avif"
               alt="Profile"
               className="rounded-full w-8 h-8 cursor-pointer hover:shadow-lg transition-all duration-300"
