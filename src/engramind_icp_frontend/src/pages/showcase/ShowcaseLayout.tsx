@@ -119,8 +119,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         />
       </AnimatedModal>
       <AnimatedModal
-        widthFitContainer
-        className="w-full md:w-[50%]"
+        customWidth="w-full md:w-[50%]"
         isOpen={showUpdateNickname}
         onClose={() => {
           if (loading) return;
