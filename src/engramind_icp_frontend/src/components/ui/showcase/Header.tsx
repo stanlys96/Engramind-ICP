@@ -71,6 +71,7 @@ export const ShowcaseHeader = (
             height={300}
           />
           <button
+            type="button"
             onClick={() => setShowConfirm(true)}
             className="text-sm md:block hidden text-red-600 dark:text-red-400 hover:underline cursor-pointer transition"
           >

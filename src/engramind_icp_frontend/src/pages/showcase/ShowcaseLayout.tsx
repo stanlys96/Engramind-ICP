@@ -166,7 +166,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               width={400}
               height={300}
             />
-            <div className="text-sm text-purple-600 dark:text-purple-300 capitalize font-semibold">
+            <div
+              onClick={() => setShowUpdateNickname(true)}
+              className="text-sm cursor-pointer text-purple-600 dark:text-purple-300 capitalize font-semibold"
+            >
               {formatNickname(currentNickname)}
             </div>
           </div>
