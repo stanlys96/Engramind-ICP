@@ -9,7 +9,7 @@ import {
   ScenarioCard,
   ScenarioRoleplayDetail,
 } from "../../components/ui";
-import { axiosBackend, axiosElwyn, fetcherBackend } from "../../utils/api";
+import { axiosElwyn, fetcherBackend } from "../../utils/api";
 import { CreationMode } from "../../components/ui/showcase/CreationMode";
 import { Category, formatNickname } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
