@@ -61,7 +61,7 @@ export default function ShowcaseAdvanceCreatePage() {
     fetcherBackend
   );
   const { data: totalPersonaData } = useSWR(
-    `persona/all/${principal}`,
+    `/persona/all/${principal}`,
     fetcherBackend
   );
   const { data: totalRubricsData } = useSWR(

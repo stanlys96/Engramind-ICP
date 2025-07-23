@@ -53,7 +53,7 @@ export default function PersonaPage() {
     nickname || userNickname
   );
   const { data: totalPersonaData, mutate: personaMutate } = useSWR(
-    `persona/all/${principal}`,
+    `/persona/all/${principal}`,
     fetcherBackend
   );
   const totalPersonaResult: PersonaData[] = totalPersonaData?.data;
