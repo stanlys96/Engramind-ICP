@@ -111,7 +111,7 @@ export default function ScenariosPage() {
           if (userNicknameResult?.[0]) {
             const finalNickname = userNicknameResult?.[0];
             dispatch(settingNickname(finalNickname));
-            Cookies.set("nickname", finalNickname);
+            Cookies.set("nickname", finalNickname, { expires: 1 });
           }
         });
     });

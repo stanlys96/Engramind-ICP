@@ -39,7 +39,7 @@ export default function Navbar({ showMenu }: NavbarProps) {
             ?.getPrincipal()
             ?.toText();
           await backend?.addNewUser(principal);
-          Cookies.set("principal", principalText);
+          Cookies.set("principal", principalText, { expires: 1 });
           dispatch(settingPrincipal(principalText));
           toast.success(`Successfully logged in!`, {
             id: toastId,
