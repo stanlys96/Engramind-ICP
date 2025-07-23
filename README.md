@@ -1,6 +1,6 @@
 # `Engramind`
 
-Optimizing knowledge transfer process across generations by immortalizing human's experiences and skills into AI personas.
+Engramind optimizes knowledge transfer process across generations by immortalizing human's experiences and skills into AI personas.
 
 Demo url: https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
