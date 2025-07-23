@@ -2,7 +2,7 @@
 
 Optimizing knowledge transfer process across generations by immortalizing human's experiences and skills into AI personas.
 
-https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
+Demo url: https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
 ![Engramind Demo Landing Page](screenshots/Engramind-Demo-3.png)
 ![Engramind Demo Showcase Page](screenshots/Engramind-Demo-4.png)
