@@ -3,8 +3,8 @@
 https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
 <div style="display: flex; align-items: center; gap: 15px; justify-content: center;">
-  <img src="screenshots/Engramind-Demo-3.png" width="48%" alt="Screenshot of Engramind Landing Page" />
-  <img src="screenshots/Engramind-Demo-4.png" width="48%" alt="Screenshot of Engramind Showcase Page" />
+  <img src="screenshots/Engramind-Demo-3.png" alt="Screenshot of Engramind Landing Page" />
+  <img src="screenshots/Engramind-Demo-4.png" alt="Screenshot of Engramind Showcase Page" />
 </div>
 
 Watch a demo video <a href="https://www.youtube.com/watch?v=sf742Rmc_gU" target="_blank" rel="noopener noreferrer">here</a>.
