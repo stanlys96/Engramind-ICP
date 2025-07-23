@@ -2,7 +2,7 @@
 
 https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
-<div style="display: flex; align-items: center; gap: 10px;">
+<div style="display: flex; align-items: center; gap: 15px; justify-content: center;">
   <img src="screenshots/Engramind-Demo-3.png" width="48%" alt="Screenshot of Engramind Landing Page" />
   <img src="screenshots/Engramind-Demo-4.png" width="48%" alt="Screenshot of Engramind Showcase Page" />
 </div>
