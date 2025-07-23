@@ -2,8 +2,10 @@
 
 https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
-![Demo Image 1](screenshots/Engramind-Demo-1.png)
-![Demo Image 2](screenshots/Engramind-Demo-2.png)
+<p align="center">
+  <img src="assets/Engramind-Demo-3.png" width="48%" alt="Screenshot of Engramind Landing Page" />
+  <img src="assets/Engramind-Demo-4.png" width="48%" alt="Screenshot of Engramind Showcase Page" />
+</p>
 
 Watch a demo video [here](https://www.youtube.com/watch?v=sf742Rmc_gU).
 
