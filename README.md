@@ -2,6 +2,11 @@
 
 https://oi22n-uaaaa-aaaaf-qawqq-cai.icp0.io/
 
+![Demo Image 1](screenshots/Engramind-Demo-1.png)
+![Demo Image 2](screenshots/Engramind-Demo-2.png)
+
+Watch a demo video [here](https://www.youtube.com/watch?v=sf742Rmc_gU).
+
 A core component of the Engramind proposal is the use of AI to transform secured user data into an interactive virtual persona. This technology holds significant potential for digital legacy but also carries substantial ethical weight and risks that must be carefully considered, especially given the target audience's cautious stance towards AI.
 
 # Concept and Creation
