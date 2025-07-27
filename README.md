@@ -11,7 +11,7 @@ Watch a demo video here: https://www.youtube.com/watch?v=sf742Rmc_gU
 
 A core component of Engramind is the use of AI to transform secured user data into an interactive virtual persona. This technology holds significant potential for digital legacy but also carries substantial ethical weight and risks that must be carefully considered, especially given the target audience's cautious stance towards AI.
 
-Pitch deck: ![Engramind Pitch Deck](https://www.canva.com/design/DAGtJcHPTZM/Z-CTZpWEppQIHGpfNSs9Eg/edit?utm_content=DAGtJcHPTZM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+Pitch deck: [Engramind Pitch Deck](https://www.canva.com/design/DAGtJcHPTZM/Z-CTZpWEppQIHGpfNSs9Eg/edit?utm_content=DAGtJcHPTZM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 # Concept and Creation
 
