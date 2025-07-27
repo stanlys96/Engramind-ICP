@@ -203,7 +203,7 @@ export const ConversationModalForm = ({
               </button>
               <div className="flex flex-col space-y-1.5 text-center sm:text-left px-6">
                 <h2 className="text-xl font-semibold flex items-center gap-2 text-gray-900 dark:text-white mb-[10px]">
-                  Vibes Check: {currentConversation?.name}
+                  Conversation: {currentConversation?.name}
                 </h2>
                 <p className="text-[#627084]">
                   Interact with the character to get a feel for the scenario.

@@ -40,7 +40,7 @@ export const ScenarioRoleplayDetail = ({ item }: Props) => {
       </div>
       <AnimatedCollapse title="Character Detail">
         <div>
-          <p>
+          <p className="mb-2">
             <span className="font-bold">Gender:</span>{" "}
             {item?.description?.charactersGender}
           </p>

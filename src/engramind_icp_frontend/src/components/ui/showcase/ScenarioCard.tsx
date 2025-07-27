@@ -23,7 +23,7 @@ export const ScenarioCard = ({
     <div
       key={item.id}
       onClick={() => onRoleplaySelected(item)}
-      className="dark:bg-zinc-800 bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
+      className="dark:bg-zinc-800 relative bg-zinc-200 w-full h-full rounded-xl shadow-lg cursor-pointer transition-all duration-300 hover:opacity-60"
     >
       <img
         src={
@@ -34,7 +34,17 @@ export const ScenarioCard = ({
         alt="character"
         className="w-full h-64 object-cover rounded-t-xl"
       />
-      <div className="p-4">
+      <div className="flex flex-wrap gap-2 absolute top-2 left-2">
+        {item?.category?.map((cat) => (
+          <button
+            key={cat}
+            className="flex items-center opacity-80 text-[11px] px-3 py-1 rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300"
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+      <div className="p-4 relative">
         <div className="relative flex flex-col gap-y-1">
           <h3 className="text-md font-semibold dark:text-white text-zinc-800">
             {item.name}
@@ -62,7 +72,7 @@ export const ScenarioCard = ({
                     className="cursor-pointer"
                     onClick={async () => handleCreateConversation(item)}
                   >
-                    Vibes Check
+                    Start Conversation
                   </button>
                 </div>
               }
